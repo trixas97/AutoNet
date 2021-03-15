@@ -24,6 +24,7 @@ export default {
 .new-net-catalog-node {
 //   background-color: $primarydark;
   padding: 1em;
+  // padding-top: 0.5em;
   margin-bottom: 0.5em;
 //   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 0px 2px 0 rgba(0, 0, 0, 0.19);
   background-color: white;
@@ -37,42 +38,63 @@ export default {
   color: #333;
   display: grid;
   grid-gap: 0px;
-  width: 1fr;
-  margin-right: 3em;
-  margin-left: 3em;
+  width: 90%;
+  height: 1fr;
+  align-items: center;
+  grid-template-columns: 1fr 2fr 2fr 2fr 1fr;
+
   grid-template-areas: 
-    "img . . . ."
-    "img ip vendor mac check"
-    "img . . . .";
+    "img ip vendor mac check";
   
   img {
     grid-area: img;
+    // background-color: lightsalmon;
+    // width: 4.1em;
+    display: flex;
+    // width: 4.1rem;
+    flex-grow: 1;
+    // width: 80%;
+    // height: 100%;
   }
 
   .ip {
     grid-area: ip;
-    padding: 0px;
+    display: flex;
+    width: 100%;
+    // flex-shrink: 3;
+    // background-color: lightblue;
+    justify-content: center;
+    flex-grow: 1;
+    //  width: 1rem;
+    // padding: 0px;
   }
 
   .vendor {
     grid-area: vendor;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    // background-color: lightgreen;
+    flex-grow: 1;
   }
 
   .check {
     grid-area: check;
-    /* Hide the browser's default checkbox */
-    input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-      height: 0;
-      width: 0;
-    }
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    height: 50%;
+    // background-color: lightblue;
+    flex-grow: 1;
   }
 
   .mac {
     grid-area: mac;
-    opacity: 1;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    // background-color: lightcoral;
+    flex-grow:1;
   }
 
   .value {
@@ -82,17 +104,33 @@ export default {
 
 }
 
-@media screen and (max-width: 768px) {
-
+@media screen and (max-width: 1281px) {
     .new-net-catalog-node {
         display: grid;
-        width: 1fr;
+        margin-right: 0em;
+        margin-left: 0em;
+        width: 100%;
         height: 1fr;
         font-size: 1rem;
         grid-gap: 0px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+
+    .new-net-catalog-node {
+        padding-top: 0.5em;
+        height: 25%;
+        display: grid;
+        margin-right: 0em;
+        margin-left: 0em;
+        width: 100%;
+        height: 1fr;
+        font-size: 1rem;
+        grid-gap: 0px;
+        grid-template-columns: 1fr 0.2fr 2fr 2fr 1fr;
         grid-template-areas: 
-          "img ip ip check"
-          "img vendor check";
+          "img . ip vendor check";
 
     img {
         grid-area: img;
@@ -100,7 +138,7 @@ export default {
 
     .ip {
         grid-area: ip;
-        width:1fr;
+        // width:1em;
         // background-color: teal;
     }
 
@@ -118,6 +156,13 @@ export default {
         color: teal;
         font-weight: bold;
     }
+  }
+}
+
+@media screen and (max-height: 650px) {
+  .new-net-catalog-node {
+    padding-top: 0.5em;
+    height: 25%;
   }
 }
 

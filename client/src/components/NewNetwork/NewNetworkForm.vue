@@ -147,7 +147,8 @@ export default {
   }
 }
 
-@media screen and (max-width: 768px) {
+//768
+@media screen and (max-width: 1281px) {
   .new-net-form {
     // display: grid;
     width: 1fr;

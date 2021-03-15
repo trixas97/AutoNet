@@ -1,6 +1,12 @@
 <template>
     <div class="newnetwork">
-        <div class="title">New Network</div>
+      <input type="button" value="Save" disabled>
+        <div class="titlesubmit">
+          <div class="title">New Network</div>
+          <div class="submit">
+            <input type="button" value="Save" disabled>
+          </div>
+        </div>
         <div class="formcatalog">
           <div class="form"><NewNetworkForm/></div>
           <div class="catalog"><NewNetworkCatalog/></div>
@@ -31,17 +37,76 @@ export default {
   padding-top: 2vh;
   // grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
   grid-template-areas: 
-    "title" 
+    "titlesubmit" 
     "formcatalog";
 
+  .titlesubmit {
+    grid-area: titlesubmit;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas: 
+    ". title submit";
 
-  .title {
-    grid-area: title;
-    width: 1fr;
-    color:midnightblue;
-    // background-color: thistle;
-    font-size: 1.5em;
-    padding-bottom: 1.5em;
+    .title {
+      grid-area: title;
+      width: 100%;
+      color:midnightblue;
+      // background-color: thistle;
+      font-size: 1.5em;
+      padding-bottom: 1.5em;
+    }
+
+    .submit {
+      grid-area: submit;
+      // background-color: lightgreen;
+      display: grid;
+      // grid-template-columns: 1fr 1fr;
+      grid-template-areas: 
+      "input";
+      
+      input {
+        // justify-self: end;
+        justify-self: center;
+        grid-area: input;
+        width: 12em;
+        height: 3em;
+        // margin-top: 1.3em;
+        border-radius: 4px;
+        background-color: #00b336;
+        border: none;
+        color: #FFFFFF;
+        transition: all 0.5s;
+        cursor: pointer;
+        padding: 5px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        text: {
+          align: center;
+        }
+        font: {
+          size: 0.6em;
+          weight: bold;
+          family: Roboto;
+        }
+        span {
+          cursor: pointer;
+          display: inline-block;
+          position: relative;
+          transition: 0.5s;
+          &:after {
+            content: '\00bb';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -4em;
+            transition: 0.5s;
+          }
+        }
+        &:disabled {
+          background-color: gray;
+          cursor: not-allowed;
+        }
+      }
+    }
   }
 
   .formcatalog {
@@ -74,14 +139,29 @@ export default {
 
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1281px) {
   
   .newnetwork {
     grid-gap: 5px;
     padding-top: 0;
 
-    .title {
-      padding-bottom: 0;
+
+    .titlesubmit {
+      display: flex;
+      flex-direction: column;
+
+      .title {
+        padding-bottom: 0;
+        width: 100%;
+        //  flex-shrink: 3;
+      }
+
+      .submit {
+        padding-bottom: 0;
+        padding-top: 1em;
+        width: 100%;
+        //  flex-shrink: 3;
+      }
     }
 
     .formcatalog {
@@ -92,13 +172,15 @@ export default {
         width: 1fr;
         padding-right: 0em;
         flex-grow: 1;
+        width: 100%;
         // background-color:teal;
       }
 
       .catalog {
         grid-area: catalog;
         // background-color: indigo;
-        width: 1fr;
+        width: 100%;
+        height: 1fr;
         flex-grow: 1;
         margin-top: 1em;
       }

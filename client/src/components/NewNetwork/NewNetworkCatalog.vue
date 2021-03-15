@@ -40,35 +40,55 @@ export default {
     "nodes";
 
   .info {
-    display: flex;
+    display: grid;
     flex-direction: row;
     color: $primary;
+    width: 90%;
+    // background-color: lightblue;
     // grid-gap: 10px;
     font-size: 1.3rem;
-    // grid-template-areas: 
-    //   "ips network all";
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-areas: 
+      "ips network all";
 
     .network {
       grid-area: network;
-      width: 1fr;
-      flex-grow: 1;
+      // background-color: lightskyblue;
+      // width: 10%;
+      // flex-grow: 1;
     }
     .ips {
       grid-area: ips;
       width: 1fr;
-      flex-grow: 1;
+      // background-color: lightsalmon;
+      // flex-grow: 3;
     }
     .all {
       grid-area: all;
-      width: 1fr;
-      flex-grow: 1;
-      display: flex;
-      .text{
+      justify-content: end; 
+      width: 100%;
+      // background-color: lightcoral;
+      grid-template-columns: 0.8fr 2fr 2fr;
+      grid-template-areas: 
+      ". checktext checkbox";
+      grid-gap: 0px;
+      // flex-grow: 0.9;
+      // justify-self: flex-end;
+      display: grid;
+      .text {
         grid-area: checktext;
         margin: 0;
+        padding: 0;
+        // background-color: lightgreen;
+        // width: 100%;
       }
       .checkbox {
         grid-area: checkbox;
+        // background-color: lightgray;
+        // width: 100%;
+        margin: 0;
+        padding: 0;
+        height: 100%;
       }
     }
 
@@ -78,6 +98,24 @@ export default {
     height: 1fr;
     // display: grid;
     // padding: 1em;
+  }
+
+  @media screen and (max-width: 1281px) {
+
+    .info {
+      grid-template-columns: 1fr 3fr 1fr;
+      width: 100%;
+    }
+
+  }
+
+  @media screen and (max-width: 768px) {
+
+    .info {
+      grid-template-columns: 2fr 3fr 2fr;
+      width: 100%;
+    }
+
   }
 
 //   .nodes {
