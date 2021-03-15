@@ -1,6 +1,5 @@
 <template>
     <div class="newnetwork">
-      <input type="button" value="Save" disabled>
         <div class="titlesubmit">
           <div class="title">New Network</div>
           <div class="submit">
