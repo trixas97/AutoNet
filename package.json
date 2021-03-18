@@ -10,13 +10,16 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "child-process-async": "^1.0.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "ip": "^1.1.5",
     "mongoose": "^5.12.0",
     "nodemon": "^2.0.7",
+    "ping": "^0.4.0",
     "python-shell": "^2.0.3",
+    "request": "^2.88.2",
     "socket.io": "^4.0.0"
   }
 }
