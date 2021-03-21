@@ -5,6 +5,10 @@ const ipFinder = require('ip');
 const {spawn} = require('child_process');
 const {PythonShell} = require('python-shell');
 const ping = require('ping');
+let counterHost = 0;
+let completeScan = []
+
+
 
 
 io.on('connection', (socket) => {
@@ -12,12 +16,42 @@ io.on('connection', (socket) => {
 
     // Find devices
     router.get('/', async (req,res) => {
+
         let ipnet = (ipFinder.cidrSubnet(req.query.ip).networkAddress + '/' + ipFinder.cidrSubnet(req.query.ip).subnetMaskLength);
         let ips = await ipsFinder(ipnet);
-        for(let i=0; i < 2; i++){
-            ips = await hostsFinder(ips,req.query.id);
+        let finishedLoop = false;
+        completeScan[req.query.id] = {
+            valued: 0,
+            valueListener: function(val) {},
+            set value(val) {
+              this.valued = val;
+              this.valueListener(val);
+            },
+            get value() {
+              return this.valued;
+            },
+            registerListener: function(listener) {
+              this.valueListener = listener;
+            }
         }
-        res.send("ok");
+
+        completeScan[req.query.id].value = 0;
+        completeScan[req.query.id].registerListener(function(val) {
+            if((finishedLoop == true) && (val == 0)){
+                res.send("ok");
+                delete completeScan[req.query.id];
+            }
+        });
+
+        for(let i=0; i < 2; i++){
+            ips = await hostsFinder(ips,req.query.id,completeScan[req.query.id]);
+        }
+        finishedLoop = true;
+
+        if(completeScan[req.query.id].value == 0){
+            res.send("ok");
+            delete completeScan[req.query.id];
+        }
     });
 
 
@@ -41,9 +75,10 @@ io.on('connection', (socket) => {
         });
     }
 
-    function deviceFinderSlow(host, socketid) {
+    function deviceFinderSlow(host, socketid, completeScan) {
         let python = spawn('python', ['server/python/network_devices.py', host.ip]);
         python.stdout.on('data', function(data) {
+            completeScan.value--;
             let datastr = data.toString();
             let datajson = JSON.parse(datastr);
             host.vendor = datajson.vendor;
@@ -56,7 +91,7 @@ io.on('connection', (socket) => {
     }
 
 
-    function hostsFinder(ips, socketid)  {
+    function hostsFinder(ips, socketid, completeScan)  {
         return new Promise(resolve => {
             let count = 0;
             let hosts = [];
@@ -66,8 +101,10 @@ io.on('connection', (socket) => {
                     count++;
                     if(isAlive){
                         let aliveHost = await deviceFinderFast(host.ip);
+                        io.to(socketid).emit('net-scan', aliveHost);
                         if(aliveHost.vendor == null){
-                        deviceFinderSlow(aliveHost, socketid);                          // Call Function => Return Device from Slow script
+                            completeScan.value++;
+                            deviceFinderSlow(aliveHost, socketid, completeScan);                         // Call Function => Return Device from Slow script
                         }else{
                             if(aliveHost.vendor == "Cisco Systems"){                       // Check vendor for Cisco devices
                                 console.log(aliveHost);                                    // Return Device from Fast script

@@ -15,12 +15,11 @@ let io = socket(server, {
       origin: "*",
       methods: ["GET", "POST"]
     }
-  });
+});
 
 const deviceFinder = require('./routes/api/device_find.js')(io);
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
-app.set('socketio', io);
 app.use('/api/devices', deviceFinder);
