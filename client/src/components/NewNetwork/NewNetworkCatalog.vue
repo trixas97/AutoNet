@@ -6,14 +6,18 @@
       <span class="all"><span class="text">All</span><Checkbox class="checkbox"/></span>
   </div>
   <div class="nodes">
-      <NewNetworkCatalogNode/>
-      <NewNetworkCatalogNode/>
-      <NewNetworkCatalogNode/>
+      <NewNetworkCatalogNode 
+        v-for="node in nodes"
+        :key="node.id"
+        :node="node"
+      />
+      <!-- <NewNetworkCatalogNode ip="{{ nodes[0].ip }}"/> -->
   </div>
 </div>
 </template>
 
 <script>
+// import { reactive, computed } from 'vue';
 import NewNetworkCatalogNode from './NewNetworkCatalogNode.vue'
 import Checkbox from '../checkbox.vue'
 export default {
@@ -21,6 +25,19 @@ export default {
   components: {
     NewNetworkCatalogNode,
     Checkbox
+  },
+  data() {
+    const nodes = [
+      { id: 1, ip: "192.168.15.1", vendor: "Cisco", mac: "AA:AA:AA:AA:AA:AA" },
+      { id: 2, ip: "192.168.15.2", vendor: "Cisco", mac: "BB:BB:BB:BB:BB:BB" },
+      { id: 3, ip: "192.168.15.3", vendor: "Cisco", mac: "CC:CC:CC:CC:CC:CC" },
+      { id: 4, ip: "192.168.15.4", vendor: "Cisco", mac: "DD:DD:DD:DD:DD:DD" },
+      { id: 5, ip: "192.168.15.5", vendor: "Cisco", mac: "EE:EE:EE:EE:EE:EE" }
+    ];
+
+    return {
+      nodes
+    }
   }
 }
 </script>

@@ -5,7 +5,6 @@ const ipFinder = require('ip');
 const {spawn} = require('child_process');
 const {PythonShell} = require('python-shell');
 const ping = require('ping');
-let counterHost = 0;
 let completeScan = []
 
 
@@ -104,7 +103,7 @@ io.on('connection', (socket) => {
                         io.to(socketid).emit('net-scan', aliveHost);
                         if(aliveHost.vendor == null){
                             completeScan.value++;
-                            deviceFinderSlow(aliveHost, socketid, completeScan);                         // Call Function => Return Device from Slow script
+                            deviceFinderSlow(aliveHost, socketid, completeScan);           // Call Function => Return Device from Slow script
                         }else{
                             if(aliveHost.vendor == "Cisco Systems"){                       // Check vendor for Cisco devices
                                 console.log(aliveHost);                                    // Return Device from Fast script

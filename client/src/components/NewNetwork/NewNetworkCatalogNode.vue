@@ -1,9 +1,9 @@
 <template>
 <div class="new-net-catalog-node">
     <img class="img" src="../../style/router.svg">
-    <span class="ip">IP: <span class="value">192.168.2.1</span></span>
-    <span class="vendor">Vendor: <span class="value">Cisco</span></span>
-    <span class="mac">MAC: <span class="value">FF:FF:FF:FF:FF:FF</span></span>
+    <span class="ip">IP: <span class="value"> {{ node.ip }}</span></span>
+    <span class="vendor">Vendor: <span class="value"> {{ node.vendor }}</span></span>
+    <span class="mac">MAC: <span class="value"> {{ node.mac }}</span></span>
     <span class="check"><Checkbox/></span>
 </div>
 </template>
@@ -14,6 +14,12 @@ export default {
   name: 'NewNetworkCatalogNode',
   components: {
     Checkbox
+  },
+  props: {
+    node: {
+      type: Object,
+      required: true
+    },
   }
 }
 </script>

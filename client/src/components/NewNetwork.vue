@@ -8,7 +8,7 @@
         </div>
         <div class="formcatalog">
           <div class="form"><NewNetworkForm/></div>
-          <div class="catalog"><NewNetworkCatalog/></div>
+          <div class="catalog"><NewNetworkCatalog nodes="`${ nodes }`"/></div>
         </div>
 
     </div>
