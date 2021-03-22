@@ -10,6 +10,8 @@
         v-for="node in nodes"
         :key="node.id"
         :node="node"
+
+
       />
       <!-- <NewNetworkCatalogNode ip="{{ nodes[0].ip }}"/> -->
   </div>
@@ -20,23 +22,16 @@
 // import { reactive, computed } from 'vue';
 import NewNetworkCatalogNode from './NewNetworkCatalogNode.vue'
 import Checkbox from '../checkbox.vue'
+// import { toRef } from 'vue'
 export default {
   name: 'NewNetwork',
   components: {
     NewNetworkCatalogNode,
     Checkbox
   },
-  data() {
-    const nodes = [
-      { id: 1, ip: "192.168.15.1", vendor: "Cisco", mac: "AA:AA:AA:AA:AA:AA" },
-      { id: 2, ip: "192.168.15.2", vendor: "Cisco", mac: "BB:BB:BB:BB:BB:BB" },
-      { id: 3, ip: "192.168.15.3", vendor: "Cisco", mac: "CC:CC:CC:CC:CC:CC" },
-      { id: 4, ip: "192.168.15.4", vendor: "Cisco", mac: "DD:DD:DD:DD:DD:DD" },
-      { id: 5, ip: "192.168.15.5", vendor: "Cisco", mac: "EE:EE:EE:EE:EE:EE" }
-    ];
-
-    return {
-      nodes
+  props: {
+    nodes: {
+      type: Array
     }
   }
 }
@@ -112,7 +107,7 @@ export default {
   }
   .nodes {
     width: 1fr;
-    height: 1fr;
+    height: 10em;
     // display: grid;
     // padding: 1em;
   }
@@ -132,6 +127,12 @@ export default {
       grid-template-columns: 2fr 3fr 2fr;
       width: 100%;
     }
+  //     .nodes {
+  //   width: 1fr;
+  //   height: 10em;
+  //   // display: grid;
+  //   // padding: 1em;
+  // }
 
   }
 

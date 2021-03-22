@@ -7,8 +7,10 @@
           </div>
         </div>
         <div class="formcatalog">
-          <div class="form"><NewNetworkForm/></div>
-          <div class="catalog"><NewNetworkCatalog nodes="`${ nodes }`"/></div>
+          <div class="form"><NewNetworkForm @add-node="addNode"/></div>
+          <div class="catalog">  
+
+      <NewNetworkCatalog v:bind :nodes="nodes" /></div>
         </div>
 
     </div>
@@ -17,11 +19,57 @@
 <script>
 import NewNetworkForm from './NewNetwork/NewNetworkForm.vue'
 import NewNetworkCatalog from './NewNetwork/NewNetworkCatalog.vue'
+import io from 'socket.io-client'
+import axios from 'axios'
 export default {
   name: 'NewNetwork',
   components: {
     NewNetworkForm,
     NewNetworkCatalog
+  },
+  data() {
+    const nodes = [
+      // { id: 1, ip: "192.168.15.1", vendor: "Cisco", mac: "AA:AA:AA:AA:AA:AA" }
+    ];
+
+    let socket = io("http://192.168.2.14:5000");
+
+    async function addNode(node){
+      // socket = await initSocket()
+      socket.on('net-scan',(data) => {
+
+          if(data.vendor == "Cisco"){
+            let flagExist = false;
+            nodes.forEach(element => {
+              if(element.ip == data.ip){
+                element.mac = data.mac;
+                element.vendor = data.vendor;
+                flagExist = true;
+              }
+            });
+            if(flagExist == false){
+              nodes.push({id: nodes.length + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, delete: false});
+              console.log(data);
+            }
+          }
+          if( data.vendor == null){
+            nodes.push({id: nodes.length + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, delete: false});
+          }
+      });
+
+      axios.get(`http://192.168.2.14:5000/api/devices?ip=${node}&id=${socket.id}`).then(response => {
+        console.log(response.data);
+        nodes.forEach((element) => { if(element.vendor == null) { element.delete = true } })
+      })
+
+    }
+
+
+    return {
+      nodes,
+      addNode,
+      socket,
+    }
   }
 }
 </script>

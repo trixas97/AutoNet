@@ -1,25 +1,26 @@
 <template>
-<div class="new-net-catalog-node">
+<!-- <div v-bind:class="{'new-net-catalog-node': isActive, 'vendor-null': hasError}"> -->
+<div class="new-net-catalog-node" v-if="!node.delete">
     <img class="img" src="../../style/router.svg">
     <span class="ip">IP: <span class="value"> {{ node.ip }}</span></span>
-    <span class="vendor">Vendor: <span class="value"> {{ node.vendor }}</span></span>
-    <span class="mac">MAC: <span class="value"> {{ node.mac }}</span></span>
+    <span class="vendor" v-if="node.vendor!=null">Vendor: <span class="value"> {{ node.vendor }}</span></span>
+    <span class="vendor animation" v-if="node.vendor==null">Vendor: <span class="value"> {{ node.vendor }}</span></span>
+    <span class="mac" v-if="node.mac!=null">MAC: <span class="value"> {{ node.mac }}</span></span>
+    <span class="mac animation" v-if="node.mac==null">MAC: <span class="value"> {{ node.mac }}</span></span>
     <span class="check"><Checkbox/></span>
 </div>
 </template>
 
 <script>
 import Checkbox from '../checkbox.vue'
+// import {  computed } from 'vue'
 export default {
   name: 'NewNetworkCatalogNode',
   components: {
     Checkbox
   },
   props: {
-    node: {
-      type: Object,
-      required: true
-    },
+    node: { }
   }
 }
 </script>
@@ -39,6 +40,8 @@ export default {
   box-sizing: border-box; 
 //   cursor: pointer;
   transition: all 0.25s ease;
+  // transition: opacity 4000ms;
+  opacity: 100%;
   font-size: 1rem;
   font-weight: bold;
   color: #333;
@@ -48,6 +51,8 @@ export default {
   height: 1fr;
   align-items: center;
   grid-template-columns: 1fr 2fr 2fr 2fr 1fr;
+  
+
 
   grid-template-areas: 
     "img ip vendor mac check";
@@ -80,9 +85,14 @@ export default {
     display: flex;
     width: 100%;
     justify-content: center;
+
+
     // background-color: lightgreen;
     flex-grow: 1;
+
+
   }
+
 
   .check {
     grid-area: check;
@@ -106,6 +116,17 @@ export default {
   .value {
     color: $accent;
     font-weight: bold;
+  }
+
+  .animation{
+    animation: mymove 0.5s infinite;
+    animation-timing-function: linear;
+    animation-direction: alternate;
+  }
+
+  @keyframes mymove {
+    from {opacity: 100%;}
+    to {opacity: 0%;}
   }
 
 }

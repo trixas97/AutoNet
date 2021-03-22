@@ -100,16 +100,17 @@ io.on('connection', (socket) => {
                     count++;
                     if(isAlive){
                         let aliveHost = await deviceFinderFast(host.ip);
-                        io.to(socketid).emit('net-scan', aliveHost);
                         if(aliveHost.vendor == null){
                             completeScan.value++;
                             deviceFinderSlow(aliveHost, socketid, completeScan);           // Call Function => Return Device from Slow script
                         }else{
                             if(aliveHost.vendor == "Cisco Systems"){                       // Check vendor for Cisco devices
+                                aliveHost.vendor = "Cisco"
                                 console.log(aliveHost);                                    // Return Device from Fast script
-                                io.to(socketid).emit('net-scan', aliveHost);
+                                // io.to(socketid).emit('net-scan', aliveHost);
                             }
                         }
+                        io.to(socketid).emit('net-scan', aliveHost);
                         hosts.push(aliveHost);  
                     } else {
                         deadHosts.push(host);

@@ -2,19 +2,41 @@
 <div class="new-net-form">
   <div class="title">Network IP Address</div>
   <div class="form">
-    <input type="text" class=AddressText placeholder="Network IP">
+    <input v-model="network" type="text" class=AddressText placeholder="Network IP">
     <div class="slash">/</div>
-    <input type="text" class="MaskText" placeholder="Mask">
+    <input v-model="mask" type="text" class="MaskText" placeholder="Mask">
   </div>
   <div class="search-div">
       <!-- <input type="submit" class="search" value="Search"> -->
-      <button class="search" style="vertical-align:middle"><span>Search </span></button>  
+      <button class="search" style="vertical-align:middle" v-on:click="createNode"><span>Search </span></button>  
   </div>
 </div>
 </template>
 
 <script>
+// import { reactive } from 'vue';
 export default {
+  data(){
+    const node = {
+      ip: "192.168.15.6",
+      mac: "FF:FF:FF:FF:FF:FF",
+      vendor: "Cisco"
+    }
+
+    let network =""
+    let mask = ""
+
+    return {
+      node,
+      network,
+      mask
+    }
+  },
+  methods:{
+      createNode(){
+      this.$emit('add-node', `${this.network}/${this.mask}`);
+    }
+  }
 
 }
 </script>
