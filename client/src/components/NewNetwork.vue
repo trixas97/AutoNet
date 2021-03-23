@@ -1,13 +1,13 @@
 <template>
-    <div class="newnetwork">
+    <div id="newnetwork" class="newnetwork">
         <div class="titlesubmit">
           <div class="title">New Network</div>
           <div class="submit">
-            <input type="button" value="Save" disabled>
+            <input type="button" value="Save" v-bind:disabled="nodes.length == 0 ? true : false" >
           </div>
         </div>
         <div class="formcatalog">
-          <div class="form"><NewNetworkForm @add-node="addNode"/></div>
+          <div class="form"><NewNetworkForm @add-node="addNode" v-bind:searchbtn="searchbtn"/></div>
           <div class="catalog">  
 
       <NewNetworkCatalog v:bind :nodes="nodes" /></div>
@@ -19,9 +19,11 @@
 <script>
 import NewNetworkForm from './NewNetwork/NewNetworkForm.vue'
 import NewNetworkCatalog from './NewNetwork/NewNetworkCatalog.vue'
+// import {reactive} from 'vue'
 import io from 'socket.io-client'
 import axios from 'axios'
 export default {
+
   name: 'NewNetwork',
   components: {
     NewNetworkForm,
@@ -31,35 +33,40 @@ export default {
     const nodes = [
       // { id: 1, ip: "192.168.15.1", vendor: "Cisco", mac: "AA:AA:AA:AA:AA:AA" }
     ];
-
+    const searchbtn = [];
+    let lengthNodes = 0;
     let socket = io("http://192.168.2.14:5000");
 
     async function addNode(node){
-      // socket = await initSocket()
+      searchbtn.push(true);
       socket.on('net-scan',(data) => {
-
-          if(data.vendor == "Cisco"){
-            let flagExist = false;
-            nodes.forEach(element => {
-              if(element.ip == data.ip){
-                element.mac = data.mac;
-                element.vendor = data.vendor;
-                flagExist = true;
-              }
-            });
-            if(flagExist == false){
-              nodes.push({id: nodes.length + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, delete: false});
-              console.log(data);
-            }
+        let flagExist = false;
+        nodes.forEach(element => {
+          if(element.ip == data.ip){
+            element.mac = data.mac;
+            element.vendor = data.vendor;
+            flagExist = true;
           }
-          if( data.vendor == null){
-            nodes.push({id: nodes.length + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, delete: false});
+        });
+        if(data.vendor == "Cisco"){
+          
+          if(flagExist == false){
+            lengthNodes++;
+            nodes.push({id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, delete: false});
           }
+        }else{
+          if( data.vendor == null && flagExist == false){
+            lengthNodes++;
+            nodes.push({id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, delete: false});
+            
+          }
+        }
       });
 
       axios.get(`http://192.168.2.14:5000/api/devices?ip=${node}&id=${socket.id}`).then(response => {
         console.log(response.data);
         nodes.forEach((element) => { if(element.vendor == null) { element.delete = true } })
+        searchbtn.pop();
       })
 
     }
@@ -67,8 +74,10 @@ export default {
 
     return {
       nodes,
+      lengthNodes,
       addNode,
       socket,
+      searchbtn
     }
   }
 }

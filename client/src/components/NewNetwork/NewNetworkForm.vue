@@ -8,7 +8,7 @@
   </div>
   <div class="search-div">
       <!-- <input type="submit" class="search" value="Search"> -->
-      <button class="search" style="vertical-align:middle" v-on:click="createNode"><span>Search </span></button>  
+      <button class="search" style="vertical-align:middle" v-on:click="createNode" v-bind:disabled="searchbtn.length > 0 ? true : false"><span v-bind:disabled="searchbtn.length > 0 ? true : false">Search </span></button>  
   </div>
 </div>
 </template>
@@ -16,6 +16,9 @@
 <script>
 // import { reactive } from 'vue';
 export default {
+  props: {
+    searchbtn: { }
+  },
   data(){
     const node = {
       ip: "192.168.15.6",
@@ -140,7 +143,7 @@ export default {
         family: Roboto;
       }
       span {
-        cursor: pointer;
+        // cursor: pointer;
         display: inline-block;
         position: relative;
         transition: 0.5s;
@@ -152,6 +155,16 @@ export default {
           right: -4em;
           transition: 0.5s;
         }
+        &:disabled {
+          background-color: green;
+          cursor: pointer;
+          transition: 0s;
+        }
+      }
+
+      &:disabled {
+        background-color: gray;
+        cursor: not-allowed;
       }
 
       &:hover {
@@ -163,9 +176,7 @@ export default {
           }
         }
       }
-
     }
-
   }
 }
 
