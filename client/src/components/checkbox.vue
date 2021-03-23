@@ -1,13 +1,28 @@
 <template>
-<div class="checkbox-container">
-  <input type="checkbox" checked="checked">
+<div v-on:click="check" class="checkbox-container">
+  <input  type="checkbox" v-bind:checked="checked">
   <span class="checkmark"></span>
 </div>
 </template>
 
 <script>
 export default {
+  props:{
+    checkall: {}
+  },
+  data(){
+    const checked = true;
 
+    return {
+      checked
+    }
+  },
+  methods:{
+    check(){
+      this.checked == true ? this.checked=false : this.checked=true
+      // this.$emit('add-node', `${this.network}/${this.mask}`);
+    }
+  }
 }
 </script>
 <style>
@@ -32,11 +47,15 @@ export default {
   cursor: pointer;
   height: 0;
   width: 0;
+
 }
 
 /* Create a custom checkbox */
 .checkmark {
   position: absolute;
+  border: 2px solid teal;
+  border-radius: 5px;
+  /* border-color: teal; */
   top: 0;
   left: 0;
   height: 25px;
