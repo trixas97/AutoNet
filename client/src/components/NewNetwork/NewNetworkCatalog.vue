@@ -3,14 +3,14 @@
   <div class="info">
       <span class="network">192.168.2.1/24</span>
       <span class="ips">10/254</span>
-      <span class="all"><span class="text">All</span><Checkbox class="checkbox"/></span>
+      <span class="all"><span class="text">All</span><Checkbox class="checkbox" @changed="checkAllChange"/></span>
   </div>
   <div class="nodes">
       <NewNetworkCatalogNode 
         v-for="node in nodes"
         :key="node.id"
         :node="node"
-
+        ref="nodesRef"
 
       />
       <!-- <NewNetworkCatalogNode ip="{{ nodes[0].ip }}"/> -->
@@ -32,6 +32,13 @@ export default {
   props: {
     nodes: {
       type: Array
+    }
+  },
+  methods: {
+    checkAllChange(value){
+      this.$refs.nodesRef.forEach(element => {
+        element.node.delete == false ? element.checkAll(value) : null
+      });
     }
   }
 }

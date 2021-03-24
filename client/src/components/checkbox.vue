@@ -1,5 +1,5 @@
 <template>
-<div v-on:click="check" class="checkbox-container">
+<div v-on:click="change" class="checkbox-container">
   <input  type="checkbox" v-bind:checked="checked">
   <span class="checkmark"></span>
 </div>
@@ -18,9 +18,13 @@ export default {
     }
   },
   methods:{
-    check(){
+    change(){
       this.checked == true ? this.checked=false : this.checked=true
-      // this.$emit('add-node', `${this.network}/${this.mask}`);
+      this.$emit('changed', this.checked);
+    },
+
+    changeAll(value){
+      value == true ? this.checked=true : this.checked=false
     }
   }
 }

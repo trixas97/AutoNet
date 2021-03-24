@@ -7,7 +7,7 @@
     <span class="vendor animation" v-if="node.vendor==null">Vendor: <span class="value"> {{ node.vendor }}</span></span>
     <span class="mac" v-if="node.mac!=null">MAC: <span class="value"> {{ node.mac }}</span></span>
     <span class="mac animation" v-if="node.mac==null">MAC: <span class="value"> {{ node.mac }}</span></span>
-    <span class="check"><Checkbox  @checked="check" checkall="true"/></span>
+    <span class="check"><Checkbox ref="checkbox"/></span>
 </div>
 </template>
 
@@ -22,16 +22,9 @@ export default {
   props: {
     node: { }
   },
-  data(){
-    const checked = true;
-    return {
-      checked
-    }
-  },
   methods:{
-    check(){
-      this.checked == true ? this.checked=false : this.checked=true
-      // this.$emit('add-node', `${this.network}/${this.mask}`);
+    checkAll(value){
+      this.$refs.checkbox.changeAll(value);
     }
   }
 }
