@@ -8,7 +8,7 @@
   </div>
   <div class="search-div">
       <!-- <input type="submit" class="search" value="Search"> -->
-      <button class="search" style="vertical-align:middle" v-on:click="createNode" v-bind:disabled="searchbtn.length > 0 ? true : false"><span v-bind:disabled="searchbtn.length > 0 ? true : false">Search </span></button>  
+      <button class="search" style="vertical-align:middle" v-on:click="createNode" v-bind:disabled="searchbtn.length > 0 ? true : false"><span class="icon" v-bind:disabled="searchbtn.length > 0 ? true : false">Search <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i></span></button>  
   </div>
 </div>
 </template>
@@ -147,8 +147,13 @@ export default {
         display: inline-block;
         position: relative;
         transition: 0.5s;
+        font-family: "Font Awesome 5 Free";
+            font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
         &:after {
-          content: '\00bb';
+          content: '\f1ea';
           position: absolute;
           opacity: 0;
           top: 0;

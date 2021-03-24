@@ -33,9 +33,17 @@ export default {
     const nodes = [
       // { id: 1, ip: "192.168.15.1", vendor: "Cisco", mac: "AA:AA:AA:AA:AA:AA" }
     ];
+    const apiLinks = {
+      server: "http://192.168.2.14:5000",
+      autoScan: {
+        path: "http://192.168.2.14:5000/api/devices?",
+        p1: "ip=",
+        p2: "&id="
+      }
+    }
     const searchbtn = [];
     let lengthNodes = 0;
-    let socket = io("http://192.168.2.14:5000");
+    let socket = io(apiLinks.server);
 
     async function addNode(node){
       searchbtn.push(true);
@@ -63,7 +71,7 @@ export default {
         }
       });
 
-      axios.get(`http://192.168.2.14:5000/api/devices?ip=${node}&id=${socket.id}`).then(response => {
+      axios.get(`${apiLinks.autoScan.path}${apiLinks.autoScan.p1}${node}${apiLinks.autoScan.p2}${socket.id}`).then(response => {
         console.log(response.data);
         nodes.forEach((element) => { if(element.vendor == null) { element.delete = true } })
         searchbtn.pop();
@@ -74,6 +82,7 @@ export default {
 
     return {
       nodes,
+      apiLinks,
       lengthNodes,
       addNode,
       socket,
@@ -85,6 +94,9 @@ export default {
 
 <style lang="scss" scoped>
 @import "../style/variables";
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 
 .newnetwork {
   display: grid;
