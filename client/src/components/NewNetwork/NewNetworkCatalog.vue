@@ -1,7 +1,7 @@
 <template>
 <div class="new-net-catalog">
   <div class="info">
-      <span class="network">192.168.2.1/24</span>
+      <span class="network">{{ info() }}</span>
       <span class="ips">10/254</span>
       <span class="all"><span class="text">All</span><Checkbox class="checkbox" @changed="checkAllChange"/></span>
   </div>
@@ -32,6 +32,9 @@ export default {
   props: {
     nodes: {
       type: Array
+    },
+    networks: {
+      type: Array
     }
   },
   methods: {
@@ -39,6 +42,17 @@ export default {
       this.$refs.nodesRef.forEach(element => {
         element.node.delete == false ? element.checkAll(value) : null
       });
+    },
+    info(){
+      if(this.networks.length == 0){
+        return "Network IP";
+      } else {
+        if(this.networks.length == 1){
+          return this.networks[0];
+        } else {
+          return "Multiple Networks"
+        }
+      }
     }
   }
 }

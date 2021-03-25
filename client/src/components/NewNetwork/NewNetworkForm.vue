@@ -7,8 +7,7 @@
     <input v-model="mask" type="text" class="MaskText" placeholder="Mask">
   </div>
   <div class="search-div">
-      <!-- <input type="submit" class="search" value="Search"> -->
-      <button class="search" style="vertical-align:middle" v-on:click="createNode" v-bind:disabled="searchbtn.length > 0 ? true : false"><span class="icon" v-bind:disabled="searchbtn.length > 0 ? true : false">Search <i class="fa fa-refresh fa-spin fa-lg fa-fw"></i></span></button>  
+      <button class="search" style="vertical-align:middle" v-on:click="createNode" v-bind:disabled="searchbtn.length > 0 ? true : false"><span class="icon" v-if="searchbtn.length > 0 ? false : true">Search </span><i v-if="searchbtn.length > 0 ? true : false" class="fa fa-refresh fa-spin fa-lg fa-fw"></i></button>  
   </div>
 </div>
 </template>
@@ -20,17 +19,10 @@ export default {
     searchbtn: { }
   },
   data(){
-    const node = {
-      ip: "192.168.15.6",
-      mac: "FF:FF:FF:FF:FF:FF",
-      vendor: "Cisco"
-    }
-
     let network =""
     let mask = ""
 
     return {
-      node,
       network,
       mask
     }
@@ -147,29 +139,32 @@ export default {
         display: inline-block;
         position: relative;
         transition: 0.5s;
-        font-family: "Font Awesome 5 Free";
-            font-style: normal;
-    font-variant: normal;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
+
         &:after {
-          content: '\f1ea';
+          content: '\f0a9';
+          font-family: FontAwesome;
+          // font-weight:900;
           position: absolute;
           opacity: 0;
           top: 0;
-          right: -4em;
-          transition: 0.5s;
+          right: -10em;
+          left: 5em;
+          transition: 0.7s;
         }
-        &:disabled {
-          background-color: green;
-          cursor: pointer;
-          transition: 0s;
-        }
+      }
+
+      i {
+        padding-right: 0px;
       }
 
       &:disabled {
         background-color: gray;
         cursor: not-allowed;
+        transition: all 0s;
+
+        &:hover {
+          padding: 0px;
+        }
       }
 
       &:hover {

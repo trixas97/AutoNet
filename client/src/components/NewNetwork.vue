@@ -10,7 +10,7 @@
           <div class="form"><NewNetworkForm @add-node="addNode" v-bind:searchbtn="searchbtn"/></div>
           <div class="catalog">  
 
-      <NewNetworkCatalog v:bind :nodes="nodes" /></div>
+      <NewNetworkCatalog v:bind :nodes="nodes" :networks="networks"/></div>
         </div>
 
     </div>
@@ -33,6 +33,7 @@ export default {
     const nodes = [
       // { id: 1, ip: "192.168.15.1", vendor: "Cisco", mac: "AA:AA:AA:AA:AA:AA" }
     ];
+    const networks = [];
     const apiLinks = {
       server: "http://192.168.2.14:5000",
       autoScan: {
@@ -45,7 +46,8 @@ export default {
     let lengthNodes = 0;
     let socket = io(apiLinks.server);
 
-    async function addNode(node){
+    async function addNode(network){
+      networks.push(network);
       searchbtn.push(true);
       socket.on('net-scan',(data) => {
         let flagExist = false;
@@ -71,9 +73,12 @@ export default {
         }
       });
 
-      axios.get(`${apiLinks.autoScan.path}${apiLinks.autoScan.p1}${node}${apiLinks.autoScan.p2}${socket.id}`).then(response => {
+      axios.get(`${apiLinks.autoScan.path}${apiLinks.autoScan.p1}${network}${apiLinks.autoScan.p2}${socket.id}`).then(response => {
         console.log(response.data);
         nodes.forEach((element) => { if(element.vendor == null) { element.delete = true } })
+        if(nodes.length == 0){
+          networks.pop();
+        }
         searchbtn.pop();
       })
 
@@ -82,6 +87,7 @@ export default {
 
     return {
       nodes,
+      networks,
       apiLinks,
       lengthNodes,
       addNode,
