@@ -7,7 +7,7 @@
     <input v-model="mask" type="text" class="MaskText" placeholder="Mask">
   </div>
   <div class="search-div">
-      <button class="search" style="vertical-align:middle" v-on:click="createNode" v-bind:disabled="searchbtn.length > 0 ? true : false"><span class="icon" v-if="searchbtn.length > 0 ? false : true">Search </span><i v-if="searchbtn.length > 0 ? true : false" class="fa fa-refresh fa-spin fa-lg fa-fw"></i></button>  
+      <button class="search" style="vertical-align:middle" v-on:click="createNode" v-bind:disabled="finishedScan.length > 0 ? true : false"><span class="icon" v-if="finishedScan.length > 0 ? false : true">Search </span><i v-if="finishedScan.length > 0 ? true : false" class="fa fa-refresh fa-spin fa-lg fa-fw"></i></button>  
   </div>
 </div>
 </template>
@@ -16,7 +16,7 @@
 // import { reactive } from 'vue';
 export default {
   props: {
-    searchbtn: { }
+    finishedScan: { }
   },
   data(){
     let network =""

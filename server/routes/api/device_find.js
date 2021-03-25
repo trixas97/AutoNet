@@ -17,6 +17,7 @@ io.on('connection', (socket) => {
     router.get('/', async (req,res) => {
 
         let ipnet = (ipFinder.cidrSubnet(req.query.ip).networkAddress + '/' + ipFinder.cidrSubnet(req.query.ip).subnetMaskLength);
+        io.to(req.query.id).emit('net-length', ipFinder.cidrSubnet(ipnet).numHosts);
         let ips = await ipsFinder(ipnet);
         let finishedLoop = false;
         completeScan[req.query.id] = {

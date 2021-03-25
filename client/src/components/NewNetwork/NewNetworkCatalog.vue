@@ -1,8 +1,8 @@
 <template>
 <div class="new-net-catalog">
   <div class="info">
-      <span class="network">{{ info() }}</span>
-      <span class="ips">10/254</span>
+      <span class="network">{{ infoNet() }}</span>
+      <span class="ips">{{ infoHostsNumber() }} <i v-if="finishedScan.length > 0 ? true : false" class="fa fa-refresh fa-spin fa-lg fa-fw"></i></span>
       <span class="all"><span class="text">All</span><Checkbox class="checkbox" @changed="checkAllChange"/></span>
   </div>
   <div class="nodes">
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-// import { reactive, computed } from 'vue';
+// import { reactive } from 'vue';
 import NewNetworkCatalogNode from './NewNetworkCatalogNode.vue'
 import Checkbox from '../checkbox.vue'
 // import { toRef } from 'vue'
@@ -35,7 +35,8 @@ export default {
     },
     networks: {
       type: Array
-    }
+    },
+    finishedScan:{}
   },
   methods: {
     checkAllChange(value){
@@ -43,14 +44,29 @@ export default {
         element.node.delete == false ? element.checkAll(value) : null
       });
     },
-    info(){
-      if(this.networks.length == 0){
+
+    infoNet(){
+      if(this.networks.length < 1){
         return "Network IP";
       } else {
         if(this.networks.length == 1){
-          return this.networks[0];
+          return this.networks[0].ip;
         } else {
           return "Multiple Networks"
+        }
+      }
+    },
+    
+    infoHostsNumber(){
+      let count = 0;
+      this.nodes.forEach((element) => { element.delete == false ? count++ : null});
+      if(this.networks.length < 1){
+        return "Hosts";
+      }else{
+        if(this.networks.length == 1){
+          return `${count}/${this.networks[0].size}`
+        }else {
+          return `Hosts: ${count}`
         }
       }
     }

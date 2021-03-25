@@ -7,10 +7,10 @@
           </div>
         </div>
         <div class="formcatalog">
-          <div class="form"><NewNetworkForm @add-node="addNode" v-bind:searchbtn="searchbtn"/></div>
+          <div class="form"><NewNetworkForm @add-node="addNode" v-bind:finishedScan="finishedScan"/></div>
           <div class="catalog">  
 
-      <NewNetworkCatalog v:bind :nodes="nodes" :networks="networks"/></div>
+      <NewNetworkCatalog v:bind :nodes="nodes" :networks="networks" v-bind:finishedScan="finishedScan"/></div>
         </div>
 
     </div>
@@ -42,19 +42,33 @@ export default {
         p2: "&id="
       }
     }
-    const searchbtn = [];
+    const finishedScan = [];
     let lengthNodes = 0;
     let socket = io(apiLinks.server);
 
     async function addNode(network){
-      networks.push(network);
-      searchbtn.push(true);
+      finishedScan.push(false);
+      socket.on('net-length',(data) => {
+        console.log("size networks " + networks.length);
+        let netExistFlag = false;
+        if(networks.length == 0){
+          console.log("first");
+          networks.push({ip: network, size: data});
+        }else {
+          console.log("second+");
+          networks.forEach(element => { element.ip == network ? netExistFlag = true : null});
+          netExistFlag == false ? networks.push({ip: network, size: data}) : null;
+        }
+        // networks[networks.length-1].size = data
+        console.log(data);
+      });
+
       socket.on('net-scan',(data) => {
         let flagExist = false;
         nodes.forEach(element => {
           if(element.ip == data.ip){
-            element.mac = data.mac;
-            element.vendor = data.vendor;
+            element.mac == null ? element.mac = data.mac : null;
+            element.vendor == null ? element.vendor = data.vendor : null;
             flagExist = true;
           }
         });
@@ -62,12 +76,12 @@ export default {
           
           if(flagExist == false){
             lengthNodes++;
-            nodes.push({id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, delete: false});
+            nodes.push({id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, ipnet: networks[networks.length - 1].ip, delete: false});
           }
         }else{
           if( data.vendor == null && flagExist == false){
             lengthNodes++;
-            nodes.push({id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, delete: false});
+            nodes.push({id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, ipnet: networks[networks.length - 1].ip, delete: false});
             
           }
         }
@@ -75,11 +89,19 @@ export default {
 
       axios.get(`${apiLinks.autoScan.path}${apiLinks.autoScan.p1}${network}${apiLinks.autoScan.p2}${socket.id}`).then(response => {
         console.log(response.data);
-        nodes.forEach((element) => { if(element.vendor == null) { element.delete = true } })
-        if(nodes.length == 0){
+        let flagNetExist = false;
+        nodes.forEach((element) => { 
+          element.vendor == null ? element.delete = true : null 
+          element.ipnet == networks[networks.length - 1].ip && element.delete == false ? flagNetExist = true : null
+        })
+        if(flagNetExist == false){
+          console.log("pao");
           networks.pop();
+          console.log(networks.length);
+          networks.length > 0 ? console.log(networks[0].ip) : null;
         }
-        searchbtn.pop();
+        
+        finishedScan.pop();
       })
 
     }
@@ -92,7 +114,7 @@ export default {
       lengthNodes,
       addNode,
       socket,
-      searchbtn
+      finishedScan
     }
   }
 }
