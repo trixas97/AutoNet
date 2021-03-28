@@ -109,6 +109,9 @@ io.on('connection', (socket) => {
                                 aliveHost.vendor = "Cisco"
                                 console.log(aliveHost);                                    // Return Device from Fast script
                                 // io.to(socketid).emit('net-scan', aliveHost);
+                            }else{
+                            console.log("testttt");
+                            console.log(aliveHost);
                             }
                         }
                         io.to(socketid).emit('net-scan', aliveHost);

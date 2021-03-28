@@ -10,7 +10,7 @@
           <div class="form"><NewNetworkForm @add-node="addNode" v-bind:finishedScan="finishedScan"/></div>
           <div class="catalog">  
 
-      <NewNetworkCatalog v:bind :nodes="nodes" :networks="networks" v-bind:finishedScan="finishedScan"/></div>
+          <NewNetworkCatalog v:bind :nodes="nodes" :networks="networks" v-bind:finishedScan="finishedScan"/></div>
         </div>
 
     </div>
@@ -28,6 +28,9 @@ export default {
   components: {
     NewNetworkForm,
     NewNetworkCatalog
+  },
+  props: {
+    auto: {}
   },
   data() {
     const nodes = [
@@ -64,6 +67,7 @@ export default {
       });
 
       socket.on('net-scan',(data) => {
+        console.log(data);
         let flagExist = false;
         nodes.forEach(element => {
           if(element.ip == data.ip){

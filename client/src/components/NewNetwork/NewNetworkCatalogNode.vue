@@ -56,7 +56,19 @@ export default {
   height: 1fr;
   align-items: center;
   grid-template-columns: 1fr 2fr 2fr 2fr 1fr;
+  animation: createNode 0.4s ease;
+  animation-direction: alternate;
   
+  @keyframes createNode {
+    0% {
+      opacity: 0;
+      transform: translateY(20px)
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }    
+  }
 
 
   grid-template-areas: 
@@ -125,7 +137,7 @@ export default {
 
   .animation{
     animation: mymove 0.5s infinite;
-    animation-timing-function: linear;
+    animation-timing-function: ease;
     animation-direction: alternate;
   }
 
