@@ -38,9 +38,9 @@ export default {
     ];
     const networks = [];
     const apiLinks = {
-      server: "http://192.168.2.14:5000",
+      server: "http://192.168.1.7:5000",
       autoScan: {
-        path: "http://192.168.2.14:5000/api/devices?",
+        path: "http://192.168.1.7:5000/api/devices?",
         p1: "ip=",
         p2: "&id="
       }
@@ -192,18 +192,16 @@ export default {
           display: inline-block;
           position: relative;
           transition: 0.5s;
-          &:after {
-            content: '\00bb';
-            position: absolute;
-            opacity: 0;
-            top: 0;
-            right: -4em;
-            transition: 0.5s;
-          }
         }
         &:disabled {
           background-color: gray;
           cursor: not-allowed;
+          &:hover {
+            background-color: gray;
+          }
+        }
+        &:hover {
+          background-color: #3e8e41;
         }
       }
     }

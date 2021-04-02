@@ -1,13 +1,15 @@
 <template>
 <!-- <div v-bind:class="{'new-net-catalog-node': isActive, 'vendor-null': hasError}"> -->
 <div class="new-net-catalog-node" v-if="!node.delete">
+  <div class="info" @click="test">
     <img class="img" src="../../style/router.svg">
     <span class="ip">IP: <span class="value"> {{ node.ip }}</span></span>
     <span class="vendor" v-if="node.vendor!=null">Vendor: <span class="value"> {{ node.vendor }}</span></span>
     <span class="vendor animation" v-if="node.vendor==null">Vendor: <span class="value"> {{ node.vendor }}</span></span>
     <span class="mac" v-if="node.mac!=null">MAC: <span class="value"> {{ node.mac }}</span></span>
     <span class="mac animation" v-if="node.mac==null">MAC: <span class="value"> {{ node.mac }}</span></span>
-    <span class="check"><Checkbox ref="checkbox"/></span>
+  </div>
+  <span class="check"><Checkbox ref="checkbox"/></span>
 </div>
 </template>
 
@@ -25,6 +27,10 @@ export default {
   methods:{
     checkAll(value){
       this.$refs.checkbox.changeAll(value);
+    },
+    test(){
+      console.log("opalev");
+      this.$emit('testOpa', 'clicked')
     }
   }
 }
@@ -55,7 +61,7 @@ export default {
   width: 90%;
   height: 1fr;
   align-items: center;
-  grid-template-columns: 1fr 2fr 2fr 2fr 1fr;
+  grid-template-columns: 7fr 1fr;
   animation: createNode 0.4s ease;
   animation-direction: alternate;
   
@@ -72,43 +78,67 @@ export default {
 
 
   grid-template-areas: 
-    "img ip vendor mac check";
+    "info check";
+
+  .info {
+    display: grid;
+    grid-area: info;
+    grid-template-columns: 1fr 2fr 2fr 2fr;
+    align-items: center;
+    grid-gap: 0px;
+    grid-template-areas: 
+      "img ip vendor mac";
+    
+    img {
+      grid-area: img;
+      // background-color: lightsalmon;
+      // width: 4.1em;
+      display: flex;
+      // width: 4.1rem;
+      flex-grow: 1;
+      // width: 80%;
+      // height: 100%;
+    }
+
+    .ip {
+      grid-area: ip;
+      display: flex;
+      width: 100%;
+      // flex-shrink: 3;
+      // background-color: lightblue;
+      justify-content: center;
+      flex-grow: 1;
+      //  width: 1rem;
+      // padding: 0px;
+    }
+
+    .vendor {
+      grid-area: vendor;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      // background-color: lightgreen;
+      flex-grow: 1;
+    }
+
+    .mac {
+      grid-area: mac;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      // background-color: lightcoral;
+      flex-grow:1;
+    }
+
+    .value {
+      color: $accent;
+      font-weight: bold;
+    }
+  }
   
-  img {
-    grid-area: img;
-    // background-color: lightsalmon;
-    // width: 4.1em;
-    display: flex;
-    // width: 4.1rem;
-    flex-grow: 1;
-    // width: 80%;
-    // height: 100%;
-  }
-
-  .ip {
-    grid-area: ip;
-    display: flex;
-    width: 100%;
-    // flex-shrink: 3;
-    // background-color: lightblue;
-    justify-content: center;
-    flex-grow: 1;
-    //  width: 1rem;
-    // padding: 0px;
-  }
-
-  .vendor {
-    grid-area: vendor;
-    display: flex;
-    width: 100%;
-    justify-content: center;
 
 
-    // background-color: lightgreen;
-    flex-grow: 1;
 
-
-  }
 
 
   .check {
@@ -121,19 +151,7 @@ export default {
     flex-grow: 1;
   }
 
-  .mac {
-    grid-area: mac;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    // background-color: lightcoral;
-    flex-grow:1;
-  }
 
-  .value {
-    color: $accent;
-    font-weight: bold;
-  }
 
   .animation{
     animation: mymove 0.5s infinite;
@@ -163,43 +181,53 @@ export default {
 @media screen and (max-width: 768px) {
 
     .new-net-catalog-node {
-        padding-top: 0.5em;
-        height: 25%;
+      padding-top: 0.5em;
+      height: 25%;
+      display: grid;
+      margin-right: 0em;
+      margin-left: 0em;
+      width: 100%;
+      height: 1fr;
+      font-size: 1rem;
+      grid-gap: 0px;
+      grid-template-columns: 5.2fr 1fr;
+      grid-template-areas: 
+        "info check";
+
+      .info {
+        grid-area: info;
         display: grid;
-        margin-right: 0em;
-        margin-left: 0em;
-        width: 100%;
-        height: 1fr;
-        font-size: 1rem;
         grid-gap: 0px;
-        grid-template-columns: 1fr 0.2fr 2fr 2fr 1fr;
+        grid-template-columns: 1fr 0.2fr 2fr 2fr;
         grid-template-areas: 
-          "img . ip vendor check";
+          "img . ip vendor";
 
-    img {
-        grid-area: img;
-    }
+        img {
+            grid-area: img;
+        }
 
-    .ip {
-        grid-area: ip;
-        // width:1em;
-        // background-color: teal;
-    }
+        .ip {
+            grid-area: ip;
+            // width:1em;
+            // background-color: teal;
+        }
 
-    .vendor {
-        grid-area: vendor;
-    }
+        .vendor {
+            grid-area: vendor;
+        }
 
-    .mac {
-        grid-area: mac;
-        opacity: 0;
-        display: none;
-        
-    }
-    .value {
-        color: teal;
-        font-weight: bold;
-    }
+        .mac {
+            grid-area: mac;
+            opacity: 0;
+            display: none;
+            
+        }
+        .value {
+            font-weight: bold;
+        }
+      }
+
+    
   }
 }
 

@@ -6,10 +6,11 @@
       <span class="all"><span class="text">All</span><Checkbox class="checkbox" @changed="checkAllChange"/></span>
   </div>
   <div class="nodes">
-      <NewNetworkCatalogNode 
+      <NewNetworkCatalogNode
         v-for="node in nodes"
         :key="node.id"
         :node="node"
+        @testOpa="opaleakis"
         ref="nodesRef"
 
       />
@@ -69,6 +70,9 @@ export default {
           return `Hosts: ${count}`
         }
       }
+    },
+    opaleakis(){
+      console.log("clicked");
     }
   }
 }
