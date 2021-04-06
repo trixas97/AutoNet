@@ -10,7 +10,7 @@
         v-for="node in nodes"
         :key="node.id"
         :node="node"
-        @testOpa="opaleakis"
+        @userpass="userpassform"
         ref="nodesRef"
 
       />
@@ -71,8 +71,8 @@ export default {
         }
       }
     },
-    opaleakis(){
-      console.log("clicked");
+    userpassform(value){
+      this.$emit("userpass", value)
     }
   }
 }

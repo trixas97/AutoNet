@@ -1,18 +1,27 @@
 <template>
     <div id="newnetwork" class="newnetwork">
-        <div class="titlesubmit">
-          <div class="title">New Network</div>
-          <div class="submit">
-            <input type="button" value="Save" v-bind:disabled="nodes.length == 0 ? true : false" >
+      <div class="titlesubmit">
+        <div class="title">New Network</div>
+        <div class="submit">
+          <input type="button" value="Save" v-bind:disabled="nodes.length == 0 ? true : false" >
+        </div>
+      </div>
+      <div class="formcatalog">
+        <div class="form"><NewNetworkForm @add-node="addNode" v-bind:finishedScan="finishedScan"/></div>
+        <div class="catalog">  
+
+        <NewNetworkCatalog v:bind :nodes="nodes" :networks="networks" v-bind:finishedScan="finishedScan" @userpass="userpassform"/></div>
+      </div>
+      <div class="userpass-area" v-if="userpassvalue.state == 1">
+        <div class="userpass-form">
+          <span class="device-ip"><label class="device-ip-txt" for="device-ip"> {{userpassvalue.ip}}</label></span>
+          <span class="username"><label for="username">Username: </label><input v-model="userpassvalue.username" class="textForm" type="text"></span>
+          <span class="password"><label for="password">Password: </label><input v-model="userpassvalue.password" class="textForm" type="text"></span>
+          <div class="save-device">
+            <input type="button" @click="saveUserDevice" value="Save">
           </div>
         </div>
-        <div class="formcatalog">
-          <div class="form"><NewNetworkForm @add-node="addNode" v-bind:finishedScan="finishedScan"/></div>
-          <div class="catalog">  
-
-          <NewNetworkCatalog v:bind :nodes="nodes" :networks="networks" v-bind:finishedScan="finishedScan"/></div>
-        </div>
-
+      </div>
     </div>
 </template>
 
@@ -46,6 +55,7 @@ export default {
       }
     }
     const finishedScan = [];
+    const userpassvalue = { state: 0, ip: '', username: '', password: ''};
     let lengthNodes = 0;
     let socket = io(apiLinks.server);
 
@@ -80,12 +90,12 @@ export default {
           
           if(flagExist == false){
             lengthNodes++;
-            nodes.push({id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, ipnet: networks[networks.length - 1].ip, delete: false});
+            nodes.push({id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, ipnet: networks[networks.length - 1].ip, delete: false, checked: true});
           }
         }else{
           if( data.vendor == null && flagExist == false){
             lengthNodes++;
-            nodes.push({id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, ipnet: networks[networks.length - 1].ip, delete: false});
+            nodes.push({id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, ipnet: networks[networks.length - 1].ip, delete: false, checked: true});
             
           }
         }
@@ -118,7 +128,33 @@ export default {
       lengthNodes,
       addNode,
       socket,
+      userpassvalue,
       finishedScan
+    }
+  },
+  methods: {
+    async userpassform(value){
+      console.log(value);
+      this.userpassvalue.state = 1;
+      this.userpassvalue.ip = value;
+      await this.nodes.forEach(element => {
+        if(element.ip == this.userpassvalue.ip){
+          this.userpassvalue.username = element.username;
+          this.userpassvalue.password = element.passsword;
+        }
+      })
+      this.userpassvalue.username
+    },
+    async saveUserDevice(){
+      this.userpassvalue.state = 0;
+      await this.nodes.forEach(element => {
+        if(element.ip == this.userpassvalue.ip){
+          element.username = this.userpassvalue.username;
+          element.passsword = this.userpassvalue.password;
+        }
+      });
+      // this.userpassvalue.username = '';
+      // this.userpassvalue.password = '';
     }
   }
 }
@@ -223,6 +259,7 @@ export default {
       // align-self: flex-end;
     }
 
+
     .catalog {
       grid-area: catalog;
       flex-grow: 1;
@@ -233,9 +270,139 @@ export default {
       // background-color: blue;
     }
   }
+  .userpass-area {
+    // background-color: blue;
+    position:absolute;
+    width: 100%;
+    height: 50%;
+    display: grid;
+    align-items: center;
+    grid-gap: 0;
+    // grid-template-rows: 5% 70% 5%;
+    // background-color: blue;
+    grid-template-areas: 
+      ". . . . . . ." 
+      ". . . userpass-form . . ."
+      ". . . . . . .";
+    
+    .userpass-form {
+      grid-area: userpass-form;
+      background-color: white;
+      color: teal;
+      display: grid;
+      height: 100%;
+      border-radius: 4px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      // grid-template-rows: 1fr 2fr 2fr 2fr;
+      grid-template-areas: 
+      "device-ip"
+      "."
+      "username"
+      "password"
+      "save-device";
+      
+      .device-ip {
+        grid-area: device-ip;
+        align-items: center;
+        font-weight: bold;
+        color: white;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        background-color: teal;
+        display: flex;
+        justify-content: center;
+
+      }
+      .username {
+        grid-area: username;
+      }
+
+      .password {
+        grid-area: password;
+      }
+
+      .textForm {
+        height: 1fr;
+        width: 9.2em;
+        margin: 0px;
+        font-size: 1em;       
+        padding: 5px; 
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        // font-weight: bold;
+        color: $accent;
+        box-sizing: border-box;
+      }
 
 
+      .save-device {
+        grid-area: save-device;
+        // background-color: lightgreen;
+        display: grid;
+        // grid-template-columns: 1fr 1fr;
+        grid-template-areas: 
+        "input";
+        
+        input {
+          // justify-self: end;
+          justify-self: center;
+          grid-area: input;
+          width: 12em;
+          height: 3em;
+          // margin-top: 1.3em;
+          border-radius: 4px;
+          background-color: $accent;
+          border: none;
+          color: #FFFFFF;
+          transition: all 0.5s;
+          cursor: pointer;
+          padding: 5px;
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+          text: {
+            align: center;
+          }
+          font: {
+            size: 0.6em;
+            weight: bold;
+            family: Roboto;
+          }
+          span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+          }
+          &:disabled {
+            background-color: gray;
+            cursor: not-allowed;
+            &:hover {
+              background-color: gray;
+            }
+          }
+          &:hover {
+            background-color: #ab154c;
+          }
+        }
+      }
+
+      
+      
+
+        // .device-ip-txt {
+
+        // }
+      
+    }
+
+
+    
+    // align-self: center;
+  }
+
+  // background-color: green;
 }
+
+
 
 @media screen and (max-width: 1281px) {
   
@@ -282,6 +449,10 @@ export default {
         flex-grow: 1;
         margin-top: 1em;
       }
+    }
+
+    .userpass-area {
+      display: none;
     }
 
   }

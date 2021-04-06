@@ -1,7 +1,7 @@
 <template>
 <!-- <div v-bind:class="{'new-net-catalog-node': isActive, 'vendor-null': hasError}"> -->
 <div class="new-net-catalog-node" v-if="!node.delete">
-  <div class="info" @click="test">
+  <div class="info" @click="userpassform">
     <img class="img" src="../../style/router.svg">
     <span class="ip">IP: <span class="value"> {{ node.ip }}</span></span>
     <span class="vendor" v-if="node.vendor!=null">Vendor: <span class="value"> {{ node.vendor }}</span></span>
@@ -9,7 +9,7 @@
     <span class="mac" v-if="node.mac!=null">MAC: <span class="value"> {{ node.mac }}</span></span>
     <span class="mac animation" v-if="node.mac==null">MAC: <span class="value"> {{ node.mac }}</span></span>
   </div>
-  <span class="check"><Checkbox ref="checkbox"/></span>
+  <span class="check"><Checkbox ref="checkbox" @changed="changeCheck"/></span>
 </div>
 </template>
 
@@ -25,12 +25,15 @@ export default {
     node: { }
   },
   methods:{
+    changeCheck(value){
+      value == true ? this.node.checked = true : this.node.checked = false;
+    },
     checkAll(value){
+      value == true ? this.node.checked = true : this.node.checked = false;
       this.$refs.checkbox.changeAll(value);
     },
-    test(){
-      console.log("opalev");
-      this.$emit('testOpa', 'clicked')
+    userpassform(){
+      this.$emit('userpass', this.node.ip)
     }
   }
 }
@@ -81,6 +84,7 @@ export default {
     "info check";
 
   .info {
+    cursor: alias;
     display: grid;
     grid-area: info;
     grid-template-columns: 1fr 2fr 2fr 2fr;
