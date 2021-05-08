@@ -3,13 +3,16 @@
 <div class="new-net-catalog-node" v-if="!node.delete">
   <div class="info" @click="userpassform">
     <img class="img" src="../../style/router.svg">
-    <span class="ip">IP: <span class="value"> {{ node.ip }}</span></span>
-    <span class="vendor" v-if="node.vendor!=null">Vendor: <span class="value"> {{ node.vendor }}</span></span>
+    <span class="ip">IP: <span v-if="userPass!=true" class="value"> {{ node.ip }}</span><span v-else class="value" style="color: #05668d"> {{ node.ip }}</span></span>
+    <span class="vendor" v-if="node.vendor!=null && userPass!=true">Vendor: <span class="value"> {{ node.vendor }}</span></span>
     <span class="vendor animation" v-if="node.vendor==null">Vendor: <span class="value"> {{ node.vendor }}</span></span>
-    <span class="mac" v-if="node.mac!=null">MAC: <span class="value"> {{ node.mac }}</span></span>
+    <span class="mac" v-if="node.mac!=null && userPass!=true">MAC: <span class="value"> {{ node.mac }}</span></span>
     <span class="mac animation" v-if="node.mac==null">MAC: <span class="value"> {{ node.mac }}</span></span>
+    <span class="vendor" v-if="node.vendor!=null && userPass==true"><div class="input-container"><i class="fa fa-user icon"></i><input v-model="node.username" class="textForm" type="text" placeholder="Username"></div></span>
+    <span class="mac" v-if="node.mac!=null && userPass==true"><div class="input-container"><i class="fa fa-lock icon"></i><span></span><input v-model="node.password" class="textForm" type="text" placeholder="Password"></div></span>
   </div>
-  <span class="check"><Checkbox ref="checkbox" @changed="changeCheck"/></span>
+  <span v-if="userPass!=true" class="check"><Checkbox ref="checkbox" @changed="changeCheck"/></span>
+  <span v-if="userPass==true" class="check"><span class="icon-status"><i ref="iconStatus" v-bind:class="{'fa fa-check icon': finished && progress, 'fa fa-spinner fa-spin icon': !finished && progress}"></i></span></span>
 </div>
 </template>
 
@@ -22,7 +25,16 @@ export default {
     Checkbox
   },
   props: {
-    node: { }
+    node: { },
+    userPass: {type: Boolean}
+  },
+  data(){
+    let finished = false;
+    let progress = false;
+    return{
+      progress,
+      finished
+    }
   },
   methods:{
     changeCheck(value){
@@ -33,7 +45,18 @@ export default {
       this.$refs.checkbox.changeAll(value);
     },
     userpassform(){
-      this.$emit('userpass', this.node.ip)
+      console.log(this.$refs.iconStatus);
+      this.finished = true;
+      console.log("test");
+      // this.$emit('userpass', this.node);
+
+    },
+    changeProgress(value){
+      console.log("paaaaaaaaaaa");
+      this.progress = value;
+    },
+    changeStatus(value){
+      this.finished = value;
     }
   }
 }
@@ -41,6 +64,8 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../style/variables";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
 
 .new-net-catalog-node {
 //   background-color: $primarydark;
@@ -61,6 +86,7 @@ export default {
   color: #333;
   display: grid;
   grid-gap: 0px;
+
   width: 90%;
   height: 1fr;
   align-items: center;
@@ -133,6 +159,60 @@ export default {
       // background-color: lightcoral;
       flex-grow:1;
     }
+    .input-container {
+      display: -ms-flexbox; /* IE10 */
+      display: flex;
+      width: 100%;
+      // box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2), 0px 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+      .icon {
+        padding: 0.5em;
+        background: teal;
+        color: white;
+        min-width: 1em;
+        text-align: center;
+        box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2), 0px 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border-radius: 4px 0px 0px 4px;
+      }
+
+      .textForm {
+        height: 1fr;
+        width: 9.2em;
+        margin: 0px;
+        font-size: 1em;       
+        padding: 5px; 
+        border: 1px solid #ccc;
+        font-family: Roboto;
+        
+        border-radius: 0px 4px 4px 0px;
+        // box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2), 0px 6px 20px 0 rgba(0, 0, 0, 0.19);
+        font-weight: bold;
+        color: $accent;
+        box-sizing: border-box;
+        transition: all 0.25s ease;
+
+        &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+          color: teal;/* Firefox */
+          opacity:  0.4;
+        }
+
+        &::-ms-input-placeholder { /* Internet Explorer 10-11 */
+          color: teal;
+          opacity:  0.4;
+        }
+
+        &::-ms-input-placeholder { /* Microsoft Edge */
+          color: teal;
+          opacity:  0.4;
+        }
+        
+
+        &:focus {
+          box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2), 0px 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+      }
+    }
+    
 
     .value {
       color: $accent;
@@ -153,6 +233,17 @@ export default {
     height: 50%;
     // background-color: lightblue;
     flex-grow: 1;
+
+    .icon-status {
+      font-size: 2em;
+      .fa-check {
+        color: rgb(21, 190, 21);
+      }
+
+      .fa-spin {
+        color: $primarydark
+      }
+    }
   }
 
 

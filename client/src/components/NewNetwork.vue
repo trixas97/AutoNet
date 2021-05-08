@@ -3,14 +3,14 @@
       <div class="titlesubmit">
         <div class="title">New Network</div>
         <div class="submit">
-          <input type="button" value="Save" v-bind:disabled="nodes.length == 0 ? true : false" >
+          <router-link :to="{name: 'SaveDevices', params: {nodes: nodes}}"><input type="button" value="Next" v-bind:disabled="nodes.length == 0 ? true : false"  ></router-link>
         </div>
       </div>
       <div class="formcatalog">
         <div class="form"><NewNetworkForm @add-node="addNode" v-bind:finishedScan="finishedScan"/></div>
         <div class="catalog">  
-
-        <NewNetworkCatalog v:bind :nodes="nodes" :networks="networks" v-bind:finishedScan="finishedScan" @userpass="userpassform"/></div>
+          <NewNetworkCatalog v:bind :nodes="nodes" :networks="networks" v-bind:finishedScan="finishedScan" @userpass="userpassform"/>
+        </div>
       </div>
       <div class="userpass-area" v-if="userpassvalue.state == 1">
         <div class="userpass-form">
@@ -47,9 +47,9 @@ export default {
     ];
     const networks = [];
     const apiLinks = {
-      server: "http://192.168.1.7:5000",
+      server: "http://192.168.1.5:5000",
       autoScan: {
-        path: "http://192.168.1.7:5000/api/devices?",
+        path: `http://192.168.1.5:5000/api/devices?`,
         p1: "ip=",
         p2: "&id="
       }
@@ -136,11 +136,11 @@ export default {
     async userpassform(value){
       console.log(value);
       this.userpassvalue.state = 1;
-      this.userpassvalue.ip = value;
+      this.userpassvalue.ip = value.ip;
       await this.nodes.forEach(element => {
         if(element.ip == this.userpassvalue.ip){
           this.userpassvalue.username = element.username;
-          this.userpassvalue.password = element.passsword;
+          this.userpassvalue.password = element.password;
         }
       })
       this.userpassvalue.username
@@ -150,7 +150,7 @@ export default {
       await this.nodes.forEach(element => {
         if(element.ip == this.userpassvalue.ip){
           element.username = this.userpassvalue.username;
-          element.passsword = this.userpassvalue.password;
+          element.password = this.userpassvalue.password;
         }
       });
       // this.userpassvalue.username = '';
