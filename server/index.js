@@ -20,13 +20,15 @@ let io = socket(server, {
 });
 
 const authRoute = require("./routes/auth.js");
-const deviceFinder = require('./routes/api/device_find.js')(io);
+const nodesFinder = require('./routes/api/nodes_find.js')(io);
+const nodesSave = require('./routes/nodes.js');
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
 app.use('/user', authRoute);
-app.use('/api/devices', deviceFinder);
+app.use('/api/devices', nodesFinder);
+app.use('/nodesSave', nodesSave);
 
 mongoose.connect(
   process.env.DB_CONNECTION, { useUnifiedTopology: true, useNewUrlParser: true }, (err) => {
