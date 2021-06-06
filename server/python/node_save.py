@@ -8,13 +8,21 @@ cisco_881 = {
     'username': 'trixas',
     'password': 'trixas'
 }
-print('opa')
 
 net_connect = ConnectHandler(**cisco_881)
-print('ela')
 
-interfaces = net_connect.send_command('show ip int brief', use_textfsm=True)
-print(interfaces[0]['intf'])
+interfaces = net_connect.send_command('show interfaces', use_textfsm=True)
+version = net_connect.send_command('show version', use_textfsm=True)
 
-print(json.dumps(interfaces))
+node = {
+    "name": version[0]['hostname'],
+    "model": version[0]['hardware'][0],
+    "interfaces": interfaces,
+    "serial": version[0]['serial'][0]
+}
+
+
+# print(interfaces[0])
+
+print(json.dumps(node))
 sys.stdout.flush()

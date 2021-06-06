@@ -21,14 +21,14 @@ let io = socket(server, {
 
 const authRoute = require("./routes/auth.js");
 const nodesFinder = require('./routes/api/nodes_find.js')(io);
-const nodesSave = require('./routes/nodes.js');
+const nodesSave = require('./routes/api/nodes_save.js');
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
 app.use('/user', authRoute);
 app.use('/api/devices', nodesFinder);
-app.use('/nodesSave', nodesSave);
+app.use('/api/nodesSave', nodesSave);
 
 mongoose.connect(
   process.env.DB_CONNECTION, { useUnifiedTopology: true, useNewUrlParser: true }, (err) => {
