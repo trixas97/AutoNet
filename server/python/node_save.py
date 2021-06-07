@@ -5,8 +5,8 @@ import sys
 cisco_881 = {
     'device_type': 'cisco_ios',
     'host':   sys.argv[1],
-    'username': 'trixas',
-    'password': 'trixas'
+    'username': sys.argv[2],
+    'password': sys.argv[3]
 }
 
 net_connect = ConnectHandler(**cisco_881)

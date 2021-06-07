@@ -3,7 +3,7 @@
       <div class="titlesubmit">
         <div class="title">New Network</div>
         <div class="submit">
-          <router-link :to="{name: 'SaveDevices', params: {nodes: nodes}}"><input type="button" value="Next" v-bind:disabled="nodes.length == 0 ? true : false"  ></router-link>
+          <router-link :to="{name: 'SaveDevices', params: {nodes: nodes, socket: socket}}"><input type="button" value="Next" v-bind:disabled="nodes.length == 0 ? true : false"  ></router-link>
         </div>
       </div>
       <div class="formcatalog">

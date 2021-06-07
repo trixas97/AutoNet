@@ -7,6 +7,14 @@ const nodeSchema = new mongoose.Schema({
         required: true,
         ref: 'users'
     },
+    username: {
+        type: String,
+        required: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
     name: {
         type: String,
         required: true,

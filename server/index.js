@@ -21,7 +21,7 @@ let io = socket(server, {
 
 const authRoute = require("./routes/auth.js");
 const nodesFinder = require('./routes/api/nodes_find.js')(io);
-const nodesSave = require('./routes/api/nodes_save.js');
+const nodesSave = require('./routes/api/nodes_save.js')(io);
 
 // Middleware
 app.use(bodyParser.json());
