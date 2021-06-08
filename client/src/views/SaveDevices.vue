@@ -36,32 +36,34 @@ export default {
     // const route = useRoute();
     const nodes = this.$route.params.nodes;
     let socket = this.$route.params.socket;
-
+    let url = 'http://192.168.1.5:5000/api/nodesSave';
+     
     socket.on('save-nodes',(data) => {
-      console.log(data, + "[OK]");
+      console.log('[OK]');
+      console.log(data);
     });
 
-
-    // const apiLinks = {
-    //   server: "http://192.168.1.5:5000",
-    //   autoScan: {
-    //     path: `http://192.168.1.5:5000/api/devices?`,
-    //     p1: "ip=",
-    //     p2: "&id="
-    //   }
-    // }
-
-
     return {
-      nodes
+      nodes,
+      socket,
+      url
     }
   },
   methods:{
     saveDevices(){
-      console.log("eeeeee");
-      axios.post("http://192.168.1.5:5000/api/nodesSave?ip1=192.168.78.131&ip2=192.168.78.133&id="+  this.$route.params.socket.id +"&ip3=192.168.78.132&ip4=192.168.78.134&ip1userpass=trixas trixas&ip2userpass=trixas trixas&ip3userpass=trixas trixas&ip4userpass=trixas trixas").then(response => {
+      let params = {}
+
+      for(let i=0; i < this.nodes.length; i++){
+        let param = `node${i}`;
+        params[param] = `${this.nodes[i].ip} ${this.nodes[i].username} ${this.nodes[i].password}`;
+      }
+
+      params.id = this.$route.params.socket.id;
+
+      axios.post(this.url, params).then(response => {
         console.log(response.data);
       })
+      
 
       this.$refs.nodesRef.forEach(element => {
         element.changeProgress(true);

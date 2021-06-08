@@ -11,45 +11,63 @@ let hostLength = 0;
 io.on('connection', (socket) => {
 
     router.post('/', (req,res) => {
-        console.log(req.query.id);
+        console.log(req.body);
+        console.log(req.body.id);
         let nodes = [];
         let hosts = [];
-        for(const key in req.query){
-            if(ipValid.isV4Format(req.query[key]))
-                hosts.push({ip: req.query[key], username: req.query[key+'userpass'].split(' ')[0], password: req.query[key+'userpass'].split(' ')[1]});                        
+        let socket = '';
+        for(const key in req.body){
+            try{
+                socket = req.body.id;
+                console.log(key + ": " + req.body[key]);
+                if(ipValid.isV4Format(req.body[key].split(' ')[0]))
+                    hosts.push({ip: req.body[key].split(' ')[0], username: req.body[key].split(' ')[1], password: req.body[key].split(' ')[2]});
+            }catch(err) {
+                res.json({ message: err});
+            }                     
         }
+        
 
         hostLength = hosts.length;
+
+        hostLength == 0 ? res.json({ message: 'Bad request'}) : console.log('');
         for(let i=0; i < hosts.length; i++){
             console.log(hosts[i]);
-            saveNodes(hosts[i], res, nodes);
+            saveNodes(hosts[i], res, nodes, socket);
         }     
     });
 
-    saveNodes = async (host, res, nodes) => {
+    saveNodes = async (host, res, nodes, socket) => {
         let node = {};
         node = await getNodeInfo(host);
-        const nodeDb = new Node({
-            user: '60aa9e031c1d653434fcf352',
-            username: host.username,
-            password: host.password,
-            name: node.name,
-            vendor: 'Cisco',
-            type: 'Router',
-            model: node.model,
-            interfaces: node.interfaces
-        });
+        if(node != null){
+            const nodeDb = new Node({
+                user: '60aa9e031c1d653434fcf352',
+                username: host.username,
+                password: host.password,
+                name: node.name,
+                vendor: 'Cisco',
+                type: 'Router',
+                model: node.model,
+                interfaces: node.interfaces
+            });
 
-        try{
-            const savedNode = await nodeDb.save();
-            nodes.push(savedNode);
-            hostLength--
-            console.log("hostLength " + hostLength);
-            if(hostLength == 0){
-                res.send(nodes);
+            try{
+                const savedNode = await nodeDb.save();
+                nodes.push(savedNode);
+                hostLength--;
+                io.to(socket).emit('save-nodes', savedNode);
+                console.log("hostLength " + hostLength);
+
+            }catch (err){
+                res.json({ message: err});
             }
-        }catch (err){
-            res.json({ message: err});
+        }else{
+            hostLength--
+        }
+
+        if(hostLength == 0){
+            nodes.length != 0 ? res.send(nodes) : res.json({ message: "No found devices"});
         }
     }
 

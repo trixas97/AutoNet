@@ -62,22 +62,22 @@ export default {
     async function addNode(network){
       finishedScan.push(false);
       socket.on('net-length',(data) => {
-        console.log("size networks " + networks.length);
+        // console.log("size networks " + networks.length);
         let netExistFlag = false;
         if(networks.length == 0){
-          console.log("first");
+          // console.log("first");
           networks.push({ip: network, size: data});
         }else {
-          console.log("second+");
+          // console.log("second+");
           networks.forEach(element => { element.ip == network ? netExistFlag = true : null});
           netExistFlag == false ? networks.push({ip: network, size: data}) : null;
         }
         // networks[networks.length-1].size = data
-        console.log(data);
+        // console.log(data);
       });
 
       socket.on('net-scan',(data) => {
-        console.log(data);
+        // console.log(data);
         let flagExist = false;
         nodes.forEach(element => {
           if(element.ip == data.ip){
@@ -105,16 +105,29 @@ export default {
         console.log(response.data);
         let flagNetExist = false;
         nodes.forEach((element) => { 
+          // console.log(element);
+
           element.vendor == null ? element.delete = true : null 
           element.ipnet == networks[networks.length - 1].ip && element.delete == false ? flagNetExist = true : null
+
+          if(element.delete == true){
+            const index = nodes.indexOf(element);
+            if (index > -1) {
+              nodes.splice(index, 1);
+            }
+          }
         })
+        // console.log("Removed");
+
         if(flagNetExist == false){
-          console.log("pao");
+          // console.log("pao");
           networks.pop();
-          console.log(networks.length);
-          networks.length > 0 ? console.log(networks[0].ip) : null;
+          // console.log(networks.length);
+          // networks.length > 0 ? console.log(networks[0].ip) : null;
         }
-        
+        nodes.forEach((element) => { 
+          console.log(element);
+        })
         finishedScan.pop();
       })
 
@@ -134,7 +147,7 @@ export default {
   },
   methods: {
     async userpassform(value){
-      console.log(value);
+      // console.log(value);
       this.userpassvalue.state = 1;
       this.userpassvalue.ip = value.ip;
       await this.nodes.forEach(element => {
