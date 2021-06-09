@@ -10,6 +10,7 @@
         v-for="node in nodes"
         :key="node.id"
         :node="node"
+        :checked="true"
         @userpass="userpassform"
         ref="nodesRef"
 

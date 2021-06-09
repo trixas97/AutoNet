@@ -1,6 +1,6 @@
 <template>
 <!-- <div v-bind:class="{'new-net-catalog-node': isActive, 'vendor-null': hasError}"> -->
-<div class="new-net-catalog-node" v-if="!node.delete">
+<div class="new-net-catalog-node" v-if="!node.delete && checked">
   <div class="info" @click="userpassform">
     <img class="img" src="../../style/router.svg">
     <span class="ip">IP: <span v-if="userPass!=true" class="value"> {{ node.ip }}</span><span v-else class="value" style="color: #05668d"> {{ node.ip }}</span></span>
@@ -12,7 +12,7 @@
     <span class="mac" v-if="node.mac!=null && userPass==true"><div class="input-container"><i class="fa fa-lock icon"></i><span></span><input v-model="node.password" class="textForm" type="text" placeholder="Password"></div></span>
   </div>
   <span v-if="userPass!=true" class="check"><Checkbox ref="checkbox" @changed="changeCheck"/></span>
-  <span v-if="userPass==true" class="check"><span class="icon-status"><i ref="iconStatus" v-bind:class="{'fa fa-check icon': finished && progress, 'fa fa-spinner fa-spin icon': !finished && progress}"></i></span></span>
+  <span v-if="userPass==true" class="check"><span class="icon-status"><i ref="iconStatus" v-bind:class="{'fa fa-check icon': finished==1 && progress, 'fa fa-spinner fa-spin icon': finished==0 && progress, 'fa fa-times icon': finished==2 && progress}"></i></span></span>
 </div>
 </template>
 
@@ -26,10 +26,11 @@ export default {
   },
   props: {
     node: { },
-    userPass: {type: Boolean}
+    userPass: {type: Boolean},
+    checked: {type: Boolean}
   },
   data(){
-    let finished = false;
+    let finished = 0;
     let progress = false;
     return{
       progress,
@@ -45,14 +46,15 @@ export default {
       this.$refs.checkbox.changeAll(value);
     },
     userpassform(){
-      console.log(this.$refs.iconStatus);
-      this.finished = true;
-      console.log("test");
-      // this.$emit('userpass', this.node);
+      // console.log(this.$refs.iconStatus);
+      // this.finished = true;
+      this.$emit('userpass', this.node);
 
     },
+    changeFinished(value){
+      this.finished = value;
+    },
     changeProgress(value){
-      console.log("paaaaaaaaaaa");
       this.progress = value;
     },
     changeStatus(value){
@@ -242,6 +244,10 @@ export default {
 
       .fa-spin {
         color: $primarydark
+      }
+
+      .fa-times {
+        color: rgb(221, 81, 81);
       }
     }
   }

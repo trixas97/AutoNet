@@ -107,7 +107,7 @@ export default {
         nodes.forEach((element) => { 
           // console.log(element);
 
-          element.vendor == null ? element.delete = true : null 
+          element.vendor != 'Cisco' ||  element.vendor == null? element.delete = true : null 
           element.ipnet == networks[networks.length - 1].ip && element.delete == false ? flagNetExist = true : null
 
           if(element.delete == true){

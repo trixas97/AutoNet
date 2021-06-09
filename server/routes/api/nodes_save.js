@@ -56,13 +56,18 @@ io.on('connection', (socket) => {
                 const savedNode = await nodeDb.save();
                 nodes.push(savedNode);
                 hostLength--;
-                io.to(socket).emit('save-nodes', savedNode);
+                let sendNode = {ip: host.ip, messageState: 1}
+                io.to(socket).emit('save-nodes', sendNode);
                 console.log("hostLength " + hostLength);
 
             }catch (err){
+                let sendNode = {ip: host.ip, messageState: 2}
+                io.to(socket).emit('save-nodes', sendNode);
                 res.json({ message: err});
             }
         }else{
+            let sendNode = {ip: host.ip, messageState: 2}
+            io.to(socket).emit('save-nodes', sendNode);
             hostLength--
         }
 

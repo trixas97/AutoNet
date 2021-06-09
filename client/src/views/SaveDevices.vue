@@ -9,12 +9,13 @@
     </div>
 
     <div class=nodes>
+      <!-- @userpass="userpassform_open" -->
       <NewNetworkCatalogNode 
         v-for="node in nodes"
+        :checked="node.checked"
         :key="node.id"
         :node="node"
         :userPass="true"
-        @userpass="userpassform_open"
         ref="nodesRef"
       />
     </div>
@@ -39,8 +40,11 @@ export default {
     let url = 'http://192.168.1.5:5000/api/nodesSave';
      
     socket.on('save-nodes',(data) => {
+      this.$refs.nodesRef.forEach(element => {
+        if(element.node.ip == data.ip)
+          element.changeFinished(data.messageState);
+      });
       console.log('[OK]');
-      console.log(data);
     });
 
     return {
@@ -61,7 +65,7 @@ export default {
       params.id = this.$route.params.socket.id;
 
       axios.post(this.url, params).then(response => {
-        console.log(response.data);
+        console.log("Response: " + response.data);
       })
       
 
