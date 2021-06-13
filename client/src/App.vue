@@ -23,18 +23,23 @@ export default {
 * {
   margin: 0;
   padding: 0;
+  height: 100%;
   #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
+    height: 100%;
     
     .container {
+      height: 100%;
       display: grid;
       grid-gap: 10px;
+      grid-template-rows: 0.06fr 0.4fr 10fr;
       grid-template-areas: 
         "navbar"
+        "."
         "view";
       .navbar {
         grid-area: navbar;
@@ -44,13 +49,14 @@ export default {
       }
       .view {
         grid-area: view;
-        margin-top: 1.5em;
-        height: 1fr;
+        // margin-top: 1.5em;
+        height: 100%;
       }
     }
     .container > div {
       text-align: center;
       font-size: 25px;
+      height: 100%;
       color: white;
     }
   }
