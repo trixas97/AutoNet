@@ -81,6 +81,7 @@ io.on('connection', (socket) => {
         return new Promise(resolve => {
             let shell = new PythonShell('server/python/node_save.py', {mode: 'json', args: [host.ip, host.username, host.password]});
             shell.on('message', function (message) {
+                console.log(message);
                 resolve(message);
             });
         })

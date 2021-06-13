@@ -1,17 +1,17 @@
 <template>
   <div class="topology">
     <img 
-        v-for="node in 10"
+        v-for="node in nodesSize"
         :key="node"
         ref="nodeImg"
         src="@/style/_router.svg" 
         alt="">
     <label        
-        v-for="node in 10"
+        v-for="node in nodesSize"
         :key="'NodeLabel' + node"
         ref="nodeLabel"
         alt="">R{{node}}</label>
-    <input @click="newLink" type="button">
+    <input @click="newNodes" type="button">
   </div>
 </template>
 
@@ -29,31 +29,18 @@ export default {
     data(){
         let nodes = [];
         let links = [];
+        let nodesSize = 0;
         return {
             nodes,
-            links
+            links,
+            nodesSize
         }
     },
     methods:{
         elementsInit(){
             document.onreadystatechange = () => {
                 if (document.readyState == "complete") {
-                    console.log('Page completed with image and files!')
-                    // fetch to next page or some code
-                    let nodeifs= [{
-                        interface: ['G0/0', 'G0/1', 'G0/2'], 
-                        status: ['down','down', 'down']
-                    }];
-                    nodeifs[1] = {
-                        interface: ['G0/3', 'G0/4', 'G0/5'], 
-                        status: ['up','up', 'up']
-                    };
-                    
-                    for(let i=0; i < 10; i++){
-                        this.nodes.push(new NetNode(this.$refs.nodeImg[i], this.$refs.nodeLabel[i], [], nodeifs));
-                        this.nodes[i].labelPosition();
-                    }
-                    
+                    console.log("ok");
                 }
             }
         },
@@ -69,6 +56,22 @@ export default {
 
             this.nodes[start].dragLink(this.nodes[start].links);
             this.nodes[end].dragLink(this.nodes[end].links);
+        },
+        newNodes(){
+            this.nodesSize++;
+            let nodeifs= [{
+                interface: ['G0/0', 'G0/1', 'G0/2'], 
+                status: ['down','down', 'down']
+            }];
+            nodeifs[1] = {
+                interface: ['G0/3', 'G0/4', 'G0/5'], 
+                status: ['up','up', 'up']
+            };
+            console.log(this.$refs.nodeImg[1]);
+            // for(let i=0; i < 10; i++){
+                this.nodes.push(new NetNode(this.$refs.nodeImg[0], this.$refs.nodeLabel[0], [], nodeifs));
+                this.nodes[0].labelPosition();
+            // }
         }
     },
     mounted(){

@@ -47,9 +47,9 @@ export default {
     ];
     const networks = [];
     const apiLinks = {
-      server: "http://192.168.1.5:5000",
+      server: "http://192.168.1.7:5000",
       autoScan: {
-        path: `http://192.168.1.5:5000/api/devices?`,
+        path: `http://192.168.1.7:5000/api/devices?`,
         p1: "ip=",
         p2: "&id="
       }

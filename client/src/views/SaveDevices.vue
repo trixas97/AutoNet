@@ -37,7 +37,7 @@ export default {
     // const route = useRoute();
     const nodes = this.$route.params.nodes;
     let socket = this.$route.params.socket;
-    let url = 'http://192.168.1.5:5000/api/nodesSave';
+    let url = 'http://192.168.1.7:5000/api/nodesSave';
      
     socket.on('save-nodes',(data) => {
       this.$refs.nodesRef.forEach(element => {
@@ -65,7 +65,7 @@ export default {
       params.id = this.$route.params.socket.id;
 
       axios.post(this.url, params).then(response => {
-        console.log("Response: " + response.data);
+        console.log(response.data);
       })
       
 
