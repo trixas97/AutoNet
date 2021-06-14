@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="app">
-    <div class="container">
-      <NavBar/>
+    <div v-bind:class="{'container': this.$route.name != 'Login'}">
+      <NavBar v-if="this.$route.name != 'Login'"/>
       <router-view class="view"/>
     </div>
   </div>
@@ -13,6 +13,14 @@ export default {
   name: 'App',
   components: {
     NavBar
+  },
+  data() {
+    // isLogin(){
+      let isLogin = this.$route.name != 'Login';
+      return {
+        isLogin
+      }
+    // }
   }
 }
 </script>
