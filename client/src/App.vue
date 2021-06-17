@@ -13,14 +13,6 @@ export default {
   name: 'App',
   components: {
     NavBar
-  },
-  data() {
-    // isLogin(){
-      let isLogin = this.$route.name != 'Login';
-      return {
-        isLogin
-      }
-    // }
   }
 }
 </script>
