@@ -7,9 +7,9 @@
         </div>
       </div>
       <div class="formcatalog">
-        <div class="form"><NewNetworkForm @add-node="addNode" v-bind:finishedScan="finishedScan"/></div>
+        <div class="form"><NewNetworkForm ref="formTest" @add-node="addNode" :finishedScan="finishedScan"/></div>
         <div class="catalog">  
-          <NewNetworkCatalog v:bind :nodes="nodes" :networks="networks" v-bind:finishedScan="finishedScan" @userpass="userpassform"/>
+          <NewNetworkCatalog v:bind :nodes="nodes" :finishedScan="finishedScan" :networks="networks" @userpass="userpassform"/>
         </div>
       </div>
       <div class="userpass-area" v-if="userpassvalue.state == 1">
@@ -28,9 +28,11 @@
 <script>
 import NewNetworkForm from './NewNetwork/NewNetworkForm.vue'
 import NewNetworkCatalog from './NewNetwork/NewNetworkCatalog.vue'
-// import {reactive} from 'vue'
+// import { mount } from '@vue/test-utils'
+import { useStore } from 'vuex';
 import io from 'socket.io-client'
 import axios from 'axios'
+import { computed } from '@vue/runtime-core';
 export default {
 
   name: 'NewNetwork',
@@ -41,11 +43,28 @@ export default {
   props: {
     auto: {}
   },
-  data() {
-    const nodes = [
-      // { id: 1, ip: "192.168.15.1", vendor: "Cisco", mac: "AA:AA:AA:AA:AA:AA" }
-    ];
-    const networks = [];
+  setup() {
+    let self = this;
+    const store = useStore();
+    // const nodes = [
+    //   // { id: 1, ip: "192.168.15.1", vendor: "Cisco", mac: "AA:AA:AA:AA:AA:AA" }
+    // ];
+
+    const storeState = 'NewNetwork/';
+    const storeActions = {
+      nodes: `${storeState}getNodes`,
+      networks: `${storeState}getNetworks`,
+      addNode: `${storeState}addNode`,
+      deleteNode: `${storeState}deleteNode`,
+      addNetwork: `${storeState}addNetwork`,
+      deleteNetwork: `${storeState}deleteNetwork`,
+      finishedScan: `${storeState}setFinishedScan`
+    }
+    const finishedScan = computed(() => store.state.NewNetwork.finishedScan);
+    const nodes = computed(() => store.getters[storeActions.nodes]).value;
+    const networks = computed(() => store.getters[storeActions.networks]).value;
+
+    
     const apiLinks = {
       server: "http://192.168.1.7:5000",
       autoScan: {
@@ -54,30 +73,27 @@ export default {
         p2: "&id="
       }
     }
-    const finishedScan = [];
+
+    
     const userpassvalue = { state: 0, ip: '', username: '', password: ''};
     let lengthNodes = 0;
     let socket = io(apiLinks.server);
 
     async function addNode(network){
-      finishedScan.push(false);
+
+      store.dispatch(storeActions.finishedScan, false);
       socket.on('net-length',(data) => {
-        // console.log("size networks " + networks.length);
         let netExistFlag = false;
         if(networks.length == 0){
-          // console.log("first");
-          networks.push({ip: network, size: data});
+          store.dispatch(storeActions.addNetwork, {ip: network, size: data});
         }else {
-          // console.log("second+");
           networks.forEach(element => { element.ip == network ? netExistFlag = true : null});
-          netExistFlag == false ? networks.push({ip: network, size: data}) : null;
+
+          netExistFlag == false ? store.dispatch(storeActions.addNetwork,{ip: network, size: data}) : null;
         }
-        // networks[networks.length-1].size = data
-        // console.log(data);
       });
 
       socket.on('net-scan',(data) => {
-        // console.log(data);
         let flagExist = false;
         nodes.forEach(element => {
           if(element.ip == data.ip){
@@ -90,12 +106,12 @@ export default {
           
           if(flagExist == false){
             lengthNodes++;
-            nodes.push({id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, ipnet: networks[networks.length - 1].ip, delete: false, checked: true});
+            store.dispatch(storeActions.addNode, {id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, ipnet: networks[networks.length - 1].ip, delete: false, checked: true});
           }
         }else{
           if( data.vendor == null && flagExist == false){
             lengthNodes++;
-            nodes.push({id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, ipnet: networks[networks.length - 1].ip, delete: false, checked: true});
+            store.dispatch(storeActions.addNode, {id: lengthNodes + 1, ip: data.ip, vendor: data.vendor, mac: data.mac, ipnet: networks[networks.length - 1].ip, delete: false, checked: true});
             
           }
         }
@@ -113,22 +129,16 @@ export default {
           if(element.delete == true){
             const index = nodes.indexOf(element);
             if (index > -1) {
-              nodes.splice(index, 1);
+              store.dispatch(storeActions.deleteNode, index);
             }
           }
         })
         // console.log("Removed");
 
-        if(flagNetExist == false){
-          // console.log("pao");
-          networks.pop();
-          // console.log(networks.length);
-          // networks.length > 0 ? console.log(networks[0].ip) : null;
+        if(flagNetExist == false){         
+          store.dispatch(storeActions.deleteNetwork); 
         }
-        nodes.forEach((element) => { 
-          console.log(element);
-        })
-        finishedScan.pop();
+        store.dispatch(storeActions.finishedScan, true);
       })
 
     }
@@ -142,6 +152,9 @@ export default {
       addNode,
       socket,
       userpassvalue,
+      self,
+      store,
+      storeActions,
       finishedScan
     }
   },
@@ -168,6 +181,11 @@ export default {
       });
       // this.userpassvalue.username = '';
       // this.userpassvalue.password = '';
+    }
+  },
+  computed:{
+    testSg(){
+      return this.finishedScan;
     }
   }
 }

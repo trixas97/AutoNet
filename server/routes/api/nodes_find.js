@@ -110,7 +110,6 @@ io.on('connection', (socket) => {
                                 console.log(aliveHost);                                    // Return Device from Fast script
                                 // io.to(socketid).emit('net-scan', aliveHost);
                             }else{
-                            console.log("testttt");
                             console.log(aliveHost);
                             }
                         }

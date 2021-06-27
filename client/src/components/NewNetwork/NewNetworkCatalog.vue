@@ -2,7 +2,7 @@
 <div class="new-net-catalog">
   <div class="info">
       <span class="network">{{ infoNet() }}</span>
-      <span class="ips">{{ infoHostsNumber() }} <i v-if="finishedScan.length > 0 ? true : false" class="fa fa-cog fa-spin fa-lg fa-fw"></i></span>
+      <span class="ips">{{ infoHostsNumber() }} <i v-if="!finishedScan" class="fa fa-cog fa-spin fa-lg fa-fw"></i></span>
       <span class="all"><span class="text">All</span><Checkbox class="checkbox" @changed="checkAllChange"/></span>
   </div>
   <div class="nodes">
@@ -21,10 +21,9 @@
 </template>
 
 <script>
-// import { reactive } from 'vue';
+
 import NewNetworkCatalogNode from './NewNetworkCatalogNode.vue'
 import Checkbox from '../checkbox.vue'
-// import { toRef } from 'vue'
 export default {
   name: 'NewNetwork',
   components: {
@@ -32,13 +31,15 @@ export default {
     Checkbox
   },
   props: {
-    nodes: {
-      type: Array
-    },
     networks: {
       type: Array
     },
-    finishedScan:{}
+    nodes: {
+      type: Array
+    },
+    finishedScan: {
+      type: Boolean
+    }
   },
   methods: {
     checkAllChange(value){

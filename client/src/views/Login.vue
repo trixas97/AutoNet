@@ -13,7 +13,7 @@
 
             <!-- <input class="username" type="text"> -->
             <span class="password">
-               <span class="icon"><i class="fa fa-lock fa-2x"></i></span><input class="password-txt" id="age" type="text" placeholder="Password">
+               <span class="icon"><i class="fa fa-lock fa-2x"></i></span><input class="password-txt" id="age" type="password" placeholder="Password">
             </span>
             <div class="btn-div">
                 <button class="btn" style="vertical-align:middle" ><span>Login</span></button>  
@@ -39,7 +39,6 @@ export default {
         height: 100%;
         width: 100%;
         display: grid;
-
         grid-template-columns: 1fr 1fr;
         grid-template-areas: 
         "img form";

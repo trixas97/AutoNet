@@ -1,12 +1,10 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import NewNetworkAuto from '@/views/NewNetworkAuto.vue'
 import NewNetworkManual from '@/views/NewNetworkManual.vue'
 import SaveDevices from '@/views/SaveDevices.vue'
 import Topology from '@/views/Topology.vue'
 import Login from '@/views/Login.vue'
 
-Vue.use(VueRouter)
 
 const routes = [
   {
@@ -40,9 +38,8 @@ const routes = [
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+const router = createRouter({
+  history: createWebHistory(),
   routes
 })
 

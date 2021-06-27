@@ -7,32 +7,41 @@
     <input v-model="mask" type="text" class="MaskText" placeholder="Mask">
   </div>
   <div class="search-div">
-      <button class="search" style="vertical-align:middle" v-on:click="createNode" v-bind:disabled="finishedScan.length > 0 ? true : false"><span class="icon" v-if="finishedScan.length > 0 ? false : true">Search </span><i v-if="finishedScan.length > 0 ? true : false" class="fa fa-refresh fa-spin fa-lg fa-fw"></i></button>  
+      <button ref="btn" class="search" style="vertical-align:middle" v-on:click="createNode" v-bind:disabled="!finishedScan"><span class="icon" v-if="finishedScan">Search </span><i v-if="!finishedScan" class="fa fa-refresh fa-spin fa-lg fa-fw"></i></button>  
   </div>
 </div>
 </template>
 
 <script>
 // import { reactive } from 'vue';
+// import { computed } from 'vue';
+import { useStore } from 'vuex';
 export default {
-  props: {
-    finishedScan: { }
+  props:{
+    finishedScan:{
+      Type: Boolean
+    }
   },
-  data(){
+  setup(props,ctx){
     let network =""
     let mask = ""
+    const store = useStore();
+    console.log(props.finishedScan);
+    
+
+    function createNode(){
+      console.log(`${this.network}/${this.mask}`);
+      ctx.emit('add-node', `${this.network}/${this.mask}`);
+    }
+
 
     return {
       network,
-      mask
-    }
-  },
-  methods:{
-      createNode(){
-      this.$emit('add-node', `${this.network}/${this.mask}`);
+      mask,
+      createNode,
+      store
     }
   }
-
 }
 </script>
 

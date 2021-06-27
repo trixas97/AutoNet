@@ -18,7 +18,6 @@
 
 <script>
 import Checkbox from '../checkbox.vue'
-// import {  computed } from 'vue'
 export default {
   name: 'NewNetworkCatalogNode',
   components: {

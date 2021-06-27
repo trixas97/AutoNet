@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="app">
-    <div v-bind:class="{'container': this.$route.name != 'Login'}">
-      <NavBar v-if="this.$route.name != 'Login'"/>
+    <div v-bind:class="{'container': $route.name != 'Login'}">
+      <NavBar v-if="$route.name != 'Login'" />
       <router-view class="view"/>
     </div>
   </div>
@@ -30,6 +30,7 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
+    
     height: 100%;
     
     .container {
