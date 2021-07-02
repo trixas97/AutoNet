@@ -2,7 +2,7 @@ import { createStore } from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import { NewNetworkModule } from './NewNetwork';
 import { UserModule } from './User';
-
+import * as Cookies from "js-cookie";
 
 export default createStore({
   state: {},
@@ -19,7 +19,13 @@ export default createStore({
   },
 
   plugins:[
-    createPersistedState()
+    createPersistedState({
+      storage: {
+        getItem: (key) => Cookies.get(key),
+        setItem: (key, value) => Cookies.set(key, value, { secure: true }),
+        removeItem: (key) => Cookies.remove(key),
+      }
+    })
   ]
 
 })
