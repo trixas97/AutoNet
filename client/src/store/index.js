@@ -1,5 +1,8 @@
 import { createStore } from 'vuex'; 
+import createPersistedState from 'vuex-persistedstate';
 import { NewNetworkModule } from './NewNetwork';
+import { UserModule } from './User';
+
 
 export default createStore({
   state: {},
@@ -11,7 +14,12 @@ export default createStore({
   actions: {},
 
   modules: {
-    NewNetwork: NewNetworkModule
-  }
+    NewNetwork: NewNetworkModule,
+    User: UserModule
+  },
+
+  plugins:[
+    createPersistedState()
+  ]
 
 })

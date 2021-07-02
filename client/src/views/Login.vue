@@ -16,7 +16,7 @@
                <span class="icon"><i class="fa fa-lock fa-2x"></i></span><input class="password-txt" id="age" type="password" placeholder="Password">
             </span>
             <div class="btn-div">
-                <button class="btn" style="vertical-align:middle" ><span>Login</span></button>  
+                <button class="btn" style="vertical-align:middle" @click="login" ><span>Login</span></button>  
             </div> 
             <!-- <input class="btn" type="button" value="Login"> -->
         </div>
@@ -25,10 +25,22 @@
 
 <script>
 // @ is an alias to /src
+import store from '../store'
 
 export default {
   name: 'Login',
   components: {
+  },
+  data(){
+      console.log(store.state.User.token);
+      return{
+
+      }
+  },
+  methods:{
+      login(){
+          store.dispatch('User/setToken', 'trixas');
+      }
   }
 }
 </script>

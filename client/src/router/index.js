@@ -4,6 +4,7 @@ import NewNetworkManual from '@/views/NewNetworkManual.vue'
 import SaveDevices from '@/views/SaveDevices.vue'
 import Topology from '@/views/Topology.vue'
 import Login from '@/views/Login.vue'
+import store from '@/store'
 
 
 const routes = [
@@ -42,5 +43,19 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+
+  if (store.state.User.token != null) {
+    if (to.path === '/login') 
+      next('/')
+    else 
+      next();
+  } else {
+      if (to.path === '/login') 
+        next()
+      else next('/login');
+  }
+});
 
 export default router
