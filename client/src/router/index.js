@@ -47,15 +47,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
 
   if (store.state.User.token != null) {
-    if (to.path === '/login') 
-      next('/')
-    else 
-      next();
+    (to.path === '/login') ? next('/') : next();
   } else {
-      if (to.path === '/login') 
-        next()
-      else next('/login');
+    (to.path === '/login') ? next() : next('/login');
   }
+  
 });
 
 export default router
