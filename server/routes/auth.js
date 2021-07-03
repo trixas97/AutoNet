@@ -4,32 +4,35 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { registerValidation, loginValidation } = require('./auth/validateData');
 const verify = require('./auth/verifyToken');
+const { query } = require('express');
 
 router.post('/register', async (req,res) => {
+    let data = {};
+    Object.keys(req.query).length === 0 ? data = req.body : data = req.query;
+
     // Validate Request Data
     const dataToValidate = {
-        username: req.query.username,
-        password: req.query.password,
-        email: req.query.email
+        username: data.username,
+        password: data.password,
+        email: data.email
     }
     const { error } = registerValidation(dataToValidate);
     if (error) return res.status(400).send(error.details[0].message);
 
     // Check if request Username exists
-    const userExists = await User.findOne({ username: req.query.username });
+    const userExists = await User.findOne({ username: data.username });
     if(userExists) return res.status(400).send("Username already exists");
 
     // Create user Mongo Model
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.query.password, salt);
+    const hashedPassword = await bcrypt.hash(data.password, salt);
     const user = new User({
-        username: req.query.username,
+        username: data.username,
         password: hashedPassword,
-        email: req.query.email,
-        name: req.query.name,
-        surname: req.query.surname
+        email: data.email,
+        name: data.name,
+        surname: data.surname
     });
-    console.log(user.username + " " + req.query.username + " ");
 
     // Create user on Database
     try{
@@ -41,16 +44,19 @@ router.post('/register', async (req,res) => {
 });
 
 router.post('/login', async (req,res) => {
+    let data = {};
+    Object.keys(req.query).length === 0 ? data = req.body : data = req.query;
+    
     // Validate Request Data
-    const { error } = loginValidation(req.query);
+    const { error } = loginValidation(data);
     if (error) return res.status(400).send(error.details[0].message);
 
     // Check if request Username exists
-    const user = await User.findOne({ username: req.query.username });
+    const user = await User.findOne({ username: data.username });
     if(!user) return res.status(400).send("Username or Password is wrong");
 
     // Check if request Password is correct
-    const validPass = await bcrypt.compare(req.query.password, user.password);
+    const validPass = await bcrypt.compare(data.password, user.password);
     if(!validPass) return res.status(400).send("Username or Password is wrong");
 
     // Create user Token
@@ -63,10 +69,5 @@ router.post('/login', async (req,res) => {
 router.get('/', verify, (req,res) => {
     res.json({state: 'Loged in'});
 })
-
-createToken = (user) => {
-    
-}
-
 
 module.exports = router;

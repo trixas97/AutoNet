@@ -8,12 +8,12 @@
             <img class="logo-autonet" src="@/assets/logo.svg" alt="">
 
             <span class="username">
-                <span class="icon"><i class="fa fa-user fa-2x"></i></span><input class="username-txt" id="age" type="text" placeholder="Username">
+                <span class="icon"><i class="fa fa-user fa-2x"></i></span><input v-model="username" class="username-txt" id="age" type="text" placeholder="Username">
             </span>
 
             <!-- <input class="username" type="text"> -->
             <span class="password">
-               <span class="icon"><i class="fa fa-lock fa-2x"></i></span><input class="password-txt" id="age" type="password" placeholder="Password">
+               <span class="icon"><i class="fa fa-lock fa-2x"></i></span><input v-model="password" class="password-txt" id="age" type="password" placeholder="Password">
             </span>
             <div class="btn-div">
                 <button class="btn" style="vertical-align:middle" @click="login" ><span>Login</span></button>  
@@ -26,20 +26,32 @@
 <script>
 // @ is an alias to /src
 import store from '../store'
+const { loginRequest } = require('../router/api');
 
 export default {
   name: 'Login',
   components: {
   },
   data(){
-      console.log(store.state.User.token);
+      const username = '';
+      const password = '';
       return{
-
+          username,
+          password
       }
   },
   methods:{
-      login(){
-          store.dispatch('User/setToken', 'trixas');
+      async login(){
+        const data = {
+            username: this.username,
+            password: this.password   
+        }
+
+        const res = await loginRequest(data);
+
+        if(res.status == 200){
+            store.dispatch('User/setToken', res.data);
+        }
       }
   }
 }
