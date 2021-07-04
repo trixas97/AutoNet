@@ -41,16 +41,18 @@ export default {
       }
   },
   methods:{
-      async login(){
+      async login(){       
         const data = {
             username: this.username,
             password: this.password   
         }
 
+
         const res = await loginRequest(data);
 
         if(res.status == 200){
             store.dispatch('User/setToken', res.data);
+            this.$router.push('Topology');
         }
       }
   }

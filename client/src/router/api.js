@@ -6,7 +6,7 @@ const url ={
     login: `${baseUrl}/user/login`
 }
 
-const loginRequest = data => {
+const login = data => {
     return new Promise(resolve => {
         const req = {
             method: 'post',
@@ -22,4 +22,4 @@ const loginRequest = data => {
     });
 }
 
-module.exports.loginRequest = loginRequest;
+module.exports.loginRequest = login;

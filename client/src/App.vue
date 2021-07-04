@@ -37,14 +37,13 @@ export default {
       height: 100%;
       display: grid;
       grid-gap: 10px;
-      grid-template-rows: 0.06fr 0.4fr 10fr;
+      grid-template-rows: 0.7fr 0.4fr 10fr;
       grid-template-areas: 
         "navbar"
         "."
         "view";
       .navbar {
         grid-area: navbar;
-        height: 1fr;
         background-color: $primary;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
       }
