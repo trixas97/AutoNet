@@ -3,13 +3,13 @@
     <img 
         v-for="node in nodesSize"
         :key="node"
-        ref="nodeImg"
+        :ref="setItemRef"
         src="@/style/_router.svg" 
         alt="">
     <label        
         v-for="node in nodesSize"
         :key="'NodeLabel' + node"
-        ref="nodeLabel"
+        :ref="setItemRef"
         alt="">R{{node}}</label>
     <input @click="newNodes" type="button">
   </div>
@@ -20,6 +20,7 @@
 // let plainDraggable = require('plain-draggable').default;
 import NetNode from '@/objects/netnode.js'
 import Link from '@/objects/link.js'
+const { getTopologyRequest } = require('../router/api');
 
 export default {
     name: 'Topology',
@@ -29,14 +30,32 @@ export default {
     data(){
         let nodes = [];
         let links = [];
-        let nodesSize = 0;
+        let nodesSize = 3;
+
+
         return {
+            nodeRefs: [],
+            imgRefs: [],
+            labelRefs: [],
             nodes,
             links,
             nodesSize
         }
     },
     methods:{
+
+        setItemRef(el) {
+            if(el){
+                console.log('el');
+
+                el.src ? this.imgRefs.push(el) : this.labelRefs.push(el);
+                this.nodeRefs.push(el)
+                // console.log(this.nodeRefs[this.nodeRefs.length-1]);
+            }
+            console.log(this.imgRefs);
+            console.log(this.labelRefs);
+
+        },
         elementsInit(){
             document.onreadystatechange = () => {
                 if (document.readyState == "complete") {
@@ -67,15 +86,35 @@ export default {
                 interface: ['G0/3', 'G0/4', 'G0/5'], 
                 status: ['up','up', 'up']
             };
-            console.log(this.$refs.nodeImg[1]);
+            // console.log('els' + this.imgRefs[0]);
             // for(let i=0; i < 10; i++){
-                this.nodes.push(new NetNode(this.$refs.nodeImg[0], this.$refs.nodeLabel[0], [], nodeifs));
+                this.nodes.push(new NetNode(this.imgRefs[0], this.labelRefs[0], [], nodeifs));
                 this.nodes[0].labelPosition();
             // }
+        },
+        async getNodes(){
+            const data = {
+                token: this.$store.state.User.token,
+                // nodes: ['60c66b2975aa7347c8f47b3f', '60c66b2975aa7347c8f47b3f', '60c66b2975aa7347c8f47b3f']
+                id: '60e20a22008d4e0dfc38934f'
+            }
+
+            const res = await getTopologyRequest(data);
+            // newNodes();
+            console.log(res);
         }
+    },
+    beforeUpdate() {
+        this.imgRefs = []
+        this.labelRefs = []
+        this.nodeRefs = []
+    },
+    updated() {
+        // console.log(this.itemRefs)
     },
     mounted(){
         this.elementsInit();
+        this.getNodes();
     }      
 }
 </script>

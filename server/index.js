@@ -22,6 +22,7 @@ let io = socket(server, {
 const authRoute = require("./routes/auth.js");
 const nodesFinder = require('./routes/api/nodes_find.js')(io);
 const nodesSave = require('./routes/api/nodes_save.js')(io);
+const saveTopology = require('./routes/api/topology');
 
 // Middleware
 app.use(bodyParser.json());
@@ -29,6 +30,7 @@ app.use(cors());
 app.use('/user', authRoute);
 app.use('/api/devices', nodesFinder);
 app.use('/api/nodesSave', nodesSave);
+app.use('/api/topology', saveTopology);
 
 mongoose.connect(
   process.env.DB_CONNECTION, { useUnifiedTopology: true, useNewUrlParser: true }, (err) => {
