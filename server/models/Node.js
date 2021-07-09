@@ -38,6 +38,10 @@ const nodeSchema = new mongoose.Schema({
     interfaces:{
         type: Array,
         required: true
+    },
+    topologyInfo:{
+        type: Object,
+        required: false
     }
 });
 

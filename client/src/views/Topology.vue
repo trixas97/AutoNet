@@ -5,18 +5,19 @@
         :key="node"
         :ref="setItemRef"
         src="@/style/_router.svg" 
+        :style="{width:'3.5vw', height:'5vh'}"
         alt="">
     <label        
         v-for="node in nodesSize"
         :key="'NodeLabel' + node"
         :ref="setItemRef"
-        alt="">R{{node}}</label>
+        alt="">{{node}}</label>
+        <!-- <input type="button" v-on:click="saveNode"> -->
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-// let plainDraggable = require('plain-draggable').default;
 import NetNode from '@/objects/netnode.js'
 // import Link from '@/objects/link.js'
 const { getTopologyRequest } = require('../router/api');
@@ -65,11 +66,18 @@ export default {
         async getNodes(){
             const data = {
                 token: this.$store.state.User.token,
-                id: '60e20a22008d4e0dfc38934f'
+                id: '60e8a88f5e398110b04d707c'
             }
             const res = await getTopologyRequest(data);
             return res.data.nodes;
         },
+        // async saveNode(){
+        //     const data = {
+        //         token: this.$store.state.User.token,
+        //         nodes: [{ node: '60c66b2975aa7347c8f47b3e', x:250, y:250, labelx:100, labely:100 }, { node: '60c66b2975aa7347c8f47b3f', x:250, y:250, labelx:100, labely:100 }, { node: '60c66b2975aa7347c8f47b40', x:250, y:250, labelx:100, labely:100 }]
+        //     }
+        //     const res = await saveTopologyRequest(data);
+        // }
     },
     beforeUpdate() {
         this.imgRefs = []
@@ -88,6 +96,8 @@ export default {
 
         for(let i=0; i < this.nodesSize; i++){
             this.nodes.push(new NetNode(this.imgRefs[i], this.labelRefs[i], [], nodeifs));
+            this.nodes[i].dragnode.left = this.nodesData[i].topologyInfo.x;
+            this.nodes[i].dragnode.top = this.nodesData[i].topologyInfo.y;
             this.nodes[i].labelPosition();
         }
     },
