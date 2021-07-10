@@ -10,6 +10,10 @@ const topologySchema = new mongoose.Schema({
     nodes: {
         type: Array,
         required: false
+    },
+    links: {
+        type: Array,
+        required: false
     }
 });
 

@@ -1,17 +1,17 @@
 <template>
   <div class="topology">
     <img 
-        v-for="node in nodesSize"
+        v-for="node in nodesData.length"
         :key="node"
         :ref="setItemRef"
         src="@/style/_router.svg" 
-        :style="{width:'3.5vw', height:'5vh'}"
+        :style="{width:'2.5em', height:'1.8em'}"
         alt="">
     <label        
-        v-for="node in nodesSize"
+        v-for="node in nodesData.length"
         :key="'NodeLabel' + node"
         :ref="setItemRef"
-        alt="">{{node}}</label>
+        alt="">{{nodesData[node-1].name}}</label>
         <!-- <input type="button" v-on:click="saveNode"> -->
   </div>
 </template>
@@ -30,18 +30,20 @@ export default {
     data(){
         let nodes = [];
         let links = [];
-        let nodesSize = 0;
+        let topo = {};
         let nodesData = [];
+        let linksData = [];
 
 
         return {
             nodeRefs: [],
             imgRefs: [],
             labelRefs: [],
+            topo,
             nodes,
             links,
-            nodesSize,
-            nodesData
+            nodesData,
+            linksData
         }
     },
     methods:{
@@ -63,13 +65,14 @@ export default {
         //     this.nodes[start].dragLink(this.nodes[start].links);
         //     this.nodes[end].dragLink(this.nodes[end].links);
         // },
-        async getNodes(){
+        async getTopoInfo(){
             const data = {
                 token: this.$store.state.User.token,
                 id: '60e8a88f5e398110b04d707c'
             }
+            
             const res = await getTopologyRequest(data);
-            return res.data.nodes;
+            return res.data;
         },
         // async saveNode(){
         //     const data = {
@@ -93,17 +96,22 @@ export default {
             interface: ['G0/3', 'G0/4', 'G0/5'], 
             status: ['up','up', 'up']
         };
+        
 
-        for(let i=0; i < this.nodesSize; i++){
-            this.nodes.push(new NetNode(this.imgRefs[i], this.labelRefs[i], [], nodeifs));
+        for(let i=0; i < this.nodesData.length; i++){
+            this.nodes.push(new NetNode(this.imgRefs[i], this.labelRefs[i], [], this.nodesData[i].interfaces));
             this.nodes[i].dragnode.left = this.nodesData[i].topologyInfo.x;
             this.nodes[i].dragnode.top = this.nodesData[i].topologyInfo.y;
             this.nodes[i].labelPosition();
+            console.log(this.nodes[i].ifs);
         }
+
+        // for(let i=0; i < this.links)
     },
     async mounted(){
-        this.nodesData = await this.getNodes();
-        this.nodesSize = this.nodesData.length;       
+        this.topo = await this.getTopoInfo();
+        this.nodesData = this.topo.nodes;
+        this.liksData = this.topo.links;   
     }     
 }
 </script>
