@@ -7,7 +7,7 @@ export default class NetNode {
         this.ifs = ifs;
         this.node = node;
         this.links = links;
-        this.label = {element: label, x: 25, y: 50};
+        this.label = {element: label.name, x: label.x, y: label.y};
         this.draglabel = new plainDraggable(this.label.element);
         this.dragnode = new plainDraggable(node);
 

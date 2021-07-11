@@ -33,9 +33,11 @@ export default class Link {
         this.end = end;
         this.ifstart = ifstart;
         this.ifend = ifend;
-        this.linkAttrs.startLabel = LeaderLine.captionLabel(this.ifstart, this.linkFonts);
-        this.linkAttrs.endLabel = LeaderLine.captionLabel(this.ifend, this.linkFonts);
+        this.linkAttrs.startLabel = LeaderLine.captionLabel(this.ifstart.name, this.linkFonts);
+        this.linkAttrs.endLabel = LeaderLine.captionLabel(this.ifend.name, this.linkFonts);
         this.link = new LeaderLine(start,end,this.linkAttrs);
+        ifstart.state ? this.link["startPlugColor"] = this.linkColors.colorUp : this.link["startPlugColor"] = this.linkColors.colorDown;
+        ifend.state ? this.link["endPlugColor"] = this.linkColors.colorUp : this.link["endPlugColor"] = this.linkColors.colorDown;
     }
 
     setDown = (node) => {
