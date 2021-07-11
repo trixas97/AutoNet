@@ -72,6 +72,7 @@ export default {
             }
             
             const res = await getTopologyRequest(data);
+            console.log(res.data);
             return res.data;
         },
         // async saveNode(){

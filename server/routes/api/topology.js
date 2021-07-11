@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Topology = require('../../models/Topology');
 const Node = require('../../models/Node');
+const Link = require('../../models/Link');
 const verify = require('../auth/verifyToken');
 const mongoose = require('mongoose');
 
@@ -8,7 +9,8 @@ const modifyTypeTopo = {
     save: 'save',
     get: 'get',
     getAll: 'getAll',
-    moreInfo: 'moreInfo'
+    moreInfo: 'moreInfo',
+    getLinks: 'getLinks'
 }
 
 
@@ -39,17 +41,20 @@ router.get('/getTopology', verify, async (req,res) => {
     Object.keys(req.query).length === 0 ? data = req.body : data = req.query;
 
     let topology = await Topology.findOne({ _id: data.id });
-    const params = await modifyDataTopo(topology.nodes, modifyTypeTopo.get);
-    const nodes = await Node.find({ $or: params });
+    const paramsNodes = await modifyDataTopo(topology.nodes, modifyTypeTopo.get);
+    const paramsLinks = await modifyDataTopo(topology.nodes, modifyTypeTopo.getLinks);
+    const nodes = await Node.find({ $or: paramsNodes });
+    const links = await Link.find({ $or: paramsLinks });
     topology.nodes = await modifyDataTopo({ nodes: nodes, nodesTopology: topology.nodes}, modifyTypeTopo.moreInfo)
-    // topology.nodes = nodes;
+    topology.links = links
     res.status(200).send(topology);
 })
 
 modifyDataTopo = async (data, type) => {
     return new Promise(async resolve => { 
-        
+        let res = [];
         switch(type){
+            
             case modifyTypeTopo.save:
                 for (let i=0; i < data.length; i++){
                     data[i] = await new Promise(resolve => resolve({ id: mongoose.Types.ObjectId(data[i].node), x: data[i].x, y: data[i].y, label: { x: data[i].labelx, y: data[i].labely } }));
@@ -57,7 +62,6 @@ modifyDataTopo = async (data, type) => {
                 }
                 break;
             case modifyTypeTopo.get:
-                let res = [];
                 for (let i=0; i < data.length; i++){
                     res[i] = await new Promise(resolve => resolve({ _id: data[i].id }));
                     if(i == data.length-1) resolve(res);
@@ -67,6 +71,13 @@ modifyDataTopo = async (data, type) => {
                 for (let i=0; i < data.nodes.length; i++){
                     data.nodes[i].topologyInfo = await new Promise(resolve => resolve( data.nodesTopology[i] ));
                     if(i == data.nodes.length-1) resolve(data.nodes);
+                }
+                break;
+            case modifyTypeTopo.getLinks:
+                for (let i=0; i < data.length; i++){
+                    res.push(await new Promise(resolve => resolve({ nodeStart: data[i].id })));
+                    res.push(await new Promise(resolve => resolve({ nodeEnd: data[i].id })));
+                    if(i == data.length-1) resolve(res);
                 }
                 break;
             case modifyTypeTopo.getAll:
