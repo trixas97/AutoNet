@@ -7,17 +7,17 @@ const linkSchema = new mongoose.Schema({
         required: true,
         ref: 'nodes'
     },
-    ifStart:{
-        type: String,
-        required: true
-    },
     nodeEnd: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'nodes'
     },
+    ifStart:{
+        type: Object,
+        required: true
+    },
     ifEnd:{
-        type: String,
+        type: Object,
         required: true
     }
 });

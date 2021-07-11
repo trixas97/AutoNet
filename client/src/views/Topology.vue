@@ -12,7 +12,6 @@
         :key="'NodeLabel' + node"
         :ref="setItemRef"
         alt="">{{nodesData[node-1].name}}</label>
-        <input type="button" v-on:click="getLinks">
   </div>
 </template>
 
@@ -20,7 +19,7 @@
 // @ is an alias to /src
 import NetNode from '@/objects/netnode.js'
 import Link from '@/objects/link.js'
-const { getTopologyRequest, getLinksRequest } = require('../router/api');
+const { getTopologyRequest } = require('../router/api');
 
 export default {
     name: 'Topology',
@@ -55,15 +54,15 @@ export default {
         newLink(start,end){
             // let start = 0;
             // let end = 1;
-            console.log(this.nodes[start].node);
-            console.log(this.nodes[end]);
-            this.links.push(new Link(this.nodes[start].node, this.nodes[end].node,{name: 'G0/1', state:true},{name: 'G0/2', state:false}));
+            console.log(this.nodes[start.id].node);
+            console.log(this.nodes[end.id]);
+            this.links.push(new Link(this.nodes[start.id].node, this.nodes[end.id].node,{name: start.name, state: start.state},{name: end.name, state: end.state}));
 
-            this.nodes[start].links.push(this.links[this.links.length - 1]);
-            this.nodes[end].links.push(this.links[this.links.length - 1]);
+            this.nodes[start.id].links.push(this.links[this.links.length - 1]);
+            this.nodes[end.id].links.push(this.links[this.links.length - 1]);
 
-            this.nodes[start].dragLink(this.nodes[start].links);
-            this.nodes[end].dragLink(this.nodes[end].links);
+            this.nodes[start.id].dragLink(this.nodes[start.id].links);
+            this.nodes[end.id].dragLink(this.nodes[end.id].links);
         },
         async getTopoInfo(){
             const data = {
@@ -82,33 +81,13 @@ export default {
         //     }
         //     const res = await saveTopologyRequest(data);
         // }
-        async getLinks(){
-
-            const data = {
-                token: this.$store.state.User.token,
-                nodes: [{ id: '60c66b2975aa7347c8f47b3f'},  { id: '60c66b2975aa7347c8f47b3e'},{ id: '60c66b2975aa7347c8f47b40'},]
-            }
-
-            const res = await getLinksRequest(data);
-            console.log(res.data);
-            return res.data;
-        }
     },
     beforeUpdate() {
         this.imgRefs = []
         this.labelRefs = []
         this.nodeRefs = []
     },
-    updated() {
-        let nodeifs= [{
-            interface: ['G0/0', 'G0/1', 'G0/2'], 
-            status: ['down','down', 'down']
-        }];
-        nodeifs[1] = {
-            interface: ['G0/3', 'G0/4', 'G0/5'], 
-            status: ['up','up', 'up']
-        };
-        
+    updated() {      
 
         for(let i=0; i < this.nodesData.length; i++){
             this.nodes.push(new NetNode(this.imgRefs[i], {name: this.labelRefs[i], x: this.nodesData[i].topologyInfo.label.x, y:this.nodesData[i].topologyInfo.label.y}, [], this.nodesData[i].interfaces));
@@ -118,15 +97,19 @@ export default {
         }
 
         for(let i=0; i < this.linksData.length; i++){
-            console.log(this.linksData[i]);
-
+            let start = {};
+            let end = {};
+            for(let j=0; j < this.nodesData.length; j++){
+                if(this.linksData[i].nodeStart == this.nodesData[j]._id) { start.id = j; start.name = this.linksData[i].ifStart.name; start.state = this.linksData[i].ifStart.state; }
+                if(this.linksData[i].nodeEnd == this.nodesData[j]._id) { end.id = j; end.name = this.linksData[i].ifEnd.name; end.state = this.linksData[i].ifEnd.state; }
+            }
+            this.newLink(start,end);
         }
-        // this.newLink();
     },
     async mounted(){
         this.topo = await this.getTopoInfo();
         this.nodesData = this.topo.nodes;
-        this.liksData = this.topo.links;   
+        this.linksData = this.topo.links;   
     }     
 }
 </script>

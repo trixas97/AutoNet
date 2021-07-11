@@ -45,7 +45,7 @@ router.get('/getTopology', verify, async (req,res) => {
     const paramsLinks = await modifyDataTopo(topology.nodes, modifyTypeTopo.getLinks);
     const nodes = await Node.find({ $or: paramsNodes });
     const links = await Link.find({ $or: paramsLinks });
-    topology.nodes = await modifyDataTopo({ nodes: nodes, nodesTopology: topology.nodes}, modifyTypeTopo.moreInfo)
+    topology.nodes = await modifyDataTopo({ nodes: nodes, nodesTopology: topology.nodes}, modifyTypeTopo.moreInfo);
     topology.links = links
     res.status(200).send(topology);
 })
