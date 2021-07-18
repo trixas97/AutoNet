@@ -52,10 +52,6 @@ export default {
         },
 
         newLink(start,end){
-            // let start = 0;
-            // let end = 1;
-            console.log(this.nodes[start.id].node);
-            console.log(this.nodes[end.id]);
             this.links.push(new Link(this.nodes[start.id].node, this.nodes[end.id].node,{name: start.name, state: start.state},{name: end.name, state: end.state}));
 
             this.nodes[start.id].links.push(this.links[this.links.length - 1]);
@@ -115,7 +111,6 @@ export default {
 </script>
 <style lang="scss" scoped>
     .topology {
-        // background-color: yellowgreen;
         label{
             color: black;
         }
