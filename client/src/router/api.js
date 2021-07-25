@@ -92,6 +92,7 @@ const getLinks = data => {
     })
 }
 
+module.exports.serverUrl = baseUrl;
 module.exports.loginRequest = login;
 module.exports.saveTopologyRequest = saveTopology;
 module.exports.getTopologyRequest = getTopology;

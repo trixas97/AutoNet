@@ -19,7 +19,8 @@
 // @ is an alias to /src
 import NetNode from '@/objects/netnode.js'
 import Link from '@/objects/link.js'
-const { getTopologyRequest } = require('../router/api');
+import io from 'socket.io-client'
+const { serverUrl, getTopologyRequest } = require('../router/api');
 
 export default {
     name: 'Topology',
@@ -30,8 +31,10 @@ export default {
         let nodes = [];
         let links = [];
         let topo = {};
+        let topoId = '60e8a88f5e398110b04d707c';
         let nodesData = [];
         let linksData = [];
+        let socket = io(serverUrl);
 
 
         return {
@@ -42,7 +45,9 @@ export default {
             nodes,
             links,
             nodesData,
-            linksData
+            linksData,
+            socket,
+            topoId
         }
     },
     methods:{
@@ -63,13 +68,20 @@ export default {
         async getTopoInfo(){
             const data = {
                 token: this.$store.state.User.token,
-                id: '60e8a88f5e398110b04d707c'
+                id: this.topoId
             }
             
             const res = await getTopologyRequest(data);
             console.log(res.data);
             return res.data;
         },
+
+        socketListener(){
+            console.log(`OK ${this.topoId}`  );
+            this.socket.on(this.topoId,(data) => {
+                console.log(data);
+            });
+        }
         // async saveNode(){
         //     const data = {
         //         token: this.$store.state.User.token,
@@ -104,6 +116,7 @@ export default {
     },
     async mounted(){
         this.topo = await this.getTopoInfo();
+        this.socketListener();
         this.nodesData = this.topo.nodes;
         this.linksData = this.topo.links;   
     }     
