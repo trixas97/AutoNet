@@ -73,7 +73,7 @@ modifyDataSNMP = async (data, type, ip) => {
             case modifyTypeSNMP.emit:
                 for (let i=0; i < data.topologies.length; i++){
                     console.log(data.topologies[i]._id);
-                    await data.io.in(data.topologies[i]._id).emit(data.data);
+                    await data.io.emit(data.topologies[i]._id, data.data);
                     if(i == data.length-1) resolve();
                 }
                 break;
