@@ -77,9 +77,8 @@ export default {
         },
 
         socketListener(){
-            console.log(`OK ${this.topoId}`  );
-            this.socket.on(this.topoId,(data) => {
-                console.log(data);
+            this.socket.on(this.topoId,(data) => {               
+                data.adminStatus ? this.links[0].setUp(this.links[0].start) : this.links[0].setDown(this.links[0].start);
             });
         }
         // async saveNode(){
