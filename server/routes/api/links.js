@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Link = require('../../models/Link');
+const Link = require('../../database/models/Link');
 const verify = require('../auth/verifyToken');
 // const mongoose = require('mongoose');
 

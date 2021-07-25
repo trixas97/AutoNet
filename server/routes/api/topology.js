@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const Topology = require('../../models/Topology');
-const Node = require('../../models/Node');
-const Link = require('../../models/Link');
+const Topology = require('../../database/models/Topology');
+const Node = require('../../database/models/Node');
+const Link = require('../../database/models/Link');
 const verify = require('../auth/verifyToken');
 const mongoose = require('mongoose');
 
@@ -48,6 +48,7 @@ router.get('/getTopology', verify, async (req,res) => {
     topology.nodes = await modifyDataTopo({ nodes: nodes, nodesTopology: topology.nodes}, modifyTypeTopo.moreInfo);
     topology.links = links
     res.status(200).send(topology);
+    
 })
 
 modifyDataTopo = async (data, type) => {
@@ -87,5 +88,6 @@ modifyDataTopo = async (data, type) => {
 
     })
 }
+
 
 module.exports = router;

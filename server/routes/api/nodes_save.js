@@ -4,7 +4,7 @@ const router = express.Router();
 const ipValid = require('ip');
 const {spawn} = require('child_process');
 const {PythonShell} = require('python-shell');
-const Node = require('../../models/Node');
+const Node = require('../../database/models/Node');
 let hostLength = 0;
 
 
