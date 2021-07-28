@@ -4,6 +4,7 @@ export default class Link {
     linkColors = {
         colorUp: 'lightgreen',
         colorDown: '#ff5252',
+        colorInter: '#ffa500',
         colorBorder: 'black'
     }
 
@@ -52,6 +53,23 @@ export default class Link {
             this.link["startPlugColor"] = this.linkColors.colorUp;
         else
             this.link["endPlugColor"] = this.linkColors.colorUp;   
+    }
+
+    setInter = (node) => {
+        if(node == this.start)
+            this.link["startPlugColor"] = this.linkColors.colorInter;
+        else
+            this.link["endPlugColor"] = this.linkColors.colorInter;   
+    }
+
+    setState= (data) => {
+        if(data.operStatus && data.adminStatus)
+            this.setUp(data.node);
+        else 
+            if(!data.adminStatus)
+                this.setDown(data.node);
+            else
+                this.setInter(data.node);
     }
 
     set ifStart(ifstart){

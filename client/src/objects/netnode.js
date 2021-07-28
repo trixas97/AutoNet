@@ -3,7 +3,8 @@ export default class NetNode {
     
     img = "file:///C:/Program%20Files/GNS3/symbols/classic/router.svg";
 
-    constructor(node,label,links,ifs){
+    constructor(id,node,label,links,ifs){
+        this.id = id;
         this.ifs = ifs;
         this.node = node;
         this.links = links;
@@ -47,6 +48,24 @@ export default class NetNode {
                 element.link.position();
             });
         }
+    }
+
+    async setLinkState(data){
+        let ifVar = await this.findInterface(data.if);
+        console.log(ifVar);
+        this.links.forEach(element =>{
+            if((element.ifstart.id == this.id && element.ifstart.name == ifVar.interfaceSum) || (element.ifend.id == this.id && element.ifend.name == ifVar.interfaceSum))
+                element.setState({operStatus: data.operStatus, adminStatus: data.adminStatus, node:this.node})
+        });
+    }
+
+    findInterface(name){
+        return new Promise(resolve => { 
+            this.ifs.forEach(element => {
+                if (element.interface == name)
+                    resolve(element);
+            });
+        })
     }
 
 

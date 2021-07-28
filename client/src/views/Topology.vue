@@ -57,8 +57,9 @@ export default {
         },
 
         newLink(start,end){
-            this.links.push(new Link(this.nodes[start.id].node, this.nodes[end.id].node,{name: start.name, state: start.state},{name: end.name, state: end.state}));
+            this.links.push(new Link(this.nodes[start.id].node, this.nodes[end.id].node,{id: start.id, name: start.name, state: start.state},{id: end.id, name: end.name, state: end.state}));
 
+            
             this.nodes[start.id].links.push(this.links[this.links.length - 1]);
             this.nodes[end.id].links.push(this.links[this.links.length - 1]);
 
@@ -78,7 +79,8 @@ export default {
 
         socketListener(){
             this.socket.on(this.topoId,(data) => {               
-                data.adminStatus ? this.links[0].setUp(this.links[0].start) : this.links[0].setDown(this.links[0].start);
+                // data.adminStatus ? this.links[0].setUp(this.links[0].start) : this.links[0].setDown(this.links[0].start);
+                this.nodes[data.id].setLinkState(data);
             });
         }
         // async saveNode(){
@@ -97,18 +99,19 @@ export default {
     updated() {      
 
         for(let i=0; i < this.nodesData.length; i++){
-            this.nodes.push(new NetNode(this.imgRefs[i], {name: this.labelRefs[i], x: this.nodesData[i].topologyInfo.label.x, y:this.nodesData[i].topologyInfo.label.y}, [], this.nodesData[i].interfaces));
-            this.nodes[i].dragnode.left = this.nodesData[i].topologyInfo.x;
-            this.nodes[i].dragnode.top = this.nodesData[i].topologyInfo.y;
-            this.nodes[i].labelPosition();
+            // this.nodes.push(new NetNode(this.imgRefs[i], {name: this.labelRefs[i], x: this.nodesData[i].topologyInfo.label.x, y:this.nodesData[i].topologyInfo.label.y}, [], this.nodesData[i].interfaces));
+            this.nodes[this.nodesData[i]._id] = new NetNode(this.nodesData[i]._id,this.imgRefs[i], {name: this.labelRefs[i], x: this.nodesData[i].topologyInfo.label.x, y:this.nodesData[i].topologyInfo.label.y}, [], this.nodesData[i].interfaces);
+            this.nodes[this.nodesData[i]._id].dragnode.left = this.nodesData[i].topologyInfo.x;
+            this.nodes[this.nodesData[i]._id].dragnode.top = this.nodesData[i].topologyInfo.y;
+            this.nodes[this.nodesData[i]._id].labelPosition();
         }
 
         for(let i=0; i < this.linksData.length; i++){
             let start = {};
             let end = {};
             for(let j=0; j < this.nodesData.length; j++){
-                if(this.linksData[i].nodeStart == this.nodesData[j]._id) { start.id = j; start.name = this.linksData[i].ifStart.name; start.state = this.linksData[i].ifStart.state; }
-                if(this.linksData[i].nodeEnd == this.nodesData[j]._id) { end.id = j; end.name = this.linksData[i].ifEnd.name; end.state = this.linksData[i].ifEnd.state; }
+                if(this.linksData[i].nodeStart == this.nodesData[j]._id) { start.id = this.nodesData[j]._id; start.name = this.linksData[i].ifStart.name; start.state = this.linksData[i].ifStart.state; }
+                if(this.linksData[i].nodeEnd == this.nodesData[j]._id) { end.id = this.nodesData[j]._id; end.name = this.linksData[i].ifEnd.name; end.state = this.linksData[i].ifEnd.state; }
             }
             this.newLink(start,end);
         }

@@ -1,4 +1,5 @@
 const { getTopologies } = require('./database/topology');
+const { getNodeInfoByIP } = require('./database/node');
 
 
 const oids = {
@@ -31,6 +32,7 @@ module.exports = function(io) {
             let info = notification.rinfo;
             let data = await modifyDataSNMP(pdu.varbinds, modifyTypeSNMP.receive, info.address);
             if(Object.keys(data).length > 1){
+                data.id = (await getNodeInfoByIP(data.ip))._id;
                 console.log(data);
                 let topologies = await getTopologies(data.ip);
                 let notify = {data: data, topologies: topologies, io: io}
