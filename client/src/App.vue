@@ -1,8 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header v-if="$route.name != 'Login'" elevated class="glossy">
-      <NavBar/>
-    </q-header>
+
+    <NavBar v-if="$route.name != 'Login'"/>
 
     <q-page-container >
       <router-view/>
@@ -29,4 +28,3 @@ export default {
   }
 }
 </script>
-

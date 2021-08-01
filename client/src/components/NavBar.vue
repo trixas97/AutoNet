@@ -1,20 +1,11 @@
 <template>
+<q-header :class="`shadow-15`" elevated>
   <q-toolbar>
-    <q-btn
-      flat
-      dense
-      round
-      @click="leftDrawerOpen = !leftDrawerOpen"
-      aria-label="Menu"
-      icon="menu"
-    />
-
-    <q-toolbar-title>
-      Quasar App
-    </q-toolbar-title>
-
-    <div>Quasar v{{ $q.version }}</div>
+    <q-space />
+      <img class="logo q-pt-sm q-pb-sm" src="@/assets/logo.svg" alt="">
+    <q-space />
   </q-toolbar>
+</q-header>
 </template>
 
 <script>
@@ -22,3 +13,15 @@ export default {
     name:'NavBar'
 }
 </script>
+
+<style lang="scss" scoped>
+@import "@/styles/quasar.variables";
+  .q-header {
+    background-color: $navbar;
+
+    .logo {
+      width: 15em;
+    }
+  }
+  
+</style>
