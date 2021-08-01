@@ -1,18 +1,21 @@
 <template>
-  <div class="topology">
+ <div>
+    <div class="row topology">
     <img 
         v-for="node in nodesData.length"
         :key="node"
         :ref="setItemRef"
         src="@/assets/nodes/router.svg" 
-        :style="{width:'2.5em', height:'1.8em'}"
+        :style="{width:'4.6em', height:'3.2em'}"
         alt="">
     <label        
         v-for="node in nodesData.length"
         :key="'NodeLabel' + node"
         :ref="setItemRef"
+
         alt="">{{nodesData[node-1].name}}</label>
   </div>
+ </div>
 </template>
 
 <script>
@@ -126,8 +129,16 @@ export default {
 </script>
 <style lang="scss" scoped>
     .topology {
+        height: 94.6vh; 
+        width: 100vw;
         label{
             color: black;
+            font: {
+                family: 'Arial';
+                size: 25px;
+            }
+            width: 1px;
+            height: 1px;
         }
     }
 </style>

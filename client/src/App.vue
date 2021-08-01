@@ -4,9 +4,10 @@
       <NavBar/>
     </q-header>
 
-    <q-page-container>
-      <router-view class="view"/>
+    <q-page-container >
+      <router-view/>
     </q-page-container>
+
   </q-layout>
 </template>
 
@@ -28,3 +29,4 @@ export default {
   }
 }
 </script>
+

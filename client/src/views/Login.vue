@@ -1,38 +1,38 @@
 <template>
  
  <q-page>
-        <div class="row" style="height: 100vh">
-          <div class="col login-img">
-            <q-img
-              class="fit background"
-              src="@/assets/login/login-background.svg"
-            />
-            <q-img
-              class="img-front"
-              src="@/assets/login/server.svg"
-            />         
-        </div>
-        <div class="col login-form">
-            <img class="logo-autonet" src="@/assets/logo.svg" alt="">
+    <div class="row" style="height: 100vh">
+        <div class="col login-img">
+        <q-img
+            class="fit background"
+            src="@/assets/login/login-background.svg"
+        />
+        <q-img
+            class="img-front"
+            src="@/assets/login/server.svg"
+        />         
+    </div>
+    <div class="col login-form">
+        <img class="logo-autonet" src="@/assets/logo.svg" alt="">
 
-            <span class="username">
-                <span class="icon bg-primary"><i class="fa fa-user fa-2x"></i></span><input v-model="username" class="username-txt" id="age" type="text" placeholder="Username">
-            </span>
-            <span class="password">
-               <span class="icon bg-primary"><i class="fa fa-lock fa-2x"></i></span><input v-model="password" class="password-txt" id="age" type="password" placeholder="Password">
-            </span>
+        <span class="username">
+            <span class="icon bg-primary"><i class="fa fa-user fa-2x"></i></span><input v-model="username" class="username-txt" id="age" type="text" placeholder="Username">
+        </span>
+        <span class="password">
+            <span class="icon bg-primary"><i class="fa fa-lock fa-2x"></i></span><input v-model="password" class="password-txt" id="age" type="password" placeholder="Password">
+        </span>
 
-            <q-btn
-                size="22px"
-                class="q-px-xl q-py-xs btn"
-                color="secondary"
-                label="Login"
-                @click="login"
-            />
-        </div>
-        
-      </div> 
-      </q-page>
+        <q-btn
+            size="22px"
+            class="q-px-xl q-py-xs btn"
+            color="secondary"
+            label="Login"
+            @click="login"
+        />
+    </div>
+
+    </div> 
+    </q-page>
 </template>
 
 <script>
