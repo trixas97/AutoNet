@@ -1,14 +1,26 @@
 <template>
+  <page>
     <div id="newnetwork" class="newnetwork">
-      <div class="titlesubmit">
-        <div class="title">New Network</div>
-        <div class="submit">
-          <router-link :to="{name: 'SaveDevices', params: {nodes: nodes, socket: socket}}"><input type="button" value="Next" v-bind:disabled="nodes.length == 0 ? true : false"  ></router-link>
+      <div class="titlesubmit row q-mt-xl">
+        <div class="col"></div>
+        <div class="title col">New Network</div>
+        <div class="col column items-center">
+          <q-btn
+            size="1.2em"
+            class="q-px-xl q-py-xs q-mt-xs"
+            :class="`shadow-8`"
+            color="positive"
+            label="Next"
+            :ripple="{ color: 'black' }"
+            push
+            unelevated 
+            no-caps
+          />
         </div>
       </div>
-      <div class="formcatalog">
-        <div class="form"><NewNetworkForm ref="formTest" @add-node="addNode" :finishedScan="finishedScan"/></div>
-        <div class="catalog">  
+      <div class="formcatalog q-mt-xl row">
+        <div class="form col column items-center"><NewNetworkForm ref="formTest" @add-node="addNode" :finishedScan="finishedScan"/></div>
+        <div class="catalog col">  
           <NewNetworkCatalog v:bind :nodes="nodes" :finishedScan="finishedScan" :networks="networks" @userpass="userpassform"/>
         </div>
       </div>
@@ -23,6 +35,7 @@
         </div>
       </div>
     </div>
+  </page>
 </template>
 
 <script>
@@ -200,90 +213,40 @@ export default {
 .newnetwork {
   display: grid;
   grid-gap: 15px;
-  // background-color: teal;
   padding-top: 2vh;
-  // grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
   grid-template-areas: 
     "titlesubmit" 
     "formcatalog";
 
   .titlesubmit {
     grid-area: titlesubmit;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-areas: 
-    ". title submit";
 
     .title {
-      grid-area: title;
-      width: 100%;
       color:midnightblue;
-      // background-color: thistle;
-      font-size: 1.5em;
-      padding-bottom: 1.5em;
+      font-size: 2.7em;
+      text-align: center;
+      font-family: "arial";
     }
 
-    .submit {
-      grid-area: submit;
-      // background-color: lightgreen;
-      display: grid;
-      // grid-template-columns: 1fr 1fr;
-      grid-template-areas: 
-      "input";
-      
-      input {
-        // justify-self: end;
-        justify-self: center;
-        grid-area: input;
-        width: 12em;
-        height: 3em;
-        // margin-top: 1.3em;
-        border-radius: 4px;
-        background-color: #00b336;
-        border: none;
-        color: #FFFFFF;
-        transition: all 0.5s;
-        cursor: pointer;
-        padding: 5px;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        text: {
-          align: center;
-        }
-        font: {
-          size: 0.6em;
-          weight: bold;
-          family: Roboto;
-        }
-        span {
-          cursor: pointer;
-          display: inline-block;
-          position: relative;
-          transition: 0.5s;
-        }
-        &:disabled {
-          background-color: gray;
-          cursor: not-allowed;
-          &:hover {
-            background-color: gray;
-          }
-        }
-        &:hover {
-          background-color: #3e8e41;
-        }
-      }
+    .q-btn {
+      width: 27%;    
+      font: {
+        size: 10px;
+        family: "arial";
+        weight: bold;
+      }  
     }
   }
 
   .formcatalog {
     display: flex;
     flex-direction: row;
-    grid-area: formcatalog;
     // background-color: turquoise;
 
     .form {
-      grid-area: form;
       flex-grow: 1;
       width: 1em; 
+      background-color: red;
       // padding-right: 2em;
       // padding-left: 5em;
       // background-color: red; 
@@ -292,9 +255,8 @@ export default {
 
 
     .catalog {
-      grid-area: catalog;
       flex-grow: 1;
-    // background-color: indigo;
+    background-color: indigo;
       width: 1em;
       // margin-left: 5em;
       // margin-right: 5em;
