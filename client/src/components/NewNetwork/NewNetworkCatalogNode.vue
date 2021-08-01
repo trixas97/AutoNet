@@ -2,7 +2,7 @@
 <!-- <div v-bind:class="{'new-net-catalog-node': isActive, 'vendor-null': hasError}"> -->
 <div class="new-net-catalog-node" v-if="!node.delete && checked">
   <div class="info" @click="userpassform">
-    <img class="img" src="../../style/router.svg">
+    <img class="img" src="@/assets/vendors/cisco.svg">
     <span class="ip">IP: <span v-if="userPass!=true" class="value"> {{ node.ip }}</span><span v-else class="value" style="color: #05668d"> {{ node.ip }}</span></span>
     <span class="vendor" v-if="node.vendor!=null && userPass!=true">Vendor: <span class="value"> {{ node.vendor }}</span></span>
     <span class="vendor animation" v-if="node.vendor==null">Vendor: <span class="value"> {{ node.vendor }}</span></span>

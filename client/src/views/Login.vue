@@ -1,8 +1,8 @@
 <template>
   <div class="login">
         <div class="login-img">
-            <img class="background" src="@/assets/login-background.svg" alt="">
-            <img class="img-front" src="@/assets/server.svg" alt="">
+            <img class="background" src="@/assets/login/login-background.svg" alt="">
+            <img class="img-front" src="@/assets/login/server.svg" alt="">
         </div>
         <div class="login-form">
             <img class="logo-autonet" src="@/assets/logo.svg" alt="">
