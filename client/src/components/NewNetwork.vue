@@ -1,5 +1,5 @@
 <template>
-  <page>
+  <div>
     <div id="newnetwork" class="newnetwork">
       <div class="titlesubmit row q-mt-xl">
         <div class="col"></div>
@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-  </page>
+  </div>
 </template>
 
 <script>
@@ -93,7 +93,7 @@ export default {
     let socket = io(apiLinks.server);
 
     async function addNode(network){
-
+      console.log('WEE');
       store.dispatch(storeActions.finishedScan, false);
       socket.on('net-length',(data) => {
         let netExistFlag = false;
@@ -238,31 +238,31 @@ export default {
     }
   }
 
-  .formcatalog {
-    display: flex;
-    flex-direction: row;
-    // background-color: turquoise;
+  // .formcatalog {
+  //   display: flex;
+  //   flex-direction: row;
+  //   // background-color: turquoise;
 
-    .form {
-      flex-grow: 1;
-      width: 1em; 
-      background-color: red;
-      // padding-right: 2em;
-      // padding-left: 5em;
-      // background-color: red; 
-      // align-self: flex-end;
-    }
+  //   .form {
+  //     flex-grow: 1;
+  //     width: 1em; 
+  //     background-color: red;
+  //     // padding-right: 2em;
+  //     // padding-left: 5em;
+  //     // background-color: red; 
+  //     // align-self: flex-end;
+  //   }
 
 
-    .catalog {
-      flex-grow: 1;
-    background-color: indigo;
-      width: 1em;
-      // margin-left: 5em;
-      // margin-right: 5em;
-      // background-color: blue;
-    }
-  }
+  //   .catalog {
+  //     flex-grow: 1;
+  //   background-color: indigo;
+  //     width: 1em;
+  //     // margin-left: 5em;
+  //     // margin-right: 5em;
+  //     // background-color: blue;
+  //   }
+  // }
   .userpass-area {
     // background-color: blue;
     position:absolute;
