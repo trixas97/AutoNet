@@ -8,7 +8,7 @@
           <q-btn
             size="1.2em"
             class="q-px-xl q-py-xs q-mt-xs"
-            :class="`shadow-8`"
+            @click="userpassform"
             color="positive"
             label="Next"
             :ripple="{ color: 'black' }"
@@ -227,7 +227,16 @@ export default {
     }
 
     .q-btn {
-      width: 27%;    
+      width: 11em;
+      height: 2.8em;
+      border-radius: 4px;
+      background-color: $accent;
+      border: none;
+      color: #FFFFFF;
+      transition: all 0.5s;
+      padding: 5px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      // width: 27%;    
       font: {
         size: 10px;
         family: "arial";
