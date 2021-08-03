@@ -1,11 +1,12 @@
 <template>
-<div class="new-net-catalog">
-  <div class="info">
-      <span class="network">{{ infoNet() }}</span>
-      <span class="ips">{{ infoHostsNumber() }} <i v-if="!finishedScan" class="fa fa-cog fa-spin fa-lg fa-fw"></i></span>
-      <span class="all"><span class="text">All</span><Checkbox class="checkbox" @changed="checkAllChange"/></span>
+<div class="new-net-catalog ">
+  <div class="info row">
+      <span class="ips col column items-left justify-center"><span class="q-pl-xl">{{ infoHostsNumber() }} <i v-if="!finishedScan" class="fa fa-cog fa-spin fa-lg fa-fw"></i></span></span>
+      <span class="network col column items-center justify-center">{{ infoNet() }}</span>
+      <span class="col column items-right" ><q-checkbox left-label color="teal" class="q-pr-lg" keep-color size="lg"><label>All</label></q-checkbox></span>
+      <!-- <span class="all col column items-right"><span class="text">All</span><Checkbox class="checkbox" @changed="checkAllChange"/></span> -->
   </div>
-  <div class="nodes">
+  <div class="nodes ">
       <NewNetworkCatalogNode
         v-for="node in nodes"
         :key="node.id"
@@ -23,12 +24,12 @@
 <script>
 
 import NewNetworkCatalogNode from './NewNetworkCatalogNode.vue'
-import Checkbox from '../checkbox.vue'
+// import Checkbox from '../checkbox.vue'
 export default {
   name: 'NewNetwork',
   components: {
     NewNetworkCatalogNode,
-    Checkbox
+    // Checkbox
   },
   props: {
     networks: {
@@ -87,39 +88,46 @@ export default {
 //   background-color: $primarydark;
   width: 1fr;
   height: 1fr;
-  display: grid;
-  font-weight: bold;
-  grid-gap: 10px;
-  grid-template-areas: 
-    "info"
-    "nodes";
+  // display: grid;
+  font: {
+    family: "arial";
+    weight: bold;
+  }
+  // grid-gap: 10px;
+  // grid-template-areas: 
+  //   "info"
+  //   "nodes";
 
   .info {
-    display: grid;
-    flex-direction: row;
+    // display: grid;
+    // flex-direction: row;
     color: $primary;
     width: 90%;
     // background-color: lightblue;
     // grid-gap: 10px;
     font-size: 1.3rem;
-    grid-template-columns: 1fr 3fr 1fr;
-    grid-template-areas: 
-      "ips network all";
+    // grid-template-columns: 1fr 3fr 1fr;
+    // grid-template-areas: 
+    //   "ips network all";
+    // background-color: aquamarine;
 
-    .network {
-      grid-area: network;
+    // .network {
+      // grid-area: network;
       // background-color: lightskyblue;
       // width: 10%;
       // flex-grow: 1;
-    }
-    .ips {
-      grid-area: ips;
-      width: 1fr;
+          // background-color: yellowgreen;
+    // }
+    // .ips {
+      // grid-area: ips;
+      // width: 1fr;
       // background-color: lightsalmon;
       // flex-grow: 3;
-    }
+          // background-color: royalblue;
+    // }
     .all {
-      grid-area: all;
+      // grid-area: all;
+          // background-color: rebeccapurple;
       justify-content: end; 
       width: 100%;
       // background-color: lightcoral;
@@ -169,6 +177,10 @@ export default {
     .info {
       grid-template-columns: 2fr 3fr 2fr;
       width: 100%;
+    }
+
+    label {
+      display: none;
     }
   //     .nodes {
   //   width: 1fr;

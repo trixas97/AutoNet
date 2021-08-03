@@ -20,9 +20,7 @@
       </div>
       <div class="formcatalog q-mt-xl row">
         <div class="form col column items-center"><NewNetworkForm ref="formTest" @add-node="addNode" :finishedScan="finishedScan"/></div>
-        <div class="catalog col">  
-          <NewNetworkCatalog v:bind :nodes="nodes" :finishedScan="finishedScan" :networks="networks" @userpass="userpassform"/>
-        </div>
+        <div class="catalog col"><NewNetworkCatalog v:bind :nodes="nodes" :finishedScan="finishedScan" :networks="networks" @userpass="userpassform"/></div>
       </div>
       <div class="userpass-area" v-if="userpassvalue.state == 1">
         <div class="userpass-form">

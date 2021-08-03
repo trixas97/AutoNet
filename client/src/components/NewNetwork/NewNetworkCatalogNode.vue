@@ -1,27 +1,26 @@
 <template>
-<!-- <div v-bind:class="{'new-net-catalog-node': isActive, 'vendor-null': hasError}"> -->
 <div class="new-net-catalog-node" v-if="!node.delete && checked">
   <div class="info" @click="userpassform">
-    <img class="img" src="@/assets/vendors/cisco.svg">
+    <q-img class="img col" src="@/assets/vendors/cisco.svg"/>
     <span class="ip">IP: <span v-if="userPass!=true" class="value"> {{ node.ip }}</span><span v-else class="value" style="color: #05668d"> {{ node.ip }}</span></span>
-    <span class="vendor" v-if="node.vendor!=null && userPass!=true">Vendor: <span class="value"> {{ node.vendor }}</span></span>
-    <span class="vendor animation" v-if="node.vendor==null">Vendor: <span class="value"> {{ node.vendor }}</span></span>
+    <span class="vendor" v-if="node.vendor!=null && userPass!=true"> Vendor: <span class="value"> {{ node.vendor }}</span></span>
+    <span class="vendor animation" v-if="node.vendor==null"> Vendor: <span class="value"> {{ node.vendor }}</span></span>
     <span class="mac" v-if="node.mac!=null && userPass!=true">MAC: <span class="value"> {{ node.mac }}</span></span>
     <span class="mac animation" v-if="node.mac==null">MAC: <span class="value"> {{ node.mac }}</span></span>
-    <span class="vendor" v-if="node.vendor!=null && userPass==true"><div class="input-container"><i class="fa fa-user icon"></i><input v-model="node.username" class="textForm" type="text" placeholder="Username"></div></span>
-    <span class="mac" v-if="node.mac!=null && userPass==true"><div class="input-container"><i class="fa fa-lock icon"></i><span></span><input v-model="node.password" class="textForm" type="text" placeholder="Password"></div></span>
+    <span class="vendor col" v-if="node.vendor!=null && userPass==true"><div class="input-container"><i class="fa fa-user icon"></i><input v-model="node.username" class="textForm" type="text" placeholder="Username"></div></span>
+    <span class="mac col" v-if="node.mac!=null && userPass==true"><div class="input-container"><i class="fa fa-lock icon"></i><span></span><input v-model="node.password" class="textForm" type="text" placeholder="Password"></div></span>
   </div>
-  <span v-if="userPass!=true" class="check"><Checkbox ref="checkbox" @changed="changeCheck"/></span>
+  <span class="column" v-if="userPass!=true"><q-checkbox left-label color="teal" class="q-pr-xs" keep-color size="lg"/></span>
   <span v-if="userPass==true" class="check"><span class="icon-status"><i ref="iconStatus" v-bind:class="{'fa fa-check icon': finished==1 && progress, 'fa fa-spinner fa-spin icon': finished==0 && progress, 'fa fa-times icon': finished==2 && progress}"></i></span></span>
 </div>
 </template>
 
 <script>
-import Checkbox from '../checkbox.vue'
+// import Checkbox from '../checkbox.vue'
 export default {
   name: 'NewNetworkCatalogNode',
   components: {
-    Checkbox
+    // Checkbox
   },
   props: {
     node: { },
@@ -70,7 +69,12 @@ export default {
 
 .new-net-catalog-node {
 //   background-color: $primarydark;
-  padding: 1em;
+  padding: {
+    left: 1em;
+    right: 1.1em;
+    top: 0.6em;
+    bottom: 0.6em;
+  } 
   // padding-top: 0.5em;
   margin-bottom: 0.5em;
 //   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.2), 0 0px 2px 0 rgba(0, 0, 0, 0.19);
@@ -120,12 +124,12 @@ export default {
     grid-template-areas: 
       "img ip vendor mac";
     
-    img {
+    .q-img {
       grid-area: img;
       // background-color: lightsalmon;
       // width: 4.1em;
       display: flex;
-      // width: 4.1rem;
+      width: 4.5rem;
       flex-grow: 1;
       // width: 80%;
       // height: 100%;
@@ -213,7 +217,6 @@ export default {
         }
       }
     }
-    
 
     .value {
       color: $accent;
@@ -282,7 +285,7 @@ export default {
 
     .new-net-catalog-node {
       padding-top: 0.5em;
-      height: 25%;
+      height: 50%;
       display: grid;
       margin-right: 0em;
       margin-left: 0em;
@@ -334,7 +337,7 @@ export default {
 @media screen and (max-height: 650px) {
   .new-net-catalog-node {
     padding-top: 0.5em;
-    height: 25%;
+    height: 50%;
   }
 }
 
