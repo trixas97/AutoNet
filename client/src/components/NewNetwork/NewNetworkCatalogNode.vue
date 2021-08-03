@@ -10,7 +10,7 @@
     <span class="vendor col" v-if="node.vendor!=null && userPass==true"><div class="input-container"><i class="fa fa-user icon"></i><input v-model="node.username" class="textForm" type="text" placeholder="Username"></div></span>
     <span class="mac col" v-if="node.mac!=null && userPass==true"><div class="input-container"><i class="fa fa-lock icon"></i><span></span><input v-model="node.password" class="textForm" type="text" placeholder="Password"></div></span>
   </div>
-  <span class="column" v-if="userPass!=true"><q-checkbox left-label color="teal" class="q-pr-xs" keep-color size="lg"/></span>
+  <span class="column" v-if="userPass!=true"><q-checkbox v-model="node.checked" left-label color="teal" class="q-pr-xs" keep-color size="lg" /></span>
   <span v-if="userPass==true" class="check"><span class="icon-status"><i ref="iconStatus" v-bind:class="{'fa fa-check icon': finished==1 && progress, 'fa fa-spinner fa-spin icon': finished==0 && progress, 'fa fa-times icon': finished==2 && progress}"></i></span></span>
 </div>
 </template>
@@ -31,6 +31,7 @@ export default {
     let finished = 0;
     let progress = false;
     return{
+
       progress,
       finished
     }
@@ -41,8 +42,8 @@ export default {
     },
     checkAll(value){
       value == true ? this.node.checked = true : this.node.checked = false;
-      this.$refs.checkbox.changeAll(value);
     },
+
     userpassform(){
       // console.log(this.$refs.iconStatus);
       // this.finished = true;

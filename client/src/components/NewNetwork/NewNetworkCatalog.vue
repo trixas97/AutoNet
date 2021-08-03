@@ -3,7 +3,7 @@
   <div class="info row">
       <span class="ips col column items-left justify-center"><span class="q-pl-xl">{{ infoHostsNumber() }} <i v-if="!finishedScan" class="fa fa-cog fa-spin fa-lg fa-fw"></i></span></span>
       <span class="network col column items-center justify-center">{{ infoNet() }}</span>
-      <span class="col column items-right" ><q-checkbox left-label color="teal" class="q-pr-lg" keep-color size="lg"><label>All</label></q-checkbox></span>
+      <span class="col column items-right" ><q-checkbox :modelValue="checkedAll" @click="checkAllChange" left-label color="teal" class="q-pr-lg" keep-color size="lg"><label>All</label></q-checkbox></span>
       <!-- <span class="all col column items-right"><span class="text">All</span><Checkbox class="checkbox" @changed="checkAllChange"/></span> -->
   </div>
   <div class="nodes ">
@@ -13,7 +13,7 @@
         :node="node"
         :checked="true"
         @userpass="userpassform"
-        ref="nodesRef"
+        :ref="setItemRef"
 
       />
       <!-- <NewNetworkCatalogNode ip="{{ nodes[0].ip }}"/> -->
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-
+// import {ref} from 'vue'
 import NewNetworkCatalogNode from './NewNetworkCatalogNode.vue'
 // import Checkbox from '../checkbox.vue'
 export default {
@@ -42,10 +42,20 @@ export default {
       type: Boolean
     }
   },
+  data(){
+    return{
+      nodesRefs: [],
+    }
+  },
   methods: {
-    checkAllChange(value){
-      this.$refs.nodesRef.forEach(element => {
-        element.node.delete == false ? element.checkAll(value) : null
+    setItemRef(el) {
+      if(el){ this.nodesRefs.push(el) }
+    },
+    checkAllChange(){
+      let value;
+      this.checkedAll == true || this.checkedAll == false  ? value = !this.checkedAll : value = true;
+      this.nodes.forEach(element => {
+        element.checked = value;
       });
     },
 
@@ -77,6 +87,24 @@ export default {
     userpassform(value){
       this.$emit("userpass", value)
     }
+  },
+  computed: {
+    checkedAll() {
+      let count = 0;
+      this.nodes.forEach(element => {
+        if(element.checked) count++;
+      });
+      if(count == this.nodes.length)
+        return true
+      else
+        if(count == 0)
+          return false
+        else
+          return null
+    }
+  },
+  beforeUpdate() {
+    this.nodesRefs = []
   }
 }
 </script>
