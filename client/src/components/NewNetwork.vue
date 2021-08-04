@@ -5,6 +5,7 @@
         <div class="col"></div>
         <div class="title col">New Network</div>
         <div class="col column items-center">
+          <router-link :to="{name: 'SaveDevices', params: {nodes: nodes, socket: socket}}">
           <q-btn
             size="1.2em"
             class="q-px-xl q-py-xs q-mt-xs"
@@ -16,6 +17,7 @@
             unelevated 
             no-caps
           />
+          </router-link>
         </div>
       </div>
       <div class="formcatalog q-mt-xl row">
@@ -69,7 +71,8 @@ export default {
       deleteNode: `${storeState}deleteNode`,
       addNetwork: `${storeState}addNetwork`,
       deleteNetwork: `${storeState}deleteNetwork`,
-      finishedScan: `${storeState}setFinishedScan`
+      finishedScan: `${storeState}setFinishedScan`,
+      
     }
     const finishedScan = computed(() => store.state.NewNetwork.finishedScan);
     const nodes = computed(() => store.getters[storeActions.nodes]).value;
