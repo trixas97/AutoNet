@@ -69,7 +69,7 @@ export default {
 
 
 .new-net-catalog-node {
-//   background-color: $primarydark;
+  // background-color: $primarydark;
   padding: {
     left: 1em;
     right: 1.1em;
@@ -94,7 +94,7 @@ export default {
   grid-gap: 0px;
 
   width: 90%;
-  height: 1fr;
+  height: 7em;
   align-items: center;
   grid-template-columns: 7fr 1fr;
   animation: createNode 0.4s ease;

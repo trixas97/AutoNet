@@ -1,9 +1,9 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr lFf" class="layout">
 
     <NavBar v-if="$route.name != 'Login'"/>
 
-    <q-page-container >
+    <q-page-container class="layout" >
       <router-view/>
     </q-page-container>
 
@@ -28,3 +28,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .layout {
+    height: 100%;
+  }
+</style>

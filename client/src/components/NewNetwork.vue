@@ -5,7 +5,7 @@
         <div class="col"></div>
         <div class="title col">New Network</div>
         <div class="col column items-center">
-          <router-link :to="{name: 'SaveDevices', params: {nodes: nodes, socket: socket}}">
+          <router-link :to="{name: 'SaveDevices', params: {nodes: ['nodes'], socket: 'socket'}}">
           <q-btn
             size="1.2em"
             class="q-px-xl q-py-xs q-mt-xs"
@@ -80,9 +80,9 @@ export default {
 
     
     const apiLinks = {
-      server: "http://192.168.1.7:5000",
+      server: "http://192.168.2.14:5000",
       autoScan: {
-        path: `http://192.168.1.7:5000/api/devices?`,
+        path: `http://192.168.2.14:5000/api/devices?`,
         p1: "ip=",
         p2: "&id="
       }
@@ -94,7 +94,6 @@ export default {
     let socket = io(apiLinks.server);
 
     async function addNode(network){
-      console.log('WEE');
       store.dispatch(storeActions.finishedScan, false);
       socket.on('net-length',(data) => {
         let netExistFlag = false;
