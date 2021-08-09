@@ -45,8 +45,6 @@ export default {
     },
 
     userpassform(){
-      // console.log(this.$refs.iconStatus);
-      // this.finished = true;
       this.$emit('userpass', this.node);
 
     },
