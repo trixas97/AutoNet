@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="formcatalog q-mt-xl row">
-        <div class="form col column items-center"><NewNetworkForm ref="formTest" @add-node="addNode" :finishedScan="finishedScan"/></div>
+        <div class="form col column items-center"><NewNetworkForm @add-node="addNode" :finishedScan="finishedScan"/></div>
         <div class="catalog col"><NewNetworkCatalog v:bind :nodes="nodes" :finishedScan="finishedScan" :networks="networks" @userpass="userpassform"/></div>
       </div>
       <div class="userpass-area" v-if="userpassvalue.state == 1">
@@ -80,9 +80,9 @@ export default {
 
     
     const apiLinks = {
-      server: "http://192.168.2.14:5000",
+      server: `${location.protocol}//${location.hostname}:5000`,
       autoScan: {
-        path: `http://192.168.2.14:5000/api/devices?`,
+        path: `${location.protocol}//${location.hostname}:5000/api/devices?`,
         p1: "ip=",
         p2: "&id="
       }
@@ -196,11 +196,6 @@ export default {
       // this.userpassvalue.password = '';
     }
   },
-  computed:{
-    testSg(){
-      return this.finishedScan;
-    }
-  }
 }
 </script>
 

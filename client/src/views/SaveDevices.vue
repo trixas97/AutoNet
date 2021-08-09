@@ -1,6 +1,6 @@
 <template>
-  <page class="test">
-    <div class="save-devices test">
+  <page>
+    <div class="save-devices">
       <!-- <NewNetwork v-bind:auto="false"/> -->
       <div class="titlesubmit">
         <div class="title">Devices</div>

@@ -1,21 +1,20 @@
 <template>
- <div>
-    <div class="row topology">
-    <img 
-        v-for="node in nodesData.length"
-        :key="node"
-        :ref="setItemRef"
-        src="@/assets/nodes/router.svg" 
-        :style="{width:'4.6em', height:'3.2em'}"
-        alt="">
-    <label        
-        v-for="node in nodesData.length"
-        :key="'NodeLabel' + node"
-        :ref="setItemRef"
+    <div class="topology">
+        <img 
+            v-for="node in nodesData.length"
+            :key="node"
+            :ref="setItemRef"
+            src="@/assets/nodes/router.svg" 
+            :style="{width:'4.6em', height:'3.2em'}"
+            alt="">
+        <label        
+            v-for="node in nodesData.length"
+            :key="'NodeLabel' + node"
+            :ref="setItemRef"
 
-        alt="">{{nodesData[node-1].name}}</label>
+            alt="">{{nodesData[node-1].name}}
+        </label>
   </div>
- </div>
 </template>
 
 <script>
@@ -38,7 +37,6 @@ export default {
         let nodesData = [];
         let linksData = [];
         let socket = io(serverUrl);
-
 
         return {
             nodeRefs: [],
@@ -129,8 +127,8 @@ export default {
 </script>
 <style lang="scss" scoped>
     .topology {
-        height: 94.6vh; 
-        width: 100vw;
+        height: 100%; 
+        width: 100%;
         label{
             color: black;
             font: {
