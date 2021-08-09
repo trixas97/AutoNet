@@ -1,26 +1,38 @@
 <template>
-  <div class="login">
-        <div class="login-img">
-            <img class="background" src="@/assets/login/login-background.svg" alt="">
-            <img class="img-front" src="@/assets/login/server.svg" alt="">
-        </div>
-        <div class="login-form">
-            <img class="logo-autonet" src="@/assets/logo.svg" alt="">
+ 
+ <div class="login">
+    <div class="row" style="height: 100%">
+        <div class="col login-img">
+        <q-img
+            class="background"
+            src="@/assets/login/login-background.svg"
+        />
+        <q-img
+            class="img-front"
+            src="@/assets/login/server.svg"
+        />         
+    </div>
+    <div class="col login-form">
+        <img class="logo-autonet" src="@/assets/logo.svg" alt="">
 
-            <span class="username">
-                <span class="icon"><i class="fa fa-user fa-2x"></i></span><input v-model="username" class="username-txt" id="age" type="text" placeholder="Username">
-            </span>
+        <span class="username">
+            <span class="icon bg-primary"><i class="fa fa-user fa-2x"></i></span><input v-model="username" class="username-txt" id="age" type="text" placeholder="Username">
+        </span>
+        <span class="password">
+            <span class="icon bg-primary"><i class="fa fa-lock fa-2x"></i></span><input v-model="password" class="password-txt" id="age" type="password" placeholder="Password">
+        </span>
 
-            <!-- <input class="username" type="text"> -->
-            <span class="password">
-               <span class="icon"><i class="fa fa-lock fa-2x"></i></span><input v-model="password" class="password-txt" id="age" type="password" placeholder="Password">
-            </span>
-            <div class="btn-div">
-                <button class="btn" style="vertical-align:middle" @click="login" ><span>Login</span></button>  
-            </div> 
-            <!-- <input class="btn" type="button" value="Login"> -->
-        </div>
-  </div>
+        <q-btn
+            size="22px"
+            class="q-px-xl q-py-xs btn"
+            color="secondary"
+            label="Login"
+            @click="login"
+        />
+    </div>
+
+    </div> 
+    </div>
 </template>
 
 <script>
@@ -35,13 +47,16 @@ export default {
   data(){
       const username = '';
       const password = '';
+              
       return{
           username,
-          password
+          password,
+
+      size: 'md'
       }
   },
   methods:{
-      async login(){       
+      async login(){  
         const data = {
             username: this.username,
             password: this.password   
@@ -52,48 +67,46 @@ export default {
 
         if(res.status == 200){
             store.dispatch('User/setToken', res.data);
-            this.$router.push('Topology');
+            this.$router.push('autoScan');
         }
       }
   }
 }
 </script>
 
+
 <style lang="scss" scoped>
-   
     .login{
         height: 100%;
         width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-areas: 
-        "img form";
-
         .login-img{
-            grid-area: img;
-            display: inline-flex;
-            background-color: #040b25;
-            .background {
-                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 1), 0 6px 20px 0 rgba(0, 0, 0, 1);
-                height: 100%;
-                width: 50vw;
-                object-fit: cover;
-            }  
+                // grid-area: img;
+                display: inline-flex;
+                background-color: #040b25;
+                // height: 100%;
 
-            .img-front {
-                position: absolute;
-                left: 10vw;
-                top: 35vh;
-                height: 30%;
-                width: 30%;
-            }  
+                .background {
+                    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 1), 0 6px 20px 0 rgba(0, 0, 0, 1);
+                    height: 100%;
+                    width: 50vw;
+                    object-fit: cover;
+                }  
+
+                .img-front {
+                    position: absolute;
+                    display: flex;
+                    justify-self: center;
+                    left: 17%;
+                    top: 35%;
+                    width:15%;
+                }
         }
 
         .login-form {
             grid-area: form;
             display: grid;
             grid-gap: 2em;
-            grid-template-rows: 1.6fr 0.2fr 0.4fr 0.2fr 0.2fr 0.2fr 1.6fr;
+            grid-template-rows: 1.6fr 0.2fr 0.4fr 0.2fr 0.2fr 0.1fr 0.6fr 1.6fr;
             grid-template-columns: 1fr 2fr 1fr;
             grid-template-areas: 
             ". . ."
@@ -101,8 +114,14 @@ export default {
             ". . ."
             ". username ."
             ". password ."
+            ". . . "
             ". btn ."
             ". . .";
+
+            font: {
+                family: 'Arial';
+                weight: bold;
+            }
 
             img {
                 grid-area: title;
@@ -123,7 +142,7 @@ export default {
                 .username-txt{
                     min-height: 3em;
                     width: 100%;
-                    font-size: 1.5em;       
+                    font-size: 1.7em;       
                     padding: 5px; 
                     border: 1px solid #ccc;
                     border-radius: 4px;
@@ -144,7 +163,7 @@ export default {
                 .password-txt{
                     min-height: 3em;
                     width: 100%;
-                    font-size: 1.5em;       
+                    font-size: 1.7em;       
                     padding: 5px; 
                     border: 1px solid #ccc;
                     border-radius: 4px;
@@ -155,13 +174,11 @@ export default {
 
                 }
             }
-
+            
             .icon {
                     padding: 0.5em;
-                    min-width: 3em;
-                    background: #43c3a1;
+                    min-width: 4em;
                     color: white;
-                    
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -170,85 +187,16 @@ export default {
 
                 }
 
-            // .btn {
-            //     grid-area: btn;
-            //     min-height: 5em;
-            // }
-            .btn-div {
+            .btn{
                 grid-area: btn;
-                
-                flex-grow: 1;
-                align-self: center;
-                grid-area: btn;
-                min-height: 5em;
-                // background-color: green;
-
-                .btn {
-                width: 100%;
-                height: 100%;
-                margin-top: 1.3em;
-                border-radius: 4px;
-                background-color: #e56353;
-                border: none;
-                color: #FFFFFF;
-                transition: all 0.5s;
-                cursor: pointer;
-                padding: 0.8em;
-                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-                text: {
-                    align: center;
-                }
                 font: {
                     size: 1.5em;
                     weight: bold;
-                    // family: Roboto;
                 }
-                span {
-                    // cursor: pointer;
-                    display: inline-block;
-                    position: relative;
-                    transition: 0.5s;
-
-                    &:after {
-                    content: '\f0a9';
-                    font-family: FontAwesome;
-                    // font-weight:900;
-                    position: absolute;
-                    opacity: 0;
-                    top: 0;
-                    right: -10em;
-                    left: 5em;
-                    transition: 0.7s;
-                    }
-                }
-
-                i {
-                    padding-right: 0px;
-                }
-
-                &:disabled {
-                    background-color: gray;
-                    cursor: not-allowed;
-                    transition: all 0s;
-
-                    &:hover {
-                    padding: 0px;
-                    }
-                }
-
-                &:hover {
-                    padding-right: 1.5em;
-                    span {
-                        &:after {
-                            opacity: 1;
-                            right: -1.5em;
-                        }
-                    }
-                }
-                }
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
             }
+        
         }
-
     }
 
 </style>

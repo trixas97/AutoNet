@@ -22,7 +22,7 @@ export default createStore({
     createPersistedState({
       storage: {
         getItem: (key) => Cookies.get(key),
-        setItem: (key, value) => Cookies.set(key, value, { secure: true }),
+        setItem: (key, value) => Cookies.set(key, value, { secure: false }),
         removeItem: (key) => Cookies.remove(key),
       }
     })

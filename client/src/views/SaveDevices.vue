@@ -1,31 +1,47 @@
 <template>
-  <div class="save-devices">
-    <!-- <NewNetwork v-bind:auto="false"/> -->
-    <div class="titlesubmit">
-      <div class="title">Devices</div>
-      <div class="submit">
-        <input type="button" value="Save" @click="saveDevices" v-bind:disabled="nodes.length == 0 ? true : false"  >
+  <page>
+    <div class="save-devices">
+      <!-- <NewNetwork v-bind:auto="false"/> -->
+      <div class="titlesubmit">
+        <div class="title">Devices</div>
+        <div class="submit">
+          <q-btn
+          v-bind:disabled="nodes.length == 0 ? true : false"
+            size="1.2em"
+            class="q-px-xl q-py-xs q-mt-xs"
+            color="positive"
+            label="Save"
+            @click="saveDevices"
+            :ripple="{ color: 'black' }"
+            push
+            unelevated 
+            no-caps
+          />
+        </div>
+      </div>
+
+      <div class=nodes>
+        <!-- @userpass="userpassform_open" -->
+        <NewNetworkCatalogNode 
+          v-for="node in nodes"
+          :checked="node.checked"
+          :key="node.id"
+          :node="node"
+          :userPass="true"
+          ref="nodesRef"
+          class="node"
+        />
       </div>
     </div>
-
-    <div class=nodes>
-      <!-- @userpass="userpassform_open" -->
-      <NewNetworkCatalogNode 
-        v-for="node in nodes"
-        :checked="node.checked"
-        :key="node.id"
-        :node="node"
-        :userPass="true"
-        ref="nodesRef"
-      />
-    </div>
-  </div>
+  </page>
 </template>
 
 <script>
 // @ is an alias to /src
 import NewNetworkCatalogNode from '@/components/NewNetwork/NewNetworkCatalogNode.vue'
-
+import { computed } from '@vue/runtime-core';
+import { useStore } from 'vuex';
+import io from 'socket.io-client'
 import axios from 'axios'
 export default {
   
@@ -35,9 +51,17 @@ export default {
   },
   data(){
     // const route = useRoute();
-    const nodes = this.$route.params.nodes;
-    let socket = this.$route.params.socket;
-    let url = 'http://192.168.1.7:5000/api/nodesSave';
+    const store = useStore();
+    const storeState = 'NewNetwork/';
+    const storeActions = {
+      nodes: `${storeState}getNodes`,
+    }
+    
+    const nodes = computed(() => store.getters[storeActions.nodes]).value;
+    let socket = io('http://192.168.2.14:5000');
+    
+    console.log(nodes);
+    let url = 'http://192.168.2.14:5000/api/nodesSave';
      
     socket.on('save-nodes',(data) => {
       this.$refs.nodesRef.forEach(element => {
@@ -79,18 +103,17 @@ export default {
 
 <style lang="scss" scoped>
   .save-devices {
-    // background-color: blue;
     display: grid;
     width: 100%;
     height: 100%;
     grid-row-gap: 1.5em;
+    grid-auto-rows: 1fr 5fr;
     grid-template-areas: 
     "head head head"
     ". nodes .";
 
     .titlesubmit{
       grid-area: head;
-      // background-color: green;
       width: 100%;
       color:midnightblue;
       display: grid;
@@ -100,66 +123,46 @@ export default {
 
       .title{
         grid-area: title;
-        font-size: 1.5em;
+        font: {
+          size: 3em;
+          family: 'arial';
+        }
+        margin: auto;
       }
 
       .submit{
         grid-area:btn;
-         display: grid;
-      // grid-template-columns: 1fr 1fr;
-          grid-template-areas: 
-          "input";
-          
-          input {
-            // justify-self: end;
-            justify-self: center;
-            grid-area: input;
-            width: 12em;
-            height: 3em;
-            // margin-top: 1.3em;
-            border-radius: 4px;
-            background-color: #00b336;
-            border: none;
-            color: #FFFFFF;
-            transition: all 0.5s;
-            cursor: pointer;
-            padding: 5px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-            text: {
-              align: center;
+        display: grid;
+        justify-items: center;
+            .q-btn {
+              margin: auto;
+              width: 11em;
+              height: 2.8em;
+              border-radius: 4px;
+              border: none;
+              color: #FFFFFF;
+              box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);  
+              font: {
+                size: 10px;
+                family: "arial";
+                weight: bold;
+              }  
             }
-            font: {
-              size: 0.6em;
-              weight: bold;
-              family: Roboto;
-            }
-            span {
-              cursor: pointer;
-              display: inline-block;
-              position: relative;
-              transition: 0.5s;
-            }
-            &:disabled {
-              background-color: gray;
-              cursor: not-allowed;
-              &:hover {
-                background-color: gray;
-              }
-            }
-            &:hover {
-              background-color: #3e8e41;
-            }
-          }
-        }
       }
+    }
     
 
     .nodes{
-      // background-color: green;
       grid-area: nodes;
       width: 100%;
-      display: grid;
-      justify-items: center;
+      height: 100%;
+      display: block;
+
+      .node {
+        height: 5em;
+        margin-left: auto;
+        margin-right: auto;
+      }
 
     }
   }

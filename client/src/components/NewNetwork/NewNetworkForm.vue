@@ -1,20 +1,46 @@
 <template>
-<div class="new-net-form">
-  <div class="title">Network IP Address</div>
-  <div class="form">
-    <input v-model="network" type="text" class=AddressText placeholder="Network IP">
-    <div class="slash">/</div>
-    <input v-model="mask" type="text" class="MaskText" placeholder="Mask">
+<div>
+  <div class="row">
+    <div class="title column col">Network IP Address</div>
   </div>
-  <div class="search-div">
-      <button ref="btn" class="search" style="vertical-align:middle" v-on:click="createNode" v-bind:disabled="!finishedScan"><span class="icon" v-if="finishedScan">Search </span><i v-if="!finishedScan" class="fa fa-refresh fa-spin fa-lg fa-fw"></i></button>  
-  </div>
+    <div class="form q-mt-lg">
+
+      <div class="row" >
+
+        <div class="col-8 column items-start">
+          <input v-model="network" type="text" class=AddressText placeholder="Network IP">
+        </div>
+
+        <div class="col slash q-ml-lg column items-center" >/</div>
+      
+        <div class="col-3 column items-end">
+          <input v-model="mask" type="text" class="MaskText" placeholder="Mask">
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row search-div q-mt-md" >
+      <div class="col column items-center">
+        <q-btn 
+          v-bind:disabled="!finishedScan"
+          @click="createNode"
+          size="1.1em"
+          class="q-px-xl q-py-xs search"
+          color="accent"
+          :ripple="{ color: 'black' }"
+          unelevated 
+          no-caps
+        >
+          <span class="icon" v-if="finishedScan">Search </span><i v-if="!finishedScan" class="fa fa-refresh fa-spin fa-lg fa-fw"></i>
+        </q-btn>
+      </div>
+    </div>
 </div>
 </template>
 
 <script>
-// import { reactive } from 'vue';
-// import { computed } from 'vue';
+import { ref } from 'vue';
 import { useStore } from 'vuex';
 export default {
   props:{
@@ -23,17 +49,13 @@ export default {
     }
   },
   setup(props,ctx){
-    let network =""
-    let mask = ""
-    const store = useStore();
-    console.log(props.finishedScan);
-    
+    let network = ref("");
+    let mask = ref("");
+    const store = useStore();   
 
     function createNode(){
-      console.log(`${this.network}/${this.mask}`);
-      ctx.emit('add-node', `${this.network}/${this.mask}`);
+      ctx.emit('add-node', `${network.value}/${mask.value}`);
     }
-
 
     return {
       network,
@@ -46,105 +68,65 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../style/variables";
-
-.new-net-form {
-  display: flex;
-  width: 1fr;
-  height: 1fr;
-  flex-direction: column;
+@import "@/styles/quasar.variables";
 
   .title {
-    grid-area: title;
-    flex-grow: 1;
-    width: 1fr;
-    height: 1fr;
-    padding-bottom: 0.8em;
-    // font-weight: bold;
-    font-size: 1.1em;
-    text-align: center;
-    align-self: center;
-    opacity: 1;
-    color:midnightblue;
-    // background-color: red;
+      color:$txtHead;
+      font-size: 2em;
+      text-align: center;
+      font-family: "arial";
   }
 
   .form {
-    grid-area: form;
-    flex-grow: 1;
-    width: 1fr;
-    height: 1fr;
-    display:inline-flex;
-    align-self: center;
-    text-align: center;
-    
+
+    font: {
+      family: "helvetica";
+      weight: bold;
+      size: 2em;
+    }
 
     .AddressText {
-      height: 1fr;
-      width: 9.2em;
-      margin: 0px;
-      font-size: 1em;       
-      padding: 5px; 
+      width: 8em;
+      padding-left: 5px; 
       border: 1px solid #ccc;
       border-radius: 4px;
-      font-weight: bold;
       color: $accent;
       box-sizing: border-box;
+      font-family: "helvetica";
     }
 
     .slash {
-      height: 1fr;
       width: 1em;
-      font-size: 1fr;
-      padding: 0.2em;
-      margin: 0px;
-      color:darkslategrey;
+      color: $txtDark;
     }
 
     .MaskText {
-      height: 1fr;
       width: 2em;
-      font-size: 1em;
-      font-weight: bold;
-      padding: 5px; 
+      text-align: center; 
       border: 1px solid #ccc;
       border-radius: 4px;
       font-weight: bold;
-      color: darkslategray;
+      color: $txtDark;
       box-sizing: border-box;
     }
   }
-
-  .search-div {
-    grid-area: search;
-    width: 12.6em;
-    flex-grow: 1;
-    align-self: center;
-    height: 3em;
-    // background-color: green;
 
     .search {
       width: 12em;
       height: 3em;
-      margin-top: 1.3em;
       border-radius: 4px;
       background-color: $accent;
       border: none;
       color: #FFFFFF;
       transition: all 0.5s;
-      cursor: pointer;
       padding: 5px;
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-      text: {
-        align: center;
-      }
       font: {
         size: 0.6em;
         weight: bold;
         family: Roboto;
       }
       span {
-        // cursor: pointer;
         display: inline-block;
         position: relative;
         transition: 0.5s;
@@ -152,7 +134,6 @@ export default {
         &:after {
           content: '\f0a9';
           font-family: FontAwesome;
-          // font-weight:900;
           position: absolute;
           opacity: 0;
           top: 0;
@@ -162,15 +143,9 @@ export default {
         }
       }
 
-      i {
-        padding-right: 0px;
-      }
-
       &:disabled {
-        background-color: gray;
-        cursor: not-allowed;
+        background-color: black;
         transition: all 0s;
-
         &:hover {
           padding: 0px;
         }
@@ -185,9 +160,7 @@ export default {
           }
         }
       }
-    }
   }
-}
 
 //768
 @media screen and (max-width: 1281px) {
@@ -209,7 +182,7 @@ export default {
       font-size: 1.1em;
       text-align: center;
       opacity: 0;
-      color: $primarydark;
+      color: $txtHead;
     }
   }
 

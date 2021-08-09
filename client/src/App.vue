@@ -1,36 +1,24 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated class="glossy">
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          @click="leftDrawerOpen = !leftDrawerOpen"
-          aria-label="Menu"
-          icon="menu"
-        />
+  <q-layout view="lHh Lpr lFf" class="layout">
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+    <NavBar v-if="$route.name != 'Login'"/>
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
-    <q-page-container>
+    <q-page-container class="layout" >
+      <router-view/>
     </q-page-container>
+
   </q-layout>
 </template>
 
 <script>
 import { ref } from 'vue'
+import NavBar from '@/components/NavBar.vue'
 
 export default {
   name: 'LayoutDefault',
 
   components: {
+    NavBar
   },
 
   setup () {
@@ -40,3 +28,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .layout {
+    height: 100%;
+  }
+</style>

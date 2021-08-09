@@ -4,7 +4,7 @@ export const NewNetworkModule = {
     state: {
         nodes: [],
         networks: [],
-        finishedScan: true
+        finishedScan: true,
     },
 
     // Mutations are functions that effect the STATE.
@@ -42,7 +42,7 @@ export const NewNetworkModule = {
         },
         deleteNetwork({ commit }){
             commit('deleteNetwork');
-        }
+        },
     },
 
     getters: {

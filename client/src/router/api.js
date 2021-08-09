@@ -1,6 +1,6 @@
 const axios = require('axios').default;
 
-const baseUrl = 'http://192.168.1.7:5000';
+const baseUrl = `${location.protocol}//${location.hostname}:5000`;
 
 const url ={
     login: `${baseUrl}/user/login`,
