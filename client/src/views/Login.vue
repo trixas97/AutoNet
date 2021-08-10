@@ -38,7 +38,8 @@
 <script>
 // @ is an alias to /src
 import store from '../store'
-const { loginRequest } = require('../router/api');
+import { sockets } from '@/services/sockets.js';
+const { loginRequest } = require('@/services/api');
 
 export default {
   name: 'Login',
@@ -62,12 +63,12 @@ export default {
             password: this.password   
         }
 
-
         const res = await loginRequest(data);
 
         if(res.status == 200){
             store.dispatch('User/setToken', res.data);
-            this.$router.push('autoScan');
+            sockets();
+            this.$router.push('topology');
         }
       }
   }

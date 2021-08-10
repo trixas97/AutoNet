@@ -13,6 +13,8 @@
 <script>
 import { ref } from 'vue'
 import NavBar from '@/components/NavBar.vue'
+import { sockets } from '@/services/sockets.js';
+import store from '@/store';
 
 export default {
   name: 'LayoutDefault',
@@ -22,6 +24,8 @@ export default {
   },
 
   setup () {
+    if (store.state.User.token != null)
+      sockets();
     return {
       leftDrawerOpen: ref(false)
     }

@@ -4,6 +4,7 @@ import NewNetworkManual from '@/views/NewNetworkManual.vue'
 import SaveDevices from '@/views/SaveDevices.vue'
 import Topology from '@/views/Topology.vue'
 import Login from '@/views/Login.vue'
+import Device from '@/views/Device.vue'
 import store from '@/store'
 
 
@@ -32,6 +33,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/device',
+    name: 'Device',
+    component: Device
   }
 ]
 

@@ -8,11 +8,16 @@ const ping = require('ping');
 let completeScan = []
 
 
-
-
 io.on('connection', (socket) => {
     console.log("Made socket connection", socket.id);
-
+    socket.on("disconnect", (reason) => {
+        const disSocket = {
+            socket: socket.id,
+            event: 'Disconnect',
+            reason: reason
+        }
+        console.log(disSocket)
+    });
     // Find devices
     router.get('/', async (req,res) => {
 

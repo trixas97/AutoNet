@@ -22,7 +22,7 @@
 import NetNode from '@/objects/netnode.js'
 import Link from '@/objects/link.js'
 import io from 'socket.io-client'
-const { serverUrl, getTopologyRequest } = require('../router/api');
+const { serverUrl, getTopologyRequest } = require('@/services/api');
 
 export default {
     name: 'Topology',
