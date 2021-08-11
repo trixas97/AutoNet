@@ -37,6 +37,13 @@ export default {
     ". . . chartPanel ."
     ". interfaces . moreInfo .";
 
+    .container {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+        background-color: white;
+        height: 90%;
+    }
+
     .info {
       grid-area: info;
       // background: palevioletred;
@@ -44,7 +51,7 @@ export default {
 
     .chartPanel {
       grid-area: chartPanel;
-      background: red;
+      // background: red;
     }
 
     .interfaces {

@@ -78,10 +78,6 @@ data(){
 <style lang="scss" scoped>
     @import "@/style/variables";
     .container {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        border-radius: 5px;
-        background-color: white;
-        height: 90%;
         margin-top: 1em;
         display: grid;
         grid-template-columns: 0.2fr 1fr 0.2fr 4fr 0.2fr;
