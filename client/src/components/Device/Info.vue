@@ -47,8 +47,21 @@
                 <!-- <q-input outlined v-model="type" label="Type" /> -->
             </div>
             <div class="status">
-                <span>Status: </span><span class="value value-stable">{{status}}</span>
+                <span>Status: </span><span class="value value-stable" style="color: #00b336">{{status}} <q-icon name="circle"/></span><!-- stop -->
+                
                 <!-- <q-input outlined v-model="status" label="Status" /> -->
+            </div>
+            <div class="addresses">
+                <q-btn
+                    size="1em"
+                    class="q-px-xl q-py-xs q-mt-xs"
+                    color="positive"
+                    label="Addresses"
+                    :ripple="{ color: 'black' }"
+                    push
+                    unelevated 
+                    no-caps
+                />
             </div>
         </div>
     </div>
@@ -99,9 +112,12 @@ data(){
             display: grid;
             grid-template-columns: 0.1fr 1fr 0.1fr 1fr;
             grid-template-areas: 
+            ". . . ."
             ". vendor . name"
             ". type . username"
-            ". status . password";
+            ". status . password"
+            "addresses addresses addresses addresses"
+            ". . . .";
 
             .q-input {
                 font: {
@@ -160,6 +176,27 @@ data(){
                 grid-area: status;
                 margin: auto;
                 // background: teal;
+            }
+
+            .addresses {
+                grid-area: addresses;
+                margin: auto;
+
+                .q-btn {
+              margin: auto;
+              width: 10em;
+              height: 2.8em;
+              border-radius: 4px;
+              border: none;
+              color: #FFFFFF;
+              box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);  
+              font: {
+                size: 10px;
+                family: "arial";
+                weight: bold;
+              }  
+            }
+
             }
         }
     }

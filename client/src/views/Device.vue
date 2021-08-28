@@ -1,6 +1,6 @@
 <template>
   <div class="deviceInfo">
-      <div class="info"><Info/></div>
+      <Info class="info"/>
       <Charts class="chartPanel"/>
       <Interfaces class="interfaces"/>
       <MoreInfo class="moreInfo"/>
@@ -29,12 +29,12 @@ export default {
     height: 100%;
     display: grid;
     padding-top: 1.5em;
-    padding-bottom: 1em;
+    padding-bottom: 0.1em;
     grid-template-columns: 0.05fr 1fr 0.05fr 1fr 0.05fr;
-    grid-template-rows: 1.3fr 1fr 2fr;
+    grid-template-rows: 2fr 2fr;
     grid-template-areas: 
     ". info . chartPanel ."
-    ". . . chartPanel ."
+    // ". . . chartPanel ."
     ". interfaces . moreInfo .";
 
     .container {
@@ -42,26 +42,31 @@ export default {
         border-radius: 5px;
         background-color: white;
         height: 90%;
+        
     }
 
     .info {
       grid-area: info;
+      min-height: 18em;
       // background: palevioletred;
     }
 
     .chartPanel {
       grid-area: chartPanel;
+      min-height: 18em;
       // background: red;
     }
 
     .interfaces {
       grid-area: interfaces;
-      background: blue;
+      // background: blue;
+      min-height: 18em;
     }
 
     .moreInfo {
       grid-area: moreInfo;
-      background: burlywood;
+      // background: burlywood;
+      min-height: 18em;
     }
   }
 </style>
