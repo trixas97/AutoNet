@@ -11,6 +11,7 @@
       hide-pagination 
       :pagination="pagination"
     >
+    
     <template v-slot:top>
         <label>Interfaces</label>
 
@@ -20,6 +21,7 @@
 
         <q-select standout v-model="model" :options="options"  label-color="white" color="teal"  bg-color="blue"/>
       </template>
+     
     </q-table>
     </div>
 </template>
@@ -214,7 +216,7 @@ export default {
   .q-table__top,
   .q-table__bottom,
   thead tr:first-child th
-    background-color: teal
+    background-color: #e56353
     color: white
 
   label

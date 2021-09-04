@@ -1,5 +1,10 @@
 <template>
     <div class="container">
+        <q-toolbar class="text-white bar">
+            <q-toolbar-title>
+                Device Info
+            </q-toolbar-title>
+        </q-toolbar>
         <div class="img">
             <q-img
                 src="@/assets/vendors/cisco.svg"
@@ -51,7 +56,12 @@
                 
                 <!-- <q-input outlined v-model="status" label="Status" /> -->
             </div>
-            <div class="addresses">
+            <div class="btns">
+            <div class="addresses"><q-btn push color="positive" icon="content_paste" round size="lg"></q-btn></div>
+            <div class="console"><q-btn push color="black" icon="code" round size="lg" ></q-btn></div>
+            <div class="config"><q-btn push color="secondary" icon="description" round size="lg"></q-btn></div>
+            </div>
+            <!-- <div class="addresses">
                 <q-btn
                     size="1em"
                     class="q-px-xl q-py-xs q-mt-xs"
@@ -62,7 +72,7 @@
                     unelevated 
                     no-caps
                 />
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -94,9 +104,24 @@ data(){
         margin-top: 1em;
         display: grid;
         grid-template-columns: 0.2fr 1fr 0.2fr 4fr 0.2fr;
+        grid-template-rows: 0.3fr 1fr;
         grid-template-areas: 
+        "bar bar bar bar bar"
         ". img . info .";
 
+        .bar {
+            grid-area: bar;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            background-color: teal;
+            .q-toolbar__title{
+                font: {
+                    weight: bold;
+                    size: 2em;
+                    family: 'Roboto';
+                }
+                
+            }
+        }
         .img {
             grid-area: img;
             display: grid;
@@ -116,7 +141,8 @@ data(){
             ". vendor . name"
             ". type . username"
             ". status . password"
-            "addresses addresses addresses addresses"
+            ". . . ."
+            ". btns btns btns"
             ". . . .";
 
             .q-input {
@@ -178,24 +204,42 @@ data(){
                 // background: teal;
             }
 
-            .addresses {
-                grid-area: addresses;
-                margin: auto;
+            .btns {
 
-                .q-btn {
-              margin: auto;
-              width: 10em;
-              height: 2.8em;
-              border-radius: 4px;
-              border: none;
-              color: #FFFFFF;
-              box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);  
-              font: {
-                size: 10px;
-                family: "arial";
-                weight: bold;
-              }  
-            }
+                grid-area: btns;
+                display: grid;
+                // background-color: aqua;
+                grid-template-columns: 1fr 1fr 0.2fr 1fr 0.2fr 1fr 0.5fr;
+                grid-template-areas: ". addresses . console . config .";
+
+                .addresses {
+                    grid-area: addresses;
+                //     margin: auto;
+
+                //     .q-btn {
+                //   margin: auto;
+                //   width: 10em;
+                //   height: 2.8em;
+                //   border-radius: 4px;
+                //   border: none;
+                //   color: #FFFFFF;
+                //   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);  
+                //   font: {
+                //     size: 10px;
+                //     family: "arial";
+                //     weight: bold;
+                //   }  
+                // }
+
+                }
+
+                .console {
+                    grid-area: console;
+                }
+
+                .config {
+                    grid-area: config;
+                }
 
             }
         }

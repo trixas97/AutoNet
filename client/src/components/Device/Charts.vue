@@ -1,5 +1,13 @@
 <template>
-    <div class="container">
+    <div class="containerChart container">
+        <q-toolbar class="text-white bar">
+            <q-toolbar-title>
+                Charts
+            </q-toolbar-title>
+            
+                <!-- <q-select filled v-model="model" :options="options"  bg-color="blue" /> -->
+                <q-select standout v-model="model" :options="options" input-style="color: white;" label-color="white" color="teal-10" bg-color="blue"/>
+        </q-toolbar>
         <div class="chartContainer">
             <canvas ref="chart" class="chart"></canvas>
         </div>
@@ -52,6 +60,10 @@ export default {
             }
         };
 
+        let options= [
+            'CPU', 'TRAFFIC'
+        ]
+
         onMounted(() => {
             let myChart = new Chart(
                 chart.value,
@@ -63,22 +75,53 @@ export default {
 
         return{
             config,
-            chart
+            chart,
+            options,
+            model: ref(options[0]),
         }
     }
 }
 </script>
 
-<style lang="scss" scoped>
-.container {
+<style lang="scss" >
+@import "@/styles/quasar.variables";
+.containerChart {
     margin-top: 1em;
+    display: grid;
+    grid-template-rows: 0.3fr 1fr;
+    grid-template-areas: 
+    "bar"
+    "charts";
 
-    .chartContainer{
-        margin: auto;
-        height:100%; 
-        width:80%;
+    .bar {
+        grid-area: bar;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        background-color: teal;
+        .q-toolbar__title{
+            font: {
+                weight: bold;
+                size: 2em;
+                family: 'Roboto';
+            }
+            
+        }
+        .q-select {
+            font-size: 2.2em;
+            font-weight: bold;
+            
+            span {
+                color: white;
+            }
+        }
+
 
     }
-    
+    .chartContainer{
+        grid-area: charts;
+        margin: auto;
+        height:100%; 
+        width:65%;
+
+    }
 }
 </style>
