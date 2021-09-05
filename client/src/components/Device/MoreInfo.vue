@@ -214,7 +214,7 @@ export default {
   .q-table__top,
   .q-table__bottom,
   thead tr:first-child th
-    background-color: #e56353
+    background-color: #e76f51
     color: white
 
   label

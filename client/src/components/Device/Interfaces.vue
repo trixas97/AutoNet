@@ -207,7 +207,7 @@ export default {
   }
 }
 </script>
-
+//e56353 
 <style lang="sass">
 .my-sticky-header-table
   height: 100%
@@ -216,7 +216,7 @@ export default {
   .q-table__top,
   .q-table__bottom,
   thead tr:first-child th
-    background-color: #e56353
+    background-color: #329F5B
     color: white
 
   label

@@ -57,9 +57,21 @@
                 <!-- <q-input outlined v-model="status" label="Status" /> -->
             </div>
             <div class="btns">
-            <div class="addresses"><q-btn push color="positive" icon="content_paste" round size="lg"></q-btn></div>
-            <div class="console"><q-btn push color="black" icon="code" round size="lg" ></q-btn></div>
-            <div class="config"><q-btn push color="secondary" icon="description" round size="lg"></q-btn></div>
+            <div class="addresses"><q-btn push color="warning" icon="content_paste" round size="lg">
+                <q-tooltip class="bg-warning text-body1" :offset="[10, 10]">
+                    Addresses
+                </q-tooltip>
+            </q-btn></div>
+            <div class="console"><q-btn push color="dark" icon="code" round size="lg" >
+                <q-tooltip class="bg-dark text-body1" :offset="[10, 10]">
+                    Console
+                </q-tooltip>
+            </q-btn></div>
+            <div class="config"><q-btn push color="secondary" icon="description" round size="lg">
+                <q-tooltip class="bg-secondary text-body1" :offset="[10, 10]">
+                    Configurations
+                </q-tooltip>
+            </q-btn></div>
             </div>
             <!-- <div class="addresses">
                 <q-btn
@@ -112,7 +124,7 @@ data(){
         .bar {
             grid-area: bar;
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            background-color: teal;
+            background-color: #023047;
             .q-toolbar__title{
                 font: {
                     weight: bold;

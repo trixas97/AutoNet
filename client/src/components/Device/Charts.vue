@@ -96,7 +96,7 @@ export default {
     .bar {
         grid-area: bar;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        background-color: teal;
+        background-color: #ffb703;
         .q-toolbar__title{
             font: {
                 weight: bold;
@@ -119,7 +119,7 @@ export default {
     .chartContainer{
         grid-area: charts;
         margin: auto;
-        height:100%; 
+
         width:65%;
 
     }
