@@ -25,6 +25,7 @@ const nodesFinder = require('./routes/api/nodes_find.js')(io);
 const nodesSave = require('./routes/api/nodes_save.js')(io);
 const saveTopology = require('./routes/api/topology');
 const links = require('./routes/api/links');
+const consoleDevice = require('./routes/api/console')(io);
 
 // Middleware
 app.use(bodyParser.json());
@@ -34,6 +35,7 @@ app.use('/api/devices', nodesFinder);
 app.use('/api/nodesSave', nodesSave);
 app.use('/api/topology', saveTopology);
 app.use('/api/links', links);
+app.use('/api/console', consoleDevice);
 
 mongoose.connect(
   process.env.DB_CONNECTION, { useUnifiedTopology: true, useNewUrlParser: true }, (err) => {
