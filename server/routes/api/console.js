@@ -1,20 +1,23 @@
 module.exports = function (io){
     const express = require('express');
     const router = express.Router();
+    let streams = [];
     const SSHClient = require('ssh2').Client;
     io.on('connection', (socket) => {
         router.get('/', async (req,res) => {
             let data = {};
             Object.keys(req.query).length === 0 ? data = req.body : data = req.query;
-            console.log(data);
             let sshCon = new SSHClient();
             sshConnection(sshCon, data, res);
         });
 
+        socket.on('consoleData', (data) => {
+            streams[data.socket].write(data.key);
+        })
+
         function sshConnection(sshCon, req, res){
-            console.log('TRIXASS ');
+
             sshCon.on('ready', function(){
-                // console.log('TRIXASS ');
                 io.to(req.socket).emit('consoleData', '\r\n*** SSH CONNECTION ESTABLISHED ***\r\n');
                 sshCon.shell(function(err, stream){
                     if (err){
@@ -23,9 +26,7 @@ module.exports = function (io){
                     }else{
                         res.status(200).send('SSH CONNECTION ESTABLISHED');
                     }
-                    socket.on('consoleData', function(data) {
-                        stream.write(data);
-                    })
+                    streams[req.socket] = stream;
                     stream.on('data', function(d){
                         io.to(req.socket).emit('consoleData', d.toString('binary'))
                     }).on('close', function(){
@@ -33,17 +34,15 @@ module.exports = function (io){
                     });
                 });
             }).on('close', function(){
-                console.log("TRIXAS CLOSE");
                 io.to(req.socket).emit('consoleData', '\r\n*** SSH CONNECTION CLOSED *** \r\n');
             }).on('error', function(err){
-                console.log("TRIXAS ERROR");
                 io.to(req.socket).emit('consoleData', '\r\n*** SSH CONNECTION ERROR: ' + err.message + ' *** \r\n');
             }).connect({
                 type: 'password',
-                host: "192.168.78.133",
-                port: 22,
-                username: 'trixas',
-                password: 'trixas',
+                host: req.ip,
+                port: req.port,
+                username: req.username,
+                password: req.password,
                 algorithms: {
                     kex: [
                         "diffie-hellman-group1-sha1",

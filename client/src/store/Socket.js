@@ -3,24 +3,44 @@ export const SocketModule = {
     namespaced: true,
     
     state:{
-        consoleData: null
+        socketReady: false,
+        consoleDataEmit: null,
+        consoleDataListen: null
     },
 
     mutations: {
-        setConsoleData(state, val){
-            state.consoleData = val;
+        setConsoleDataEmit(state, val){
+            state.consoleDataEmit = val;
+        },
+        setConsoleDataListen(state, val){
+            state.consoleDataListen = val;
+        },
+        setSocketReady(state, val){
+            state.socketReady = val;
         }
     },
 
     actions: {
-        setConsoleData(context, value) {  
-            context.commit('setConsoleData', value);
+        setConsoleDataEmit(context, value) {  
+            context.commit('setConsoleDataEmit', value);
+        },
+        setConsoleDataListen(context, value) {  
+            context.commit('setConsoleDataListen', value);
+        },
+        setSocketReady(context, value) {
+            context.commit('setSocketReady', value);
         }
     },
 
     getters: {
-        getConsoleData(state) {
-            return state.consoleData;
+        getConsoleDataEmit(state) {
+            return state.consoleDataEmit;
+        },
+        getConsoleDataListen(state) {
+            return state.consoleDataListen;
+        },
+        getSocketReady(state){
+            return state.socketReady;
         }
     }
 }

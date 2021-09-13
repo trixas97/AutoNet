@@ -8,33 +8,64 @@
 <script>
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import store from '../store';
+const { initConsoleSSHRequest } = require('@/services/api');
 
 
 export default {
 
 setup(){
     const term = ref(null);
-   
+    let initConFlag = true;
+
+   async function consoleInit() {
+        const data = {
+            socket: store.state.User.socket,
+            ip: '192.168.78.133',
+            username: 'trixas',
+            password: 'trixas',
+            port: 22
+        }
+            
+        const res = await initConsoleSSHRequest(data);
+        return res;
+    }
     onMounted(() => {
         const terminal = new Terminal({ cursorBlink: true });        
         const fitAddon = new FitAddon();
         terminal.loadAddon(fitAddon);
         terminal.open(term.value);
         fitAddon.fit();
+
+        watch(() => store.getters['Socket/getSocketReady'], (data) => {
+            if(data && initConFlag){
+                console.log(consoleInit());
+            }
+        })
+
+        watch(() => store.getters['Socket/getConsoleDataListen'], (data) => {
+            if(data != null){
+                terminal.write(data);
+                store.dispatch('Socket/setConsoleDataListen', null);
+            }
+            
+        })
+
+        terminal.onKey(function (ev) {
+            store.dispatch('Socket/setConsoleDataEmit', ev);            
+        });
+
+
         
     });
     
-
     return {
         term
     }
 },
 methods:{
-    test(){
-        store.dispatch('Socket/setConsoleData', 'TEST');
-    }
+ 
 }
 
 }

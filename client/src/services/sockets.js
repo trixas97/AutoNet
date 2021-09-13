@@ -1,39 +1,35 @@
 import io from 'socket.io-client';
-import { useStore } from 'vuex';
+import store from '../store';
 import {  watch } from 'vue';
 
-const axios = require('axios').default;
+// const axios = require('axios').default;
 export const sockets = () => {
-    const store = useStore();
-
+    // const store = useStore();
+    store.dispatch('Socket/setSocketReady', false);
     const { serverUrl } = require('@/services/api.js');
 
     let socket = io(serverUrl);
     socket.on('connect', () => {
+        console.log('TRIOXAS  ' + socket.id);
         store.dispatch('User/setSocket', socket.id);
-        const req = {
-            method: 'get',
-            url: 'http://192.168.1.7:5000/api/console',
-            params: {
-                ip: '192.168.78.133',
-                socket: socket.id,
-                username: 'trixas',
-                password: 'trixas'
-            }
-        }
-            axios(req)
-                .then(response => { console.log(response); })
-                .catch(error => { console.log(error); });
+        store.dispatch('Socket/setSocketReady', true);
     });
 
 
-    watch(() => store.getters['Socket/getConsoleData'], (count) => {
-        console.log(count);
+    watch(() => store.getters['Socket/getConsoleDataEmit'], (data) => {
+        if(data != null){
+            data.socket = store.state.User.socket;
+            console.log('TRIXAKIS   ' + data.socket);
+            socket.emit('consoleData', data);
+            console.log('EMIITTT');
+            store.dispatch('Socket/setConsoleDataEmit', null);
+        }
     })
 
     
     socket.on('consoleData',(data) => {
-        console.log('consoleData' + data);
+        console.log(data);
+        store.dispatch('Socket/setConsoleDataListen', data);
     });
 
     return socket;

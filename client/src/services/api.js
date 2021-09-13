@@ -7,7 +7,8 @@ const url ={
     saveTopology: `${baseUrl}/api/topology/saveTopology`,
     getTopology: `${baseUrl}/api/topology/getTopology`,
     saveLinks: `${baseUrl}/api/links/saveLinks`,
-    getLinks: `${baseUrl}/api/links/getLinks`
+    getLinks: `${baseUrl}/api/links/getLinks`,
+    initConsole: `${baseUrl}/api/console`
 }
 
 const login = data => {
@@ -92,9 +93,29 @@ const getLinks = data => {
     })
 }
 
+const initConsoleSSH = data => {
+    return new Promise(resolve => {
+        const req = {
+            method: 'get',
+            url: url.initConsole,
+            params: {
+                ip: data.ip,
+                socket: data.socket,
+                username: data.username,
+                password: data.password,
+                port: data.port
+            }
+        }
+        axios(req)
+            .then(response => { console.log(response); resolve(response); })
+            .catch(error => { resolve(error.response) });
+    })
+}
+
 module.exports.serverUrl = baseUrl;
 module.exports.loginRequest = login;
 module.exports.saveTopologyRequest = saveTopology;
 module.exports.getTopologyRequest = getTopology;
 module.exports.saveLinksRequest = saveLinks;
 module.exports.getLinksRequest = getLinks;
+module.exports.initConsoleSSHRequest = initConsoleSSH;
