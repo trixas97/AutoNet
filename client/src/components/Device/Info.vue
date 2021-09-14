@@ -62,7 +62,8 @@
                     Addresses
                 </q-tooltip>
             </q-btn></div>
-            <div class="console"><q-btn push color="dark" icon="code" round size="lg" >
+            <div class="console"><q-btn push color="dark" round size="lg" >
+                <img src="@/assets/console.svg" class="filter-green" @click="openConsole">
                 <q-tooltip class="bg-dark text-body1" :offset="[10, 10]">
                     Console
                 </q-tooltip>
@@ -86,11 +87,17 @@
                 />
             </div> -->
         </div>
+        <!-- <DialogConsole v-model="console"/> -->
     </div>
 </template>
 
 <script>
+// import { ref } from 'vue';
+
 export default {
+// conponents:{
+//     DialogConsole
+// },
 data(){
     let name = 'R1'
     let username = 'trixas'
@@ -104,7 +111,15 @@ data(){
         password,
         vendor,
         type,
-        status
+        status,
+        // console: ref(true)
+    }
+},
+methods:{
+    openConsole(){
+        console.log("test");
+        this.$emit('console', true);
+        // this.console = true;
     }
 }
 }
@@ -247,6 +262,12 @@ data(){
 
                 .console {
                     grid-area: console;
+
+                    .filter-green{
+                        width: 1.8em;
+                        filter: invert(100%) sepia(8%) saturate(0%) hue-rotate(134deg) brightness(107%) contrast(109%);
+                    }
+
                 }
 
                 .config {

@@ -1,8 +1,5 @@
 <template>
-  <div>
-      <h3 @click="test">WebSSH</h3>
       <div id="terminal-container" ref="term"></div>
-  </div>
 </template>
 
 <script>
@@ -15,7 +12,7 @@ const { initConsoleSSHRequest } = require('@/services/api');
 
 export default {
 
-setup(){
+setup() {
     const term = ref(null);
     let initConFlag = true;
 
@@ -55,8 +52,6 @@ setup(){
         terminal.onKey(function (ev) {
             store.dispatch('Socket/setConsoleDataEmit', ev);            
         });
-
-
         
     });
     
@@ -74,8 +69,8 @@ methods:{
 <style lang="scss" scoped>
 
     #terminal-container {
-        width: 960px;
-        height: 600px;
+        width: 50px;
+        height: 50px;
         margin: 0 auto;
         padding: 2px;
       }
