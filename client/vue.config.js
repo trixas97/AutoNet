@@ -7,5 +7,8 @@ module.exports = {
   },
   transpileDependencies: [
     'quasar'
-  ]
+  ],
+  devServer: {
+    port: 8080 
+  }
 }

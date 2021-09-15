@@ -16,6 +16,28 @@ setup() {
     const term = ref(null);
     let initConFlag = true;
 
+    var theme = {
+        foreground: '#eff0eb',
+        background: '#282a36',
+        selection: '#97979b33',
+        black: '#282a36',
+        brightBlack: '#686868',
+        red: '#ff5c57',
+        brightRed: '#ff5c57',
+        green: '#5af78e',
+        brightGreen: '#5af78e',
+        yellow: '#f3f99d',
+        brightYellow: '#f3f99d',
+        blue: '#57c7ff',
+        brightBlue: '#57c7ff',
+        magenta: '#ff6ac1',
+        brightMagenta: '#ff6ac1',
+        cyan: '#9aedfe',
+        brightCyan: '#9aedfe',
+        white: '#f1f1f0',
+        brightWhite: '#eff0eb'
+    };
+
    async function consoleInit() {
         const data = {
             socket: store.state.User.socket,
@@ -29,7 +51,10 @@ setup() {
         return res;
     }
     onMounted(() => {
-        const terminal = new Terminal({ cursorBlink: true });        
+        const terminal = new Terminal({ fontFamily: '"Fira Code"',
+            fontWeight: 'bold',
+            theme: theme,
+            cursorBlink: true });        
         const fitAddon = new FitAddon();
         terminal.loadAddon(fitAddon);
         terminal.open(term.value);
@@ -48,7 +73,8 @@ setup() {
             }
             
         })
-
+        terminal.write('\r\n*** SSH CONNECTION ESTABLISHED ***\r\n');
+        terminal.write('\r\nR1>:');
         terminal.onKey(function (ev) {
             store.dispatch('Socket/setConsoleDataEmit', ev);            
         });
@@ -69,18 +95,24 @@ methods:{
 <style lang="scss" scoped>
 
     #terminal-container {
-        width: 50px;
-        height: 50px;
-        margin: 0 auto;
-        padding: 2px;
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+        padding-top: 2%;
+        padding-left: 3.6%;
+        
+        
       }
       #terminal-container .terminal {
         background-color: #111;
         color: #fafafa;
         padding: 2px;
+        margin: 0px;    
+        
       }
       #terminal-container .terminal:focus .terminal-cursor {
         background-color: #fafafa;
+        
       }
 </style>
 
@@ -158,6 +190,7 @@ methods:{
         position: absolute;
         left: 0;
         top: 0;
+        
     }
 
     .xterm .xterm-scroll-area {

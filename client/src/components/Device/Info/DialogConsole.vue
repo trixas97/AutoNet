@@ -1,10 +1,11 @@
 <template>
-    <q-dialog persistent transition-show="scale" transition-hide="scale">
+    <q-dialog persistent transition-show="fade" transition-hide="fade">
       <q-layout view="hhh lpR fff"  class="bg-white" style="min-height: 25em; height: 25em">
 
         <q-header class="bg-primary" style="width: 100%">
           <q-toolbar>
-            <label class="info">R1</label>            
+            <label class="info">R1</label>  
+            <q-btn flat v-close-popup round dense icon="close" />          
           </q-toolbar>
         </q-header>
 
@@ -34,6 +35,7 @@ export default {
 @import "@/styles/quasar.variables.scss";
     .q-toolbar {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        
 
         .info {
             display: block;
@@ -45,15 +47,18 @@ export default {
             }
         }
     }
-    .page {
-        background-color: red;
-        width: 10px;
-        // height: 100%;
-        // display: block;
+    .q-page-container {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
 
         .consoleClass{
-            background-color: blue;
-            width: 10px;
+            background-color: $consoleBack;
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
         }
     }
 </style>

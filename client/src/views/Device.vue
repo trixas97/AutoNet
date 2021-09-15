@@ -5,7 +5,6 @@
       <Interfaces class="interfaces"/>
       <MoreInfo class="moreInfo"/>
       <DialogConsole v-model="consoleFlag"/>
-      <!-- <Console class="consoleClass" /> -->
   </div>
 </template>
 
@@ -14,7 +13,6 @@ import Info from '@/components/Device/Info.vue'
 import Charts from '@/components/Device/Charts.vue'
 import Interfaces from '@/components/Device/Interfaces.vue'
 import MoreInfo from '@/components/Device/MoreInfo.vue'
-// import Console from '@/components/Console.vue'
 import DialogConsole from '@/components/Device/Info/DialogConsole'
 import { ref } from 'vue';
 
@@ -25,17 +23,15 @@ export default {
     Interfaces,
     MoreInfo,
     DialogConsole
-    // Console
   },
   data(){
     return {
-      consoleFlag: ref(true)
+      consoleFlag: ref(false)
     }
   },
   methods:{
     openConsole(value){
-      console.log('opapaa ' + value);
-      // this.consoleFlag = true
+      this.consoleFlag = value
     }
   }
 }
