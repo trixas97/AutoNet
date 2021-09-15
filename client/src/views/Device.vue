@@ -13,7 +13,7 @@ import Info from '@/components/Device/Info.vue'
 import Charts from '@/components/Device/Charts.vue'
 import Interfaces from '@/components/Device/Interfaces.vue'
 import MoreInfo from '@/components/Device/MoreInfo.vue'
-import DialogConsole from '@/components/Device/Info/DialogConsole'
+import DialogConsole from '@/components/Device/DialogConsole'
 import { ref } from 'vue';
 
 export default {
