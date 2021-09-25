@@ -8,6 +8,7 @@ module.exports = function (io){
             let data = {};
             Object.keys(req.query).length === 0 ? data = req.body : data = req.query;
             let sshCon = new SSHClient();
+            console.log('TRIXAKIS test');
             sshConnection(sshCon, data, res);
         });
 

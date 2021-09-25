@@ -73,8 +73,9 @@ setup() {
             }
             
         })
-        terminal.write('\r\n*** SSH CONNECTION ESTABLISHED ***\r\n');
-        terminal.write('\r\nR1>:');
+        consoleInit()
+        // terminal.write('\r\n*** SSH CONNECTION ESTABLISHED ***\r\n');
+        // terminal.write('\r\nR1>:');
         terminal.onKey(function (ev) {
             store.dispatch('Socket/setConsoleDataEmit', ev);            
         });

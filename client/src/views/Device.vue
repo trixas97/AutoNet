@@ -1,10 +1,12 @@
 <template>
   <div class="deviceInfo">
-      <Info class="info" @console="openConsole"/>
+      <Info class="info" @console="openConsole" @config="openConfig" @info="openInfo"/>
       <Charts class="chartPanel"/>
       <Interfaces class="interfaces"/>
       <MoreInfo class="moreInfo"/>
       <DialogConsole v-model="consoleFlag"/>
+      <DialogConfig v-model="configFlag"/>
+      <DialogInfo v-model="infoFlag"/>
   </div>
 </template>
 
@@ -14,6 +16,8 @@ import Charts from '@/components/Device/Charts.vue'
 import Interfaces from '@/components/Device/Interfaces.vue'
 import MoreInfo from '@/components/Device/MoreInfo.vue'
 import DialogConsole from '@/components/Device/DialogConsole'
+import DialogConfig from '@/components/Device/DialogConfig'
+import DialogInfo from '@/components/Device/DialogInfo'
 import { ref } from 'vue';
 
 export default {
@@ -22,16 +26,26 @@ export default {
     Charts,
     Interfaces,
     MoreInfo,
-    DialogConsole
+    DialogConsole,
+    DialogConfig,
+    DialogInfo
   },
   data(){
     return {
-      consoleFlag: ref(false)
+      consoleFlag: ref(false),
+      configFlag: ref(false),
+      infoFlag: ref(false)
     }
   },
   methods:{
     openConsole(value){
-      this.consoleFlag = value
+      this.consoleFlag = value;
+    },
+    openConfig(value){
+      this.configFlag = value;
+    },
+    openInfo(value){
+      this.infoFlag = value;
     }
   }
 }

@@ -57,18 +57,18 @@
                 <!-- <q-input outlined v-model="status" label="Status" /> -->
             </div>
             <div class="btns">
-            <div class="addresses"><q-btn push color="warning" icon="content_paste" round size="lg">
+            <div class="informations"><q-btn push color="warning" icon="content_paste" round size="lg" @click="openInfo">
                 <q-tooltip class="bg-warning text-body1" :offset="[10, 10]">
-                    Addresses
+                    Informations
                 </q-tooltip>
             </q-btn></div>
-            <div class="console"><q-btn push color="dark" round size="lg" >
-                <img src="@/assets/console.svg" class="filter-green" @click="openConsole">
+            <div class="console"><q-btn push color="dark" round size="lg" @click="openConsole">
+                <img src="@/assets/console.svg" class="filter-green">
                 <q-tooltip class="bg-dark text-body1" :offset="[10, 10]">
                     Console
                 </q-tooltip>
             </q-btn></div>
-            <div class="config"><q-btn push color="secondary" icon="description" round size="lg">
+            <div class="config"><q-btn push color="secondary" icon="description" round size="lg" @click="openConfig">
                 <q-tooltip class="bg-secondary text-body1" :offset="[10, 10]">
                     Configurations
                 </q-tooltip>
@@ -99,7 +99,7 @@ export default {
 //     DialogConsole
 // },
 data(){
-    let name = 'R1'
+    let name = 'R2'
     let username = 'trixas'
     let password = 'trixas'
     let vendor = 'Cisco'
@@ -117,9 +117,13 @@ data(){
 },
 methods:{
     openConsole(){
-        console.log("test");
         this.$emit('console', true);
-        // this.console = true;
+    },
+    openConfig(){
+        this.$emit('config', true);
+    },
+    openInfo(){
+        this.$emit('info', true);
     }
 }
 }
@@ -239,7 +243,7 @@ methods:{
                 grid-template-columns: 1fr 1fr 0.2fr 1fr 0.2fr 1fr 0.5fr;
                 grid-template-areas: ". addresses . console . config .";
 
-                .addresses {
+                .informations {
                     grid-area: addresses;
                 //     margin: auto;
 

@@ -4,7 +4,7 @@
 
         <q-header class="bg-primary" style="width: 100%">
           <q-toolbar>
-            <label class="info">R1</label>  
+            <label class="info">R2</label>  
             <q-btn flat v-close-popup round dense icon="close" />          
           </q-toolbar>
         </q-header>
