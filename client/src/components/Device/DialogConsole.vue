@@ -54,7 +54,7 @@ export default {
         padding: 0px;
 
         .consoleClass{
-            background-color: $consoleBack;
+            background-color: $consoleBlack;
             width: 100%;
             height: 100%;
             margin: 0px;

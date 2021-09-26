@@ -4,7 +4,8 @@
 // #21BA45
 
 $primary   : #43c3a1;
-$secondary : #e56353 ;
+$primary-2 : #05668d;
+$secondary : #e56353;
 $accent    : #D81B60;
 
 $dark      : #1D1D1D;
@@ -19,15 +20,23 @@ $navbar : #05668d;
 $txtDark : darkslategrey;
 $txtHead : midnightblue;
 
-$consoleBack: #282a36;
+$consoleBlack: #282a36;
 $darkblue: #023047;
 $indigo-9: #283593; 
+
 
 .text-darkblue{
     color: #023047;
 }
 .bg-darkblue {
     background: #023047;
+}
+
+.text-consoleBlack{
+    color: #282a36;
+}
+.bg-consoleBlack {
+    background: #282a36;
 }
 
 @import '~quasar-variables-styl'
