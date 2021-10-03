@@ -1,0 +1,27 @@
+
+- SSH 
+
+	ip domain-name autonet
+	crypto key gen rsa mod 1024
+	username autonet privilege 15 password autonet
+	service password-encryption
+	ip ssh version 2
+	line vty 0 15
+	login local
+	transport input ssh 
+
+
+
+- CDP
+	
+	conf t
+	cdp run
+
+
+- SNMP
+
+	conf t
+	snpm-server community AutoNet RW
+	snpm-server host <SNMP SERVER IP> version 2c AutoNet
+	snmp-server trap link ietf
+	snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
