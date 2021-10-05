@@ -79,7 +79,7 @@ io.on('connection', (socket) => {
     getNodeInfo = (host) => {
         console.log("Go Python: " + host.ip);
         return new Promise(resolve => {
-            let shell = new PythonShell('server/python/node_save.py', {mode: 'json', args: [host.ip, host.username, host.password]});
+            let shell = new PythonShell('server/python/node_info.py', {mode: 'json', args: [host.ip, host.username, host.password]});
             shell.on('message', function (message) {
                 console.log(message);
                 resolve(message);

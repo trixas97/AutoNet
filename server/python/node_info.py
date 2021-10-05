@@ -65,6 +65,62 @@ def modifyInterface(interface, key):
     elif key == "output_errors":
         return {keysNames["name"]: "Output Errors", keysNames["value"]: interface[key], keysNames["edit"]: False}
 
+def modifyRouteTable(route, key):
+    if key == "protocol":
+        return {keysNames["name"]: "Protocol", keysNames["value"]: route[key], keysNames["edit"]: False}
+    elif key == "type":
+        return {keysNames["name"]: "Type", keysNames["value"]: route[key], keysNames["edit"]: False}
+    elif key == "network":
+        return {keysNames["name"]: "Network", keysNames["value"]: route[key], keysNames["edit"]: True}
+    elif key == "mask":
+        return {keysNames["name"]: "Mask", keysNames["value"]: route[key], keysNames["edit"]: True}
+    elif key == "distance":
+        return {keysNames["name"]: "Distance", keysNames["value"]: route[key], keysNames["edit"]: False}
+    elif key == "metric":
+        return {keysNames["name"]: "Metric", keysNames["value"]: route[key], keysNames["edit"]: True}
+    elif key == "nexthop_ip":
+        return {keysNames["name"]: "Nexthop-IP", keysNames["value"]: route[key], keysNames["edit"]: True}
+    elif key == "nexthop_if":
+        return {keysNames["name"]: "Nexthop-IF", keysNames["value"]: route[key], keysNames["edit"]: True}
+    elif key == "uptime":
+        return {keysNames["name"]: "Uptime", keysNames["value"]: route[key], keysNames["edit"]: False}
+
+def modifyArpTable(entry, key):
+    if key == "protocol":
+        return {keysNames["name"]: "Protocol", keysNames["value"]: entry[key], keysNames["edit"]: False}
+    elif key == "address":
+        return {keysNames["name"]: "IP Address", keysNames["value"]: entry[key], keysNames["edit"]: False}
+    elif key == "age":
+        return {keysNames["name"]: "Age", keysNames["value"]: entry[key], keysNames["edit"]: False}
+    elif key == "mac":
+        return {keysNames["name"]: "MAC Address", keysNames["value"]: entry[key], keysNames["edit"]: False}
+    elif key == "type":
+        return {keysNames["name"]: "Type", keysNames["value"]: entry[key], keysNames["edit"]: False}
+    elif key == "interface":
+        return {keysNames["name"]: "Interface", keysNames["value"]: entry[key], keysNames["edit"]: False}
+
+
+def modifyACL(acl, key):
+    if key == "name":
+        return {keysNames["name"]: "Name", keysNames["value"]: acl[key], keysNames["edit"]: True}
+    elif key == "sn":
+        return {keysNames["name"]: "SN", keysNames["value"]: acl[key], keysNames["edit"]: True}
+    elif key == "action":
+        return {keysNames["name"]: "Action", keysNames["value"]: acl[key], keysNames["edit"]: True}
+    elif key == "protocol":
+        return {keysNames["name"]: "Protocol", keysNames["value"]: acl[key], keysNames["edit"]: True}
+    elif key == "source":
+        return {keysNames["name"]: "Source", keysNames["value"]: acl[key], keysNames["edit"]: True}
+    elif key == "port":
+        return {keysNames["name"]: "Port", keysNames["value"]: acl[key], keysNames["edit"]: True}
+    elif key == "range":
+        return {keysNames["name"]: "Range", keysNames["value"]: acl[key], keysNames["edit"]: False}
+    elif key == "destination":
+        return {keysNames["name"]: "Destination", keysNames["value"]: acl[key], keysNames["edit"]: True}
+    elif key == "modifier":
+        return {keysNames["name"]: "Modifier", keysNames["value"]: acl[key], keysNames["edit"]: False}
+
+
 try:
     cisco_881 = {
         'device_type': 'cisco_ios',
@@ -72,8 +128,10 @@ try:
         'username': sys.argv[2],
         'password': sys.argv[3]
     }
-    net_connect = ConnectHandler(**cisco_881)   
-    
+    net_connect = ConnectHandler(**cisco_881) 
+
+    runConf = net_connect.send_command('show running-config', use_textfsm=True)
+    startConf = net_connect.send_command('show startup-config', use_textfsm=True)
     interfaces = net_connect.send_command('show interfaces', use_textfsm=True)
     version = net_connect.send_command('show version', use_textfsm=True)
     typeNode = net_connect.send_command('show version', use_textfsm=False)
@@ -82,16 +140,35 @@ try:
     acl = net_connect.send_command('show access-list', use_textfsm=True)
     cdp = net_connect.send_command('show cdp neighbors detail', use_textfsm=True)
 
+    # Modify Interfaces
     for interface in interfaces:
         interface["interface_short"] = {}
         for key in  interface:
             interface[key] = modifyInterface(interface, key)
     
+    # Modify Route Table
+    for route in routeTable:
+        for key in route:
+            route[key] = modifyRouteTable(route, key)
+    
+    # Modify ARP Table
+    for entry in arpTable:
+        for key in entry:
+            entry[key] = modifyArpTable(entry, key)
+
+    # Modify ACL
+    for aclItem in acl:
+        for key in aclItem:
+            aclItem[key] = modifyACL(aclItem, key)
+            
+
     node = {
-        "name": {"name": "Name", "value":version[0]['hostname'], "editable": True},
-        "model": {"name": "Model", "value":version[0]['hardware'][0], "editable": False},
-        "type": {"name": "Type", "value":"Switch" if "Router" not in typeNode else "Router", "editable": False},
-        "upTime": {"name": "UpTime", "value":version[0]['uptime'], "editable": False},
+        "name": {keysNames["name"]: "Name", keysNames["value"]:version[0]['hostname'], keysNames["edit"]: True},
+        "model": {keysNames["name"]: "Model", keysNames["value"]:version[0]['hardware'][0], keysNames["edit"]: False},
+        "type": {keysNames["name"]: "Type", keysNames["value"]:"Switch" if "Router" not in typeNode else "Router", keysNames["edit"]: False},
+        "upTime": {keysNames["name"]: "UpTime", keysNames["value"]:version[0]['uptime'], keysNames["edit"]: False},
+        "runConf": runConf,
+        "startConf": startConf,
         "interfaces": interfaces,
         "route_table": routeTable,
         "arp_table": arpTable,
