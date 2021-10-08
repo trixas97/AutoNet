@@ -1,4 +1,3 @@
-from typing import Match
 from netmiko import ConnectHandler
 import json
 import sys
@@ -179,6 +178,9 @@ try:
 except NameError:
     print(NameError)
     node = None
+
+
+net_connect.disconnect()
 
 
 print(json.dumps(node))

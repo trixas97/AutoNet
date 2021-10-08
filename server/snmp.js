@@ -32,6 +32,7 @@ module.exports = function(io) {
             let info = notification.rinfo;
             // console.log(pdu);
             let data = await modifyDataSNMP(pdu.varbinds, modifyTypeSNMP.receive, info.address);
+            console.log(data);
             if(Object.keys(data).length > 1){
                 data.id = (await getNodeInfoByIP(data.ip))._id;
                 console.log(data);

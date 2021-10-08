@@ -1,3 +1,5 @@
+const { hostname } = require('os');
+
 module.exports = function(io) {
 const express = require('express');
 const router = express.Router();
@@ -39,6 +41,7 @@ io.on('connection', (socket) => {
 
     saveNodes = async (host, res, nodes, socket) => {
         let node = {};
+        node = await initNode(host)
         node = await getNodeInfo(host);
         if(node != null){
             const nodeDb = new Node({
@@ -74,6 +77,15 @@ io.on('connection', (socket) => {
         if(hostLength == 0){
             nodes.length != 0 ? res.send(nodes) : res.json({ message: "No found devices"});
         }
+    }
+
+    initNode = (host) => {
+        return new Promise(resolve => {
+            let shell = new PythonShell('server/python/init.py', {mode: 'json', args: [host.ip, host.username, host.password]});
+            shell.on('message', function (message) {
+                resolve(host)
+            })
+        })
     }
 
     getNodeInfo = (host) => {

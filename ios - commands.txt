@@ -21,7 +21,7 @@
 - SNMP
 
 	conf t
-	snpm-server community AutoNet RW
-	snpm-server host <SNMP SERVER IP> version 2c AutoNet
+	snmp-server community AutoNet RW
+	snmp-server host <SNMP SERVER IP> version 2c AutoNet
 	snmp-server trap link ietf
 	snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
