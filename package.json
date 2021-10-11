@@ -25,6 +25,7 @@
     "python-shell": "^2.0.3",
     "request": "^2.88.2",
     "socket.io": "^4.0.0",
-    "ssh2": "^1.4.0"
+    "ssh2": "^1.4.0",
+    "syslog-server": "^1.0.1"
   }
 }
