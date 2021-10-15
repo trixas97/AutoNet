@@ -6,7 +6,7 @@ import Topology from '@/views/Topology.vue'
 import Login from '@/views/Login.vue'
 import Device from '@/views/Device.vue'
 import Home from '@/views/Home.vue'
-// import store from '@/store'
+import store from '@/store'
 
 
 const routes = [
