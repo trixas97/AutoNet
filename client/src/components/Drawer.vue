@@ -29,8 +29,6 @@
 
 <script>
 
-import { ref } from 'vue'
-
 const menuList = [
   {
     icon: 'space_dashboard',

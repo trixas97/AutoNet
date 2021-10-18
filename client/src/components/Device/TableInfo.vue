@@ -31,9 +31,9 @@ const columns = [
     align: 'left',
     field: row => row.name,
     format: val => `${val}`,
-    sortable: false
+    sortable: true
   },
-  { name: 'calories', align: 'left', label: 'Value', field: 'calories', sortable: false },
+  { name: 'calories', align: 'left', label: 'Value', field: 'calories', sortable: true },
 ]
 
 const rows = [
@@ -128,7 +128,7 @@ const rows = [
     iron: '22%'
   },
   {
-    name: 'KitKat',
+    name: 'KitKat1',
     calories: 518,
     fat: 26.0,
     carbs: 65,
@@ -138,7 +138,7 @@ const rows = [
     iron: '6%'
   },
   {
-    name: 'KitKat',
+    name: 'KitKat2',
     calories: 518,
     fat: 26.0,
     carbs: 65,
@@ -148,7 +148,7 @@ const rows = [
     iron: '6%'
   },
   {
-    name: 'KitKat',
+    name: 'KitKat3',
     calories: 518,
     fat: 26.0,
     carbs: 65,
@@ -158,7 +158,7 @@ const rows = [
     iron: '6%'
   },
   {
-    name: 'KitKat',
+    name: 'KitKat4',
     calories: 518,
     fat: 26.0,
     carbs: 65,
@@ -168,7 +168,7 @@ const rows = [
     iron: '6%'
   },
   {
-    name: 'KitKat',
+    name: 'KitKat5',
     calories: 518,
     fat: 26.0,
     carbs: 65,

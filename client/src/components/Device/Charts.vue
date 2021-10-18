@@ -118,9 +118,17 @@ export default {
     }
     .chartContainer{
         grid-area: charts;
-        margin: auto;
+        max-height: 100%;
+        min-height: 100%;
+        max-width: 95%;
+        margin-left: 3%;
+        margin-top: 1%;
 
-        width:65%;
+        .chart{
+            min-width: 95%;
+            min-height: 70%;
+            max-height: 97%;
+        }
 
     }
 }
