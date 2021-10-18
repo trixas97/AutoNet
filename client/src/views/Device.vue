@@ -66,7 +66,8 @@ export default {
     ". interfaces . moreInfo .";
 
     .container {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        // box-shadow: 0 4px 8px 0 rgba(150, 79, 79, 0.2);
+        box-shadow: 0 1px 15px 1px rgba(39, 39, 39, 0.1);
         border-radius: 5px;
         background-color: white;
         height: 90%;

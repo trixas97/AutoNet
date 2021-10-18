@@ -1,9 +1,9 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="layout">
 
-    <NavBar v-if="$route.name != 'Login' && $route.name != 'Dashboard'"/>
+    <NavBar v-if="$route.name != 'Login' && !visibleComponent($route) "/>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left"  v-if="$route.name == 'Dashboard'" elevated class="bg-navbar">
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left"  v-if="visibleComponent($route)" elevated class="bg-navbar">
       <Drawer />
     </q-drawer>
 
@@ -21,6 +21,7 @@ import NavBar from '@/components/NavBar.vue'
 import Drawer from '@/components/Drawer.vue'
 import { sockets } from '@/services/sockets.js';
 import store from '@/store';
+import routes from '@/router/routes.js'
 
 export default {
   name: 'LayoutDefault',
@@ -35,6 +36,18 @@ export default {
       sockets();
     return {
       leftDrawerOpen: ref(false)
+    }
+  },
+
+  methods: {
+    visibleComponent(route){
+      let flag;
+      try{
+        flag = routes.find(element => element.name == route.name).devname.includes('home') ? true : false
+      }catch{
+        flag = false
+      }
+      return flag;
     }
   }
 }

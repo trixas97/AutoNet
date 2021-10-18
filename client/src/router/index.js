@@ -1,51 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import NewNetworkAuto from '@/views/NewNetworkAuto.vue'
-import NewNetworkManual from '@/views/NewNetworkManual.vue'
-import SaveDevices from '@/views/SaveDevices.vue'
-import Topology from '@/views/Topology.vue'
-import Login from '@/views/Login.vue'
-import Device from '@/views/Device.vue'
-import Home from '@/views/Home.vue'
 import store from '@/store'
-
-
-const routes = [
-  {
-    path: '/autoScan',
-    name: 'AutoScanNetwork',
-    component: NewNetworkAuto
-  },
-  {
-    path: '/manualScan',
-    name: 'ManualScanNetwork',
-    component: NewNetworkManual
-  },
-  {
-    path: '/saveDevices',
-    name: 'SaveDevices',
-    component: SaveDevices
-  },
-  {
-    path: '/topology',
-    name: 'Topology',
-    component: Topology
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  },
-  {
-    path: '/device',
-    name: 'Device',
-    component: Device
-  },
-  {
-    path: '/',
-    name: 'Dashboard',
-    component: Home
-  }
-]
+import routes from '@/router/routes.js'
 
 const router = createRouter({
   history: createWebHistory(),

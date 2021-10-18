@@ -3,15 +3,15 @@
       <div class="logo-container"><img class="logo q-pt-sm q-pb-sm" src="@/assets/logo.svg" alt=""></div>
     
     <q-list class="list">
-        <div v-for="(menuItem, index) in menuList" :key="index">
-            <q-item  clickable :active="menuItem.label === 'Outbox'" active-class="bg-secondary text-white" v-ripple>
-                <q-item-section avatar>
-                <q-icon :name="menuItem.icon" />
-                </q-item-section>
-                <q-item-section>
-                {{ menuItem.label }}
-                </q-item-section>
-            </q-item>
+      <div v-for="(menuItem, index) in menuList" :key="index">
+        <q-item  clickable :active="menuItem.label === $route.name" active-class="bg-secondary text-white" @click="clickItem(menuItem.label)" v-ripple>
+          <q-item-section avatar >
+            <q-icon :name="menuItem.icon" />
+          </q-item-section>
+          <q-item-section >
+            {{ menuItem.label }}
+          </q-item-section>
+          </q-item>
         </div>
     </q-list>
     <div class="logout-container">
@@ -67,8 +67,13 @@ const menuList = [
 export default {
   setup () {
     return {
-      drawer: ref(false),
       menuList
+    }
+  },
+  methods:{
+    clickItem(value){
+      if(value == 'Dashboard') value = '/'
+      this.$router.push(value);
     }
   }
 }
