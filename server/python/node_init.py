@@ -14,13 +14,50 @@ try:
 	                    'snmp-server host ' + sys.argv[4] + ' version 2c AutoNet',
 	                    'snmp-server trap link ietf',
 	                    'snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart', 
+                        'logging monitor xml',
+                        'logging host ' + sys.argv[4],
                         'cdp run' ]
 
+
     interfaces = net_connect.send_command('show interfaces', use_textfsm=True)
-    output = net_connect.send_config_set(config_commands)
+    
     for interface in interfaces:
-        net_connect.send_config_set(['interface ' + interface["interface"], 'cdp enable'])
+        config_commands.append('interface ' + interface["interface"])
+        config_commands.append('cdp enable')
+        config_commands.append('exit')
+
+
+    net_connect.send_config_set(config_commands)
+    
+    i = 100
+    flag = True
+    for interface in interfaces:
+
+        config_commands = []
+        config_commands.append('event manager applet AutonetTraffic')
+        config_commands.append('event timer watchdog time 300')
+
+        if flag:
+            config_commands.append('action '+ str(i) + ' cli command "en"')
+            i += 1
+            flag = False
         
+        config_commands.append('action '+ str(i) + ' cli command "show interface ' + interface["interface"] + ' | in packets input"')
+        i += 1
+        config_commands.append('action '+ str(i) + ' set inTr "$_cli_result"')
+        i += 1
+        config_commands.append('action '+ str(i) + ' cli command "show interface ' + interface["interface"] + ' | in packets output"')
+        i += 1
+        config_commands.append('action '+ str(i) + ' set outTr "$_cli_result"')
+        i += 1
+        config_commands.append('action '+ str(i) + ' puts "' + interface["interface"] + ' $inTr"')
+        i += 1
+        config_commands.append('action '+ str(i) + ' puts "' + interface["interface"] + ' $outTr"')
+        i += 1
+        config_commands.append('exit')
+        output = net_connect.send_config_set(config_commands)
+        
+    
     net_connect.send_command('wr')      
 
     net_connect.disconnect()
