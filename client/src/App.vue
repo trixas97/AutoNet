@@ -3,7 +3,7 @@
 
     <NavBar v-if="$route.name != 'Login' && !visibleComponent($route) "/>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left"  v-if="visibleComponent($route)" elevated class="bg-navbar">
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" :width="250" v-if="visibleComponent($route)" elevated class="bg-navbar">
       <Drawer />
     </q-drawer>
 
