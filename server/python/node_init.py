@@ -64,3 +64,7 @@ try:
 
 except NameError:
     print(NameError)
+
+node = {"complete": True}
+print(json.dumps(node))
+sys.stdout.flush()

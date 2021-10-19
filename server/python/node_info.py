@@ -3,121 +3,121 @@ import json
 import sys
 import re
 
-keysNames = {"name": "name", "value": "value", "edit":"editable"}
+keysNames = {"name": "name", "value": "value", "edit":"editable", "visible": "visible"}
 test = None
-def modifyInterface(interface, key):
+def  modifyInterface(interface, key):
     if key == "interface_short":
         m = re.search(r"\d", interface["interface"][keysNames["value"]])
-        return {keysNames["name"]: "Name Short", keysNames["value"]: interface["interface"][keysNames["value"]][0] + interface["interface"][keysNames["value"]][m.start():], keysNames["edit"]: False}
+        return {keysNames["name"]: "Name Short", keysNames["value"]: interface["interface"][keysNames["value"]][0] + interface["interface"][keysNames["value"]][m.start():], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "interface":
-        return {keysNames["name"]: "Name", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Name", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "link_status":
-        return {keysNames["name"]: "Link Status", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Link Status", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "protocol_status":
-        return {keysNames["name"]: "Protocol Status", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Protocol Status", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "hardware_type":
-        return {keysNames["name"]: "Hardware Type", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Hardware Type", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "address":
-        return {keysNames["name"]: "Mac Address", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Mac Address", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "bia":
-        return {keysNames["name"]: "Bia", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Bia", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "description":
-        return {keysNames["name"]: "Description", keysNames["value"]: interface[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Description", keysNames["value"]: interface[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "ip_address":
-        return {keysNames["name"]: "Ip Address", keysNames["value"]: interface[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Ip Address", keysNames["value"]: interface[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "mtu":
-        return {keysNames["name"]: "Mtu", keysNames["value"]: interface[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Mtu", keysNames["value"]: interface[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "duplex":
-        return {keysNames["name"]: "Duplex", keysNames["value"]: interface[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Duplex", keysNames["value"]: interface[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "speed":
-        return {keysNames["name"]: "Speed", keysNames["value"]: interface[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Speed", keysNames["value"]: interface[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "media_type":
-        return {keysNames["name"]: "Media Type", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Media Type", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "bandwidth":
-        return {keysNames["name"]: "Bandwidth", keysNames["value"]: interface[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Bandwidth", keysNames["value"]: interface[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "delay":
-        return {keysNames["name"]: "Delay", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Delay", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "encapsulation":
-        return {keysNames["name"]: "Encapsulation", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Encapsulation", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "last_input":
-        return {keysNames["name"]: "Last Input", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Last Input", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "last_output":
-        return {keysNames["name"]: "Last Output", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Last Output", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "last_output_hang":
-        return {keysNames["name"]: "Last Output Hang", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Last Output Hang", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "queue_strategy":
-        return {keysNames["name"]: "Queue Strategy", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Queue Strategy", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "input_rate":
-        return {keysNames["name"]: "Input Rate", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Input Rate", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "output_rate":
-        return {keysNames["name"]: "Output Rate", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Output Rate", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "input_packets":
-        return {keysNames["name"]: "Input Packets", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Input Packets", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "output_packets":
-        return {keysNames["name"]: "Output Packets", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Output Packets", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "input_errors":
-        return {keysNames["name"]: "Input Errors", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Input Errors", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "crc":
-        return {keysNames["name"]: "Crc", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Crc", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "abort":
-        return {keysNames["name"]: "Abort", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Abort", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "output_errors":
-        return {keysNames["name"]: "Output Errors", keysNames["value"]: interface[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Output Errors", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
 
 def modifyRouteTable(route, key):
     if key == "protocol":
-        return {keysNames["name"]: "Protocol", keysNames["value"]: route[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Protocol", keysNames["value"]: route[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "type":
-        return {keysNames["name"]: "Type", keysNames["value"]: route[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Type", keysNames["value"]: route[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "network":
-        return {keysNames["name"]: "Network", keysNames["value"]: route[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Network", keysNames["value"]: route[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "mask":
-        return {keysNames["name"]: "Mask", keysNames["value"]: route[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Mask", keysNames["value"]: route[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "distance":
-        return {keysNames["name"]: "Distance", keysNames["value"]: route[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Distance", keysNames["value"]: route[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "metric":
-        return {keysNames["name"]: "Metric", keysNames["value"]: route[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Metric", keysNames["value"]: route[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "nexthop_ip":
-        return {keysNames["name"]: "Nexthop-IP", keysNames["value"]: route[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Nexthop-IP", keysNames["value"]: route[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "nexthop_if":
-        return {keysNames["name"]: "Nexthop-IF", keysNames["value"]: route[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Nexthop-IF", keysNames["value"]: route[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "uptime":
-        return {keysNames["name"]: "Uptime", keysNames["value"]: route[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Uptime", keysNames["value"]: route[key], keysNames["edit"]: False, keysNames["visible"]: True}
 
 def modifyArpTable(entry, key):
     if key == "protocol":
-        return {keysNames["name"]: "Protocol", keysNames["value"]: entry[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Protocol", keysNames["value"]: entry[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "address":
-        return {keysNames["name"]: "IP Address", keysNames["value"]: entry[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "IP Address", keysNames["value"]: entry[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "age":
-        return {keysNames["name"]: "Age", keysNames["value"]: entry[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Age", keysNames["value"]: entry[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "mac":
-        return {keysNames["name"]: "MAC Address", keysNames["value"]: entry[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "MAC Address", keysNames["value"]: entry[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "type":
-        return {keysNames["name"]: "Type", keysNames["value"]: entry[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Type", keysNames["value"]: entry[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "interface":
-        return {keysNames["name"]: "Interface", keysNames["value"]: entry[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Interface", keysNames["value"]: entry[key], keysNames["edit"]: False, keysNames["visible"]: True}
 
 
 def modifyACL(acl, key):
     if key == "name":
-        return {keysNames["name"]: "Name", keysNames["value"]: acl[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Name", keysNames["value"]: acl[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "sn":
-        return {keysNames["name"]: "SN", keysNames["value"]: acl[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "SN", keysNames["value"]: acl[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "action":
-        return {keysNames["name"]: "Action", keysNames["value"]: acl[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Action", keysNames["value"]: acl[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "protocol":
-        return {keysNames["name"]: "Protocol", keysNames["value"]: acl[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Protocol", keysNames["value"]: acl[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "source":
-        return {keysNames["name"]: "Source", keysNames["value"]: acl[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Source", keysNames["value"]: acl[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "port":
-        return {keysNames["name"]: "Port", keysNames["value"]: acl[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Port", keysNames["value"]: acl[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "range":
-        return {keysNames["name"]: "Range", keysNames["value"]: acl[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Range", keysNames["value"]: acl[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "destination":
-        return {keysNames["name"]: "Destination", keysNames["value"]: acl[key], keysNames["edit"]: True}
+        return {keysNames["name"]: "Destination", keysNames["value"]: acl[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "modifier":
-        return {keysNames["name"]: "Modifier", keysNames["value"]: acl[key], keysNames["edit"]: False}
+        return {keysNames["name"]: "Modifier", keysNames["value"]: acl[key], keysNames["edit"]: False, keysNames["visible"]: True}
 
 
 try:

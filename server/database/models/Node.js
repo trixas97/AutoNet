@@ -15,26 +15,63 @@ const nodeSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    name: {
+    privPass: {
         type: String,
+        required: false,
+    },
+    confPass: {
+        type: String,
+        required: false,
+    },
+    name: {
+        type: Object,
         required: true,
-        min: 3
     },
     vendor: {
-        type: String,
+        type: Object,
         required: true,
-        min: 3
     },
     type: {
-        type: String,
+        type: Object,
         required: true,
-        min:3
     },
     model: {
-        type: String,
+        type: Object,
         required: true,
-        min:3
     },
+    upTime: {
+        type: Object,
+        required: true,
+    },
+    runConf: {
+        type: Object,
+        required: true,
+    },
+    startConf: {
+        type: Object,
+        required: true,
+    },
+    route_table: {
+        type: Object,
+        required: true,
+    },
+    arp_table: {
+        type: Object,
+        required: true,
+    },
+    acl: {
+        type: Object,
+        required: true,
+    },
+    cdp: {
+        type: Object,
+        required: true,
+    },
+    serial: {
+        type: Object,
+        required: true,
+    },
+
     interfaces:{
         type: Array,
         required: true

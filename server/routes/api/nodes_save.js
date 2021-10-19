@@ -13,17 +13,16 @@ let hostLength = 0;
 io.on('connection', (socket) => {
 
     router.post('/', (req,res) => {
-        console.log(req.body);
-        console.log(req.body.id);
+        let data = {};
+        Object.keys(req.query).length === 0 ? data = req.body : data = req.query;
         let nodes = [];
         let hosts = [];
         let socket = '';
-        for(const key in req.body){
+        for(const key in data){
             try{
-                socket = req.body.id;
-                console.log(key + ": " + req.body[key]);
-                if(ipValid.isV4Format(req.body[key].split(' ')[0]))
-                    hosts.push({ip: req.body[key].split(' ')[0], username: req.body[key].split(' ')[1], password: req.body[key].split(' ')[2]});
+                socket = data.id;
+                if(ipValid.isV4Format(data[key].split(' ')[0]))
+                    hosts.push({ip: data[key].split(' ')[0], username: data[key].split(' ')[1], password: data[key].split(' ')[2]});
             }catch(err) {
                 res.json({ message: err});
             }                     
@@ -34,7 +33,6 @@ io.on('connection', (socket) => {
 
         hostLength == 0 ? res.json({ message: 'Bad request'}) : console.log('');
         for(let i=0; i < hosts.length; i++){
-            console.log(hosts[i]);
             saveNodes(hosts[i], res, nodes, socket);
         }     
     });
@@ -43,6 +41,7 @@ io.on('connection', (socket) => {
         let node = {};
         node = await initNode(host)
         node = await getNodeInfo(host);
+        node.interfaces = await initTraffic(node.interfaces)
         if(node != null){
             const nodeDb = new Node({
                 user: '60aa9e031c1d653434fcf352',
@@ -50,8 +49,16 @@ io.on('connection', (socket) => {
                 password: host.password,
                 name: node.name,
                 vendor: 'Cisco',
-                type: 'Router',
+                type: node.type,
                 model: node.model,
+                upTime: node.upTime,
+                runConf: node.runConf,
+                startConf: node.startConf,
+                route_table: node.route_table,
+                arp_table: node.arp_table,
+                acl: node.acl,
+                cdp: node.cdp,
+                serial: node.serial,
                 interfaces: node.interfaces
             });
 
@@ -61,7 +68,6 @@ io.on('connection', (socket) => {
                 hostLength--;
                 let sendNode = {ip: host.ip, messageState: 1}
                 io.to(socket).emit('save-nodes', sendNode);
-                console.log("hostLength " + hostLength);
 
             }catch (err){
                 let sendNode = {ip: host.ip, messageState: 2}
@@ -81,7 +87,7 @@ io.on('connection', (socket) => {
 
     initNode = (host) => {
         return new Promise(resolve => {
-            let shell = new PythonShell('server/python/init.py', {mode: 'json', args: [host.ip, host.username, host.password]});
+            let shell = new PythonShell('server/python/node_init.py', {mode: 'json', args: [host.ip, host.username, host.password, '192.168.78.1']});
             shell.on('message', function (message) {
                 resolve(host)
             })
@@ -93,11 +99,19 @@ io.on('connection', (socket) => {
         return new Promise(resolve => {
             let shell = new PythonShell('server/python/node_info.py', {mode: 'json', args: [host.ip, host.username, host.password]});
             shell.on('message', function (message) {
-                console.log(message);
                 resolve(message);
             });
         })
-    }   
+    }
+
+    initTraffic = async (interfaces) => {
+        return new Promise(async resolve => { 
+            for (let i=0; i < interfaces.length; i++){
+                interfaces[i].traffic = await { name: 'Traffic', value: [], editable: false, visible: false };
+                if(i == interfaces.length-1) resolve(interfaces)
+            }
+        })
+    }
 });
 
 return router;
