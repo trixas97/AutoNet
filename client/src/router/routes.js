@@ -4,8 +4,13 @@ import SaveDevices from '@/views/SaveDevices.vue'
 import Topology from '@/views/Topology.vue'
 import Login from '@/views/Login.vue'
 import Device from '@/views/Device.vue'
-import Home from '@/views/Home.vue'
-import Traffic from '@/views/Traffic.vue'
+import Home from '@/views/Dashboard/Home.vue'
+import Traffic from '@/views/Dashboard/Traffic.vue'
+import Protocols from '@/views/Dashboard/Protocols.vue'
+import Topologies from '@/views/Dashboard/Topologies.vue'
+import Devices from '@/views/Dashboard/Devices.vue'
+import Networks from '@/views/Dashboard/Networks.vue'
+
 
 const routes = [
     {
@@ -55,6 +60,30 @@ const routes = [
       name: 'Traffic',
       devname: 'homeTraffic',
       component: Traffic
+    },
+    {
+      path: '/protocols',
+      name: 'Protocols',
+      devname: 'homeProtocols',
+      component: Protocols
+    },
+    {
+      path: '/devices',
+      name: 'Devices',
+      devname: 'homeDevices',
+      component: Devices
+    },
+    {
+      path: '/topologies',
+      name: 'Topologies',
+      devname: 'homeTopologies',
+      component: Topologies
+    },
+    {
+      path: '/networks',
+      name: 'Networks',
+      devname: 'homeNetworks',
+      component: Networks
     }
   
   ]
