@@ -5,21 +5,16 @@
             <div class="title"><q-icon name="timeline" />Traffic</div>
             
             <div class="filter">
-                <!-- <q-select color="lime-11" bg-color="green" filled v-model="model" :options="options" label="Label">
+                <q-select standout="bg-teal text-white"  v-model="model" :options="options" label="Data">
                     <template v-slot:prepend>
-                        <q-icon name="event" />
+                        <q-icon name="swap_horiz" />
                     </template>
                 </q-select>
-                 <q-select color="lime-11" bg-color="green" filled v-model="model" :options="options" label="Label">
+               <q-select standout="bg-teal text-white" v-model="model" :options="options" label="Frequence">
             <template v-slot:prepend>
                 <q-icon name="event" />
             </template>
         </q-select>
-               <q-select color="lime-11" bg-color="green" filled v-model="model" :options="options" label="Label">
-            <template v-slot:prepend>
-                <q-icon name="event" />
-            </template>
-        </q-select> -->
 
         </div>
       </div>
@@ -164,6 +159,7 @@ export default {
       }
 
       .chartContainer{
+        margin-top: 2%;
         max-width: 98%;
         margin-left: 1%;
         max-height: 80%;
@@ -171,7 +167,6 @@ export default {
         display: block;
 
         .options{
-          background-color: green;
           height: 8em;
         }
 
