@@ -1,8 +1,32 @@
 <template>
   <div class="traffic-container">
     <div class="traffic-box">
+        <div class="head">
+            <div class="title"><q-icon name="timeline" />Traffic</div>
+            
+            <div class="filter">
+                <!-- <q-select color="lime-11" bg-color="green" filled v-model="model" :options="options" label="Label">
+                    <template v-slot:prepend>
+                        <q-icon name="event" />
+                    </template>
+                </q-select>
+                 <q-select color="lime-11" bg-color="green" filled v-model="model" :options="options" label="Label">
+            <template v-slot:prepend>
+                <q-icon name="event" />
+            </template>
+        </q-select>
+               <q-select color="lime-11" bg-color="green" filled v-model="model" :options="options" label="Label">
+            <template v-slot:prepend>
+                <q-icon name="event" />
+            </template>
+        </q-select> -->
+
+        </div>
+      </div>
+        
       <div class="chartContainer">
         <canvas ref="chart" class="chart"></canvas>
+        <div class="options">aa</div>
       </div>
     </div>
   </div>
@@ -99,31 +123,66 @@ export default {
 .traffic-container{
     width: 100%;
     height: 100%;
-    display: grid;
+    min-width: 100%;
+    max-width: 100%;
+    display: block;
+    padding-top: 2em;
 
     .traffic-box {
       box-shadow: 0 1px 15px 1px rgba(39, 39, 39, 0.1);
       border-radius: 5px;
       background-color: white;
-      height: 92%;
       width: 92%;
-      margin: auto;
-    }
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 5%;
+      display: block;
 
-    .chartContainer{
-        grid-area: charts;
-        max-height: 100%;
-        min-height: 100%;
-        max-width: 95%;
-        margin-left: 3%;
-        margin-top: 1%;
+      
+      .head {
+        display: flex;
+        align-items: center;
+        padding-left: 1%;
+        padding-top: 1%;
+        justify-content: space-between;
+          
+        .title{
+            font: {
+              size: 2.8em;
+              family: Roboto;
+              weight: bold;
+          }
+        }
+        .filter{
+            display: flex;
+            padding-right: 1%;
+            .q-select {
+                width: 15em;
+                margin-left: 1%;
+            }
+        }
+      }
+
+      .chartContainer{
+        max-width: 98%;
+        margin-left: 1%;
+        max-height: 80%;
+        min-height: 15em;
+        display: block;
+
+        .options{
+          background-color: green;
+          height: 8em;
+        }
 
         .chart{
-            min-width: 95%;
-            min-height: 70%;
-            max-height: 97%;
+            min-width: 98%;
+            max-height: 82%;
         }
 
     }
+    }
+
+    
 }
 </style>
