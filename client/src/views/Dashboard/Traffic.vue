@@ -10,13 +10,12 @@
                         <q-icon name="swap_horiz" />
                     </template>
                 </q-select>
-               <q-select standout="bg-teal text-white" v-model="model" :options="options" label="Frequence">
-            <template v-slot:prepend>
-                <q-icon name="event" />
-            </template>
-        </q-select>
-
-        </div>
+                <q-select standout="bg-teal text-white" v-model="model" :options="options" label="Frequence">
+                    <template v-slot:prepend>
+                        <q-icon name="event" />
+                    </template>
+                </q-select>
+            </div>
       </div>
         
       <div class="chartContainer">
