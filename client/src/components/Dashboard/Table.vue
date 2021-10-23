@@ -28,8 +28,11 @@
               {{ col.name == 'status' && col.value ? 'Active' : 'Inactive' }}
             </span>
           
-            <q-img v-if="col.name == 'type' && col.value == 'router'" src="@/assets/nodes/router.svg" />
-            <q-img v-if="col.name == 'type' && col.value != 'router'" src="@/assets/nodes/switch.svg" />
+            <q-img v-if="col.name == 'type' && col.value == 'router'" src="@/assets/elements/router.svg" />
+            <q-img v-if="col.name == 'type' && col.value == 'switch'" src="@/assets/elements/switch.svg" />
+            <q-img v-if="col.name == 'type' && col.value == 'topology'" src="@/assets/elements/topology.svg" />      
+            <q-img v-if="col.name == 'type' && col.value == 'network'" src="@/assets/elements/network.svg" />
+
             <q-btn size="md" v-if="col.name == 'delete'" color="negative" round dense @click="deleteItem" icon="delete_forever" />
           </q-td>
           

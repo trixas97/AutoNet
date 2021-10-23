@@ -4,7 +4,7 @@
             v-for="node in nodesData.length"
             :key="node"
             :ref="setItemRef"
-            src="@/assets/nodes/router.svg" 
+            src="@/assets/elements/router.svg" 
             :style="{width:'4.6em', height:'3.2em'}"
             alt="">
         <label        

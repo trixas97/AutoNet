@@ -32,6 +32,7 @@ export default {
     setup(){
 
       const columns = [
+        { name: 'type', align: 'center', field: 'type', sortable: true },
         { name: 'name',  label: 'Name', align: 'center', field: 'name', sortable: true },
         { name: 'network', label: 'IP Network', align: 'center', field: 'network' },
         { name: 'netlength', label: 'Networks', align: 'center', field: 'netlength', sortable: true },
