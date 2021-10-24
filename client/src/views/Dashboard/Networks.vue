@@ -4,7 +4,7 @@
       <div class="head">
         <div class="title"><q-icon name="account_tree" />Networks</div>
         <div class="filter">
-            <span class="add-btn"><q-btn round color="accent" size="md" icon="add" >
+            <span class="add-btn"><q-btn round color="accent" size="md" icon="add" @click="newNetwork" >
                 <q-tooltip class="bg-accent text-body1" :offset="[10, 10]">
                     New Network
                 </q-tooltip>
@@ -16,7 +16,8 @@
             </q-input>
         </div>
       </div>
-      <Table :filter="filter" :rows="rows" :columns="columns"/>
+      <Dialog v-model="dialogFlag" :ipnet="ipNetOpen"/>
+      <Table :filter="filter" :rows="rows" :columns="columns" @networkInfo="openDialog" />
     </div>
   </div>
 </template>
@@ -24,10 +25,12 @@
 <script>
 import { ref } from 'vue'
 import Table from '@/components/Dashboard/Table'
+import Dialog from '@/components/Dashboard/Dialog'
 export default {
     name: 'Topologies',
     components: {
-      Table
+      Table,
+      Dialog
     },
     setup(){
 
@@ -76,8 +79,19 @@ export default {
       ]
       return{
          filter: ref(''),
+         ipNetOpen: ref(''),
+         dialogFlag: ref(false),
          columns,
          rows
+      }
+    },
+    methods: {
+      openDialog(value){
+        this.ipNetOpen = value;
+        this.dialogFlag = true
+      },
+      newNetwork(){
+        this.$router.push('autoScan');
       }
     }
 }

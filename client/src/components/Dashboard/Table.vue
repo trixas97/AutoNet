@@ -19,7 +19,7 @@
             v-for="col in props.cols"
             :key="col.name"
             :props="props"
-            @click="showItem(col.name, props.key, props.row.type, props.row.name)"
+            @click="showItem(col.name, props)"
           >
             <q-icon v-if="col.name == 'status'" :class="col.value ? 'status-true' : 'status-false'" name="circle"/>
             
@@ -64,14 +64,18 @@ export default {
     deleteItem(){
       console.log("Delete");
     },
-    showItem(key, ip, type, name) {
+    showItem(key, props) {
+      console.log(props);
       if(key != 'delete'){
-        switch(type){
+        switch(props.row.type){
           case 'topology':
-            this.$router.push('topology?name='+name);
+            this.$router.push('topology?name='+props.row.name);
+            break;
+          case 'network':
+            this.$emit('networkInfo', props.row.network);
             break;
           default:
-            this.$router.push('device?ip='+ip);
+            this.$router.push('device?ip='+ props.row.ip);
             break;
         }
         

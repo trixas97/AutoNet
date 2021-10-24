@@ -122,7 +122,14 @@ export default {
         this.socketListener();
         this.nodesData = this.topo.nodes;
         this.linksData = this.topo.links;   
-    }     
+    },
+    async unmounted(){
+        this.nodes = []
+        await this.links.forEach(async element => {
+           await element.link.remove()
+        });
+        this.links = [];       
+    }
 }
 </script>
 <style lang="scss" scoped>
