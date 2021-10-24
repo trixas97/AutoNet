@@ -4,7 +4,7 @@ import sys
 import re
 
 keysNames = {"name": "name", "value": "value", "edit":"editable", "visible": "visible"}
-test = None
+
 def  modifyInterface(interface, key):
     if key == "interface_short":
         m = re.search(r"\d", interface["interface"][keysNames["value"]])
@@ -144,6 +144,10 @@ try:
         interface["interface_short"] = {}
         for key in  interface:
             interface[key] = modifyInterface(interface, key)
+        if(sys.argv[1] not in interface['ip_address']['value']): 
+            interface['mainIf'] = { keysNames["name"]: "Main Interface", keysNames["value"]: False, keysNames["edit"]: False, keysNames["visible"]: False }
+        else:
+            interface['mainIf'] = { keysNames["name"]: "Main Interface", keysNames["value"]: True, keysNames["edit"]: False, keysNames["visible"]: False }
     
     # Modify Route Table
     for route in routeTable:

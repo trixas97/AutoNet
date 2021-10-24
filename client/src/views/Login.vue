@@ -67,8 +67,9 @@ export default {
 
         if(res.status == 200){
             store.dispatch('User/setToken', res.data);
+            store.dispatch('User/setUsername',  this.username);
             sockets();
-            this.$router.push('topology');
+            this.$router.push('/');
         }
       }
   }

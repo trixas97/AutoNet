@@ -16,12 +16,15 @@ export const sockets = () => {
     });
 
 
+    socket.on(store.getters['User/getUsername'], (data) => {
+        console.log("Listeeennnn Userrr");
+        console.log(data);
+    })
+
     watch(() => store.getters['Socket/getConsoleDataEmit'], (data) => {
         if(data != null){
             data.socket = store.state.User.socket;
-            console.log('TRIXAKIS   ' + data.socket);
             socket.emit('consoleData', data);
-            console.log('EMIITTT');
             store.dispatch('Socket/setConsoleDataEmit', null);
         }
     })

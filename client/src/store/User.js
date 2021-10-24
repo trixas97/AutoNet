@@ -3,6 +3,7 @@ export const UserModule = {
     namespaced: true,
     
     state:{
+        username: null,
         token: null,
         socket: null
     },
@@ -13,6 +14,9 @@ export const UserModule = {
         },
         setSocket(state, val){
             state.socket = val;
+        },
+        setUsername(state, val){
+            state.username = val;
         }
     },
 
@@ -22,12 +26,18 @@ export const UserModule = {
         },
         setSocket({ commit }, val){
             commit('setSocket', val);
+        },
+        setUsername({ commit }, val){
+            commit('setUsername', val);
         }
     },
 
     getters: {
         getToken(state) {
             return state.token;
+        },
+        getUsername(state) {
+            return state.username;
         }
     }
 }

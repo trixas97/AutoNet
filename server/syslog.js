@@ -12,6 +12,7 @@ module.exports = function(io) {
         if(value.message.includes("AutonetTraffic")){
             value = await modifyMessage(value, typeMessage.traffic)
             console.log(value);
+            io.emit("trixas97", value);
         }
     });
     
