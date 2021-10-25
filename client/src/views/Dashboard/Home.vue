@@ -4,6 +4,13 @@
       <div class="head">
         <div class="title"><q-icon name="dns" />Server</div>
       </div>
+      <div class="serverbody">
+        <div class="element"><span class="label"><q-icon class="text-secondary" name="label"/> Ip:</span><span class="value">192.168.78.1</span></div>
+        <div class="element"><span class="label"><q-icon class="text-secondary" name="label"/> Port:</span><span class="value">8080</span></div>
+        <div class="element"><span class="label"><q-icon class="text-secondary" name="label"/> Number of Users:</span><span class="value">5</span></div>
+        <div class="element"><span class="label"><q-icon class="text-secondary" name="label"/> Alive Time:</span><span class="value">5 Days, 3 Hours</span></div>
+        <div class="element currentUser"><span class="label"><q-icon class="text-darkblue" name="person"/> Loged as</span><span class="value text-primary">trixas97</span></div>
+      </div>
     </div>
     <div class="dashboard-box dashboard-traffic">
       <div class="head">
@@ -120,6 +127,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/quasar.variables.scss";
 .dashboard-container{
     width: 100%;
     height: 100%;
@@ -189,8 +197,30 @@ export default {
       }
     }
 
+
     .dashboard-server {
       grid-area: server;
+      .serverbody{
+        font: {
+          size: 2em
+        }
+        width: 100%;
+        height: 100%;
+        margin-top: 1em;
+        .element {
+          padding-left: 1em;
+          .value{
+            font-weight: bold;
+            padding-left: 0.5em;
+            color: $darkblue;
+          }
+        }
+        .currentUser{
+          margin-top: 10%;
+        }
+
+
+      }
     }
 
     .dashboard-traffic {
