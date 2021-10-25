@@ -174,7 +174,7 @@ export default {
             max-height: 82%;
         }
 
-    }
+     }
     }
 
     

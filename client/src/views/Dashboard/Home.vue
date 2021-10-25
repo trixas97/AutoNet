@@ -234,6 +234,22 @@ export default {
     .dashboard-devices {
       grid-area: devices;
     }
+
+
+      .chartContainer{
+        min-width: 100%;
+        max-width: 100%;
+        max-height: 90%;
+        min-height: 15em;
+        font: {
+          size: 1em;
+        }
+        .chart{
+            min-width: 98%;
+            max-height: 100%;
+        }
+
+     }
 }
 
 </style>
