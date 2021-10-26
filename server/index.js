@@ -38,6 +38,16 @@ app.use('/api/topology', saveTopology);
 app.use('/api/links', links);
 app.use('/api/console', consoleDevice);
 
+
+const userData = require('./database/userData');
+
+io.on('connection', (socket) => {
+  socket.on('initUser', async (data) => {
+    console.log(`User ${data} connected with socket ${socket.id}`);
+    io.to(socket.id).emit(data, await userData.getUserData(data))
+  })
+})
+
 mongoose.connect(
   process.env.DB_CONNECTION, { useUnifiedTopology: true, useNewUrlParser: true }, (err) => {
     

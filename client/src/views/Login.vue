@@ -66,9 +66,9 @@ export default {
         const res = await loginRequest(data);
 
         if(res.status == 200){
+            sockets();
             store.dispatch('User/setToken', res.data);
             store.dispatch('User/setUsername',  this.username);
-            sockets();
             this.$router.push('/');
         }
       }

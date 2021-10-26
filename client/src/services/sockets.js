@@ -11,10 +11,10 @@ export const sockets = () => {
     let socket = io(serverUrl);
     socket.on('connect', () => {
         console.log('TRIOXAS  ' + socket.id);
+        socket.emit('initUser', store.getters['User/getUsername']);
         store.dispatch('User/setSocket', socket.id);
         store.dispatch('Socket/setSocketReady', true);
     });
-
 
     socket.on(store.getters['User/getUsername'], (data) => {
         console.log("Listeeennnn Userrr");
