@@ -87,9 +87,22 @@ export default {
             type: 'line',
             data: dataChart,
             options: {
+                hoverRadius: 10,
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value){
+                                if(value >= 1000000000)
+                                    return value/1000000000 + ' Gbps'
+                                else if(value >= 1000000)
+                                    return value/1000000 + ' Mbps'
+                                else if(value >= 1000)
+                                    return value/1000 + ' Kbps'
+                                else
+                                    return value + ' bps'
+                            }
+                        }
                     }
                 }
             }
