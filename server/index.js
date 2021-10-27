@@ -44,7 +44,10 @@ const userData = require('./database/userData');
 io.on('connection', (socket) => {
   socket.on('initUser', async (data) => {
     console.log(`User ${data} connected with socket ${socket.id}`);
-    io.to(socket.id).emit(data, await userData.getUserData(data))
+    let msg = {}
+    msg.data = await userData.getUserData(data);
+    msg.type = 'userData'
+    io.to(socket.id).emit(data, msg)
   })
 })
 
