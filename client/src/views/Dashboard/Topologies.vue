@@ -4,7 +4,7 @@
       <div class="head">
         <div class="title"><q-icon name="share" />Topologies</div>
         <div class="filter">
-            <span class="add-btn"><q-btn round color="accent" size="md" icon="add" >
+            <span class="add-btn"><q-btn round color="accent" size="md" icon="add" @click="newTopology" >
                 <q-tooltip class="bg-accent text-body1" :offset="[10, 10]">
                     New Topology
                 </q-tooltip>
@@ -24,13 +24,14 @@
 <script>
 import { ref } from 'vue'
 import Table from '@/components/Dashboard/Table'
+import { useStore } from 'vuex';
 export default {
     name: 'Topologies',
     components: {
       Table
     },
     setup(){
-
+      const store = useStore();
       const columns = [
         { name: 'type', align: 'center', field: 'type', sortable: true },
         { name: 'name',  label: 'Name', align: 'center', field: 'name', sortable: true },
@@ -77,7 +78,13 @@ export default {
       return{
          filter: ref(''),
          columns,
-         rows
+         rows,
+         store
+      }
+    },
+    methods:{
+      newTopology(){
+        
       }
     }
 }

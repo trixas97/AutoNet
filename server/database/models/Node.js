@@ -8,19 +8,19 @@ const nodeSchema = new mongoose.Schema({
         ref: 'users'
     },
     username: {
-        type: String,
+        type: Object,
         required: true,
     },
     password: {
-        type: String,
+        type: Object,
         required: true,
     },
     privPass: {
-        type: String,
+        type: Object,
         required: false,
     },
     confPass: {
-        type: String,
+        type: Object,
         required: false,
     },
     name: {

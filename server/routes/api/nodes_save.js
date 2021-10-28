@@ -45,10 +45,10 @@ io.on('connection', (socket) => {
         if(node != null){
             const nodeDb = new Node({
                 user: '60aa9e031c1d653434fcf352',
-                username: host.username,
-                password: host.password,
+                username: node.username,
+                password: node.password,
                 name: node.name,
-                vendor: 'Cisco',
+                vendor: node.vendor,
                 type: node.type,
                 model: node.model,
                 upTime: node.upTime,

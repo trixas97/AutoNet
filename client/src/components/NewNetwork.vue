@@ -68,8 +68,6 @@ export default {
     let nodeDialog = null;
     const nodes = computed(() => store.getters[storeActions.nodes]).value;
     const networks = computed(() => store.getters[storeActions.networks]).value;
-
-    
     const apiLinks = {
       server: `${location.protocol}//${location.hostname}:5000`,
       autoScan: {

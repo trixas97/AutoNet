@@ -28,8 +28,8 @@
               {{ col.name == 'status' && col.value ? 'Active' : 'Inactive' }}
             </span>
           
-            <q-img v-if="col.name == 'type' && col.value == 'router'" src="@/assets/elements/router.svg" />
-            <q-img v-if="col.name == 'type' && col.value == 'switch'" src="@/assets/elements/switch.svg" />
+            <q-img v-if="col.name == 'type' && col.value == 'Router'" src="@/assets/elements/router.svg" />
+            <q-img v-if="col.name == 'type' && col.value == 'Switch'" src="@/assets/elements/switch.svg" />
             <q-img v-if="col.name == 'type' && col.value == 'topology'" src="@/assets/elements/topology.svg" />      
             <q-img v-if="col.name == 'type' && col.value == 'network'" src="@/assets/elements/network.svg" />
 
@@ -44,7 +44,7 @@
 
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 
 export default {
@@ -54,10 +54,14 @@ export default {
     rows: Array
   },
   setup () {
+
+    onMounted(() => {
+      console.log("SIFJISFJ");
+    })
     return {
         pagination: ref({
-        rowsPerPage: 0
-      })
+          rowsPerPage: 0
+        }),
     }
   },
   methods: {

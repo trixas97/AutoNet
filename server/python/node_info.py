@@ -166,6 +166,9 @@ try:
             
 
     node = {
+        "username": {keysNames["name"]: "Username", keysNames["value"]: sys.argv[2], keysNames["edit"]: True},
+        "password": {keysNames["name"]: "Password", keysNames["value"]: sys.argv[3], keysNames["edit"]: True},
+        "vendor": {keysNames["name"]: "Vendor", keysNames["value"]: 'Cisco', keysNames["edit"]: False},
         "name": {keysNames["name"]: "Name", keysNames["value"]:version[0]['hostname'], keysNames["edit"]: True},
         "model": {keysNames["name"]: "Model", keysNames["value"]:version[0]['hardware'][0], keysNames["edit"]: False},
         "type": {keysNames["name"]: "Type", keysNames["value"]:"Switch" if "Router" not in typeNode else "Router", keysNames["edit"]: False},

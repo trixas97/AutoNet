@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 import store from '../store';
-import {  watch } from 'vue';
+import { watch } from 'vue';
 
 export const sockets = () => {
     store.dispatch('Socket/setSocketReady', false);
@@ -18,10 +18,12 @@ export const sockets = () => {
 
     // Listener to receive user data (nodes, topologies...) changes
     socket.on(store.getters['User/getUsername'], (msg) => {
-        console.log("Listeeennnn Userrr");
         switch(msg.type){
             case 'userData':
-                //code
+                store.dispatch('UserData/setNodes', msg.data.nodes);
+                store.dispatch('UserData/setTopologies', msg.data.topologies);
+                store.dispatch('UserData/setLinks', msg.data.links);
+                store.dispatch('UserData/setNetworks', msg.data.networks);
                 break;
             case 'topologies':
                 //code
@@ -36,7 +38,6 @@ export const sockets = () => {
                 //code
                 break; 
         }
-        console.log(msg.data);
     })
 
 
