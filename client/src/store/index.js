@@ -3,6 +3,7 @@ import createPersistedState from 'vuex-persistedstate';
 import { NewNetworkModule } from './NewNetwork';
 import { UserModule } from './User';
 import { SocketModule } from './Socket';
+import { UserDataModule } from './UserData';
 import * as Cookies from "js-cookie";
 
 export default createStore({
@@ -17,7 +18,8 @@ export default createStore({
   modules: {
     NewNetwork: NewNetworkModule,
     User: UserModule,
-    Socket: SocketModule
+    Socket: SocketModule,
+    UserData: UserDataModule
   },
 
   plugins:[
