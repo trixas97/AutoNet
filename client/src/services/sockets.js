@@ -41,6 +41,14 @@ export const sockets = () => {
     })
 
 
+    watch(() => store.getters['UserData/getNodes'], (data) => {
+        if(data != null){
+            console.log('Watcheeerrr fromm Socketsss');
+            console.log(data);
+        }
+    })
+
+
 
     // For console device live stream - watch user actions and emit
     watch(() => store.getters['Socket/getConsoleDataEmit'], (data) => {

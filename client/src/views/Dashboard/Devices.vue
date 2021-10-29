@@ -26,6 +26,7 @@ import { ref, watch, onMounted } from 'vue'
 import Table from '@/components/Dashboard/Table'
 import store from '@/store';
 import { computed } from '@vue/runtime-core';
+import _ from "lodash";
 export default {
     name: 'Devices',
     components: {
@@ -52,8 +53,7 @@ export default {
 
       onMounted(() => {
         console.log("MOUNNTEEEDD");
-        watch(() => store.getters['UserData/getNodes'], (data) => {
-          console.log("Watcheeeerrrrrr OUT");
+        watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (data) => {
           if(data != null){
             console.log("Watcheeeerrrrrr");
             console.log(data);
@@ -193,6 +193,7 @@ export default {
     methods:{
       newNode(){
         let nodes = store.getters['UserData/getNodes'];
+        // let test = [];
         nodes.push({
           type: { value: "Router"},
           name: { value: "R13"},
@@ -201,7 +202,7 @@ export default {
         nodes[0].name.value = "S2"
         nodes[0].type.value = "Switch"
         store.dispatch('UserData/setNodes', nodes);
-        console.log(store.getters['UserData/getNodes']);
+        // console.log(store.getters['UserData/getNodes']);
       },
 
       findMainIp(node) {
