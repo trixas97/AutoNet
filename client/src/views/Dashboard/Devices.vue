@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import Table from '@/components/Dashboard/Table'
 import store from '@/store';
 import { computed } from '@vue/runtime-core';
@@ -47,15 +47,37 @@ export default {
 
       console.log(store.getters['UserData/getNodes']);
       const nodes = computed(() => store.getters['UserData/getNodes']).value;
-      const rows = [];
+      const rows = ref(computed(() => modifyNodes()))
 
-      // onMounted(() => {
-      //   nodes.forEach(async element => {
-      //     if(element.username.name){
-      //       initNode(element)
-      //     }
-      //   });
-      // })
+
+      onMounted(() => {
+        console.log("MOUNNTEEEDD");
+        watch(() => store.getters['UserData/getNodes'], (data) => {
+          console.log("Watcheeeerrrrrr OUT");
+          if(data != null){
+            console.log("Watcheeeerrrrrr");
+            console.log(data);
+          }
+        })
+      });
+
+
+     function modifyNodes(){
+        let rowsArray = [];
+        for(let  i=0; i<nodes.length; i++){
+          rowsArray[i] ={
+            type: nodes[i].type.value,
+            name: nodes[i].name.value,
+            ip: '192.168.78.'+ i,
+            network: '192.168.78.0/24',
+            traffic: 1.5,
+            status: true,
+            delete: '',
+          };
+          if(i == nodes.length-1)
+            return(rowsArray)
+        }
+    }
 
       // const rows = [
       //   {
@@ -171,8 +193,15 @@ export default {
     methods:{
       newNode(){
         let nodes = store.getters['UserData/getNodes'];
-        nodes.push(nodes[0]);
+        nodes.push({
+          type: { value: "Router"},
+          name: { value: "R13"},
+          interfaces: [{mainIf: {value: true}, ip_address: {value: '192.168.778.1'}}, {mainIf: {value: false}, ip_address: {value: '13.13.13.1'}}],
+        });
+        nodes[0].name.value = "S2"
+        nodes[0].type.value = "Switch"
         store.dispatch('UserData/setNodes', nodes);
+        console.log(store.getters['UserData/getNodes']);
       },
 
       findMainIp(node) {
@@ -197,25 +226,7 @@ export default {
             delete: '',
           })
       }
-    },
-    mounted(){
-      watch(() => store.getters['UserData/getNodes'], (data) => {
-        if(data != null){
-          console.log("Watcheeeerrrrrr");
-          console.log(data);
-          data.forEach(async element => {
-            if(element.username.name){
-              this.initNode(element)
-            }
-          });
-        }
-      })
-      this.nodes.forEach(async element => {
-        if(element.username.name){
-          this.initNode(element)
-        }
-      });
-    },
+    }
 }
 </script>
 
