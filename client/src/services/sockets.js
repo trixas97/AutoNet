@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
 import store from '../store';
 import { watch } from 'vue';
+import _ from "lodash";
 
 export const sockets = () => {
     store.dispatch('Socket/setSocketReady', false);
@@ -8,9 +9,15 @@ export const sockets = () => {
 
     let socket = io(serverUrl);
 
+    let initFlag = {
+        nodes: false, 
+        networks: false,
+        topologies: false,
+        links: false
+    }
+
     // Init data after sockets connection
     socket.on('connect', () => {
-        console.log('TRIOXAS  ' + socket.id);
         socket.emit('initUser', store.getters['User/getUsername']);
         store.dispatch('User/setSocket', socket.id);
         store.dispatch('Socket/setSocketReady', true);
@@ -20,7 +27,7 @@ export const sockets = () => {
     socket.on(store.getters['User/getUsername'], (msg) => {
         switch(msg.type){
             case 'userData':
-                store.dispatch('UserData/setNodes', msg.data.nodes);
+                store.dispatch('UserData/setNodes', { data: msg.data.nodes, changedFromUser: false });
                 store.dispatch('UserData/setTopologies', msg.data.topologies);
                 store.dispatch('UserData/setLinks', msg.data.links);
                 store.dispatch('UserData/setNetworks', msg.data.networks);
@@ -29,7 +36,7 @@ export const sockets = () => {
                 //code
                 break;
             case 'nodes':
-                //code
+                store.dispatch('UserData/setNodes', msg.nodes);
                 break;
             case 'links':
                 //code
@@ -41,13 +48,15 @@ export const sockets = () => {
     })
 
 
-    watch(() => store.getters['UserData/getNodes'], (data) => {
-        if(data != null){
-            console.log('Watcheeerrr fromm Socketsss');
-            console.log(data);
+    watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (nodes) => { 
+        if(initFlag.nodes && nodes.changedFromUser){
+            if(nodes != null){
+                socket.emit('nodes', {nodes: nodes.data, user: store.getters['User/getUsername']});
+            }
         }
+        else
+            initFlag.nodes = true
     })
-
 
 
     // For console device live stream - watch user actions and emit

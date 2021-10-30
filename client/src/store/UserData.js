@@ -3,7 +3,7 @@ export const UserDataModule = {
     namespaced: true,
 
     state: {
-        nodes: [],
+        nodes: {data: [], changedFromUser: false},
         networks: [],
         topologies: [],
         links: []
@@ -14,10 +14,10 @@ export const UserDataModule = {
             state.nodes = val
         },
         addNode(state,val){
-            state.nodes.push(val);
+            state.nodes.data.push(val);
         },
         deleteNode(state,val){
-            state.nodes.splice(val, 1);
+            state.nodes.data.splice(val, 1);
         },
 
 

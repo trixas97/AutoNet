@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import Table from '@/components/Dashboard/Table'
 import store from '@/store';
 import { computed } from '@vue/runtime-core';
@@ -45,147 +45,18 @@ export default {
         { name: 'status', label: 'Status', align: 'center', field: 'status', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
         { name: 'delete', label: '', field: 'delete', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
       ]
+      let nodesFromWatch = ref(store.getters['UserData/getNodes'])
+      let nodes = computed(() => ref(nodesFromWatch));
 
-      console.log(store.getters['UserData/getNodes']);
-      const nodes = computed(() => store.getters['UserData/getNodes']).value;
-      const rows = ref(computed(() => modifyNodes()))
-
-
-      onMounted(() => {
-        console.log("MOUNNTEEEDD");
-        watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (data) => {
-          if(data != null){
-            console.log("Watcheeeerrrrrr");
-            console.log(data);
+      watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => { 
+        if(dataNodes != null){
+            nodesFromWatch.value = dataNodes
+            nodes = ref(nodesFromWatch)
           }
         })
-      });
-
-
-     function modifyNodes(){
-        let rowsArray = [];
-        for(let  i=0; i<nodes.length; i++){
-          rowsArray[i] ={
-            type: nodes[i].type.value,
-            name: nodes[i].name.value,
-            ip: '192.168.78.'+ i,
-            network: '192.168.78.0/24',
-            traffic: 1.5,
-            status: true,
-            delete: '',
-          };
-          if(i == nodes.length-1)
-            return(rowsArray)
-        }
-    }
-
-      // const rows = [
-      //   {
-      //     type: 'router',
-      //     name: 'R1',
-      //     ip: '192.168.78.1',
-      //     network: '192.168.78.0',
-      //     mask: 255,
-      //     traffic: 1.5,
-      //     status: true,
-      //     delete: '',
-      //   },
-      //   {
-      //     type: 'router',
-      //     name: 'R2',
-      //     ip: '192.168.78.222',
-      //     network: '192.168.78.0',
-      //     mask: 255,
-      //     traffic: 25,
-      //     status: false,
-      //     delete: ''
-      //   },
-      //   {
-      //     type: 'router',
-      //     name: 'R3',
-      //     ip: '192.168.178.111',
-      //     network: '192.168.78.0',
-      //     mask: 255,
-      //     traffic: 1.5,
-      //     status: true,
-      //     delete: ''
-      //   },
-      //   {
-      //     type: 'switch',
-      //     name: 'S1',
-      //     ip: '192.168.78.2',
-      //     network: '192.168.78.0',
-      //     mask: 255,
-      //     traffic: 1.5,
-      //     status: true,
-      //     delete: ''
-      //   },
-      //   {
-      //     type: 'router',
-      //     name: 'R5',
-      //     ip: '192.168.78.3',
-      //     network: '192.168.78.0',
-      //     mask: 255,
-      //     traffic: 1.5,
-      //     status: true,
-      //     delete: ''
-      //   },
-      //   {
-      //     type: 'router',
-      //     name: 'R6',
-      //     ip: '192.168.78.4',
-      //     network: '192.168.78.0',
-      //     mask: 255,
-      //     traffic: 1.5,
-      //     status: 'Active',
-      //     delete: ''
-      //   },
-      //   {
-      //     type: 'router',
-      //     name: 'R7',
-      //     ip: '192.168.78.5',
-      //     network: '192.168.78.0',
-      //     mask: 255,
-      //     traffic: 1.5,
-      //     status: 'Active',
-      //     delete: ''
-      //   },
-      //   {
-      //     type: 'router',
-      //     name: 'R8',
-      //     ip: '192.168.78.6',
-      //     network: '192.168.78.0',
-      //     mask: 255,
-      //     traffic: 1.5,
-      //     status: 'Active',
-      //     delete: ''
-      //   },
-      //   {
-      //     type: 'router',
-      //     name: 'R9',
-      //     ip: '192.168.78.7',
-      //     network: '192.168.78.0',
-      //     mask: 255,
-      //     traffic: 1.5,
-      //     status: 'Active',
-      //     delete: ''
-      //   },
-      //   {
-      //     type: 'router',
-      //     name: 'R10',
-      //     ip: '192.168.78.8',
-      //     network: '192.168.78.0',
-      //     mask: 255,
-      //     traffic: 1.5,
-      //     status: 'Active',
-      //     delete: ''
-      //   }
-      // ]
-
       
       return{
         filter: ref(''),
-        rows: ref(rows),
         columns,
         nodes: ref(nodes)
       }
@@ -193,41 +64,38 @@ export default {
     methods:{
       newNode(){
         let nodes = store.getters['UserData/getNodes'];
-        // let test = [];
-        nodes.push({
+        nodes.data.push({
           type: { value: "Router"},
           name: { value: "R13"},
           interfaces: [{mainIf: {value: true}, ip_address: {value: '192.168.778.1'}}, {mainIf: {value: false}, ip_address: {value: '13.13.13.1'}}],
         });
-        nodes[0].name.value = "S2"
-        nodes[0].type.value = "Switch"
-        store.dispatch('UserData/setNodes', nodes);
-        // console.log(store.getters['UserData/getNodes']);
-      },
 
-      findMainIp(node) {
-        return new Promise(resolve => {
-          node.interfaces.forEach(element => {
-            if(element.mainIf.value){
-              resolve(element.ip_address.value)
-            }
-          })
-        })
-      },
-     async initNode(node) {
-          let mainIp = ''
-          mainIp = await this.findMainIp(node)
-          this.rows.push({
-            type: node.type.value,
-            name: node.name.value,
-            ip: mainIp,
-            network: '192.168.78.0',
+        nodes.data[0].name.value = "S2"
+        nodes.data[0].type.value = "Switch"
+        nodes.changedFromUser = true
+        store.dispatch('UserData/setNodes', nodes);
+      }
+    },
+    computed:{
+      rows(){
+        let rowsArray = [];
+        let nodesArray = this.nodes.value.data;
+        for(let  i=0; i< nodesArray.length; i++){
+          rowsArray[i] ={
+            type: nodesArray[i].type.value,
+            name: nodesArray[i].name.value,
+            ip: '192.168.78.'+ i,
+            network: '192.168.78.0/24',
             traffic: 1.5,
             status: true,
             delete: '',
-          })
+          };
+          if(i == nodesArray.length-1)
+            return(rowsArray)
+        }
+        return rowsArray
       }
-    }
+    },
 }
 </script>
 

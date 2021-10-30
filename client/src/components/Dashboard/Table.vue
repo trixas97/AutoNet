@@ -44,7 +44,7 @@
 
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 
 export default {
@@ -55,9 +55,6 @@ export default {
   },
   setup () {
 
-    onMounted(() => {
-      console.log("SIFJISFJ");
-    })
     return {
         pagination: ref({
           rowsPerPage: 0

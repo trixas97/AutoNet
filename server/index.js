@@ -21,6 +21,7 @@ let io = socket(server, {
 
 const snmp = require('./snmp')(io);
 const syslog = require('./syslog')(io);
+const socketsListeners = require('./sockets')(io);
 const authRoute = require("./routes/auth.js");
 const nodesFinder = require('./routes/api/nodes_find.js')(io);
 const nodesSave = require('./routes/api/nodes_save.js')(io);
@@ -39,17 +40,8 @@ app.use('/api/links', links);
 app.use('/api/console', consoleDevice);
 
 
-const userData = require('./database/userData');
 
-io.on('connection', (socket) => {
-  socket.on('initUser', async (data) => {
-    console.log(`User ${data} connected with socket ${socket.id}`);
-    let msg = {}
-    msg.data = await userData.getUserData(data);
-    msg.type = 'userData'
-    io.to(socket.id).emit(data, msg)
-  })
-})
+
 
 mongoose.connect(
   process.env.DB_CONNECTION, { useUnifiedTopology: true, useNewUrlParser: true }, (err) => {
