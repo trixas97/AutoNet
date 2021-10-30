@@ -84,7 +84,7 @@ export default {
           rowsArray[i] ={
             type: nodesArray[i].type.value,
             name: nodesArray[i].name.value,
-            ip: '192.168.78.'+ i,
+            ip: this.mainIp,
             network: '192.168.78.0/24',
             traffic: 1.5,
             status: true,
@@ -94,9 +94,23 @@ export default {
             return(rowsArray)
         }
         return rowsArray
-      }
-    },
-}
+      },
+      mainIp(){
+        let nodes = this.nodes.value.data;
+        for(let j=0; j < nodes.length; j++){
+          for(let k=0; k < nodes[j].interfaces.length; k++){
+            if(nodes[j].interfaces[k].mainIf.value){
+              if(nodes[j].interfaces[k].ip_address.value.includes('/'))
+                return nodes[j].interfaces[k].ip_address.value.split('/')[0]
+              else
+                return nodes[j].interfaces[k].ip_address.value
+            }
+          }
+        }
+        return ''
+      } 
+    } 
+  }
 </script>
 
 <style lang="scss" scoped>
