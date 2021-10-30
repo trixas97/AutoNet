@@ -52,7 +52,7 @@
                 <!-- <q-input outlined v-model="type" label="Type" /> -->
             </div>
             <div class="status">
-                <span>Status: </span><span class="value value-stable" style="color: #00b336">{{status}} <q-icon name="circle"/></span><!-- stop -->
+                <span>Status: </span><span class="value value-stable" :class="status == 'Active' ? 'text-positive' : 'text-negative'">{{status}} <q-icon name="circle"/></span><!-- stop -->
                 
                 <!-- <q-input outlined v-model="status" label="Status" /> -->
             </div>
@@ -92,39 +92,112 @@
 </template>
 
 <script>
+import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
+import { computed } from '@vue/runtime-core';
+import { ref, watch } from 'vue'
+import store from '@/store';
+import _ from "lodash";
 
 export default {
-// conponents:{
-//     DialogConsole
-// },
-data(){
-    let name = 'R2'
-    let username = 'trixas'
-    let password = 'trixas'
-    let vendor = 'Cisco'
-    let type = 'Router'
-    let status = 'Active'
-    return {
-        name,
-        username,
-        password,
-        vendor,
-        type,
-        status,
-        // console: ref(true)
-    }
-},
-methods:{
-    openConsole(){
-        this.$emit('console', true);
+
+    data(){
+        const route = useRoute()
+        let mainIp = ''
+
+        let nodesFromWatch = ref(store.getters['UserData/getNodes'])
+        let nodes = computed(() => ref(nodesFromWatch));
+
+        watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => { 
+            if(dataNodes != null){
+                nodesFromWatch.value = dataNodes
+                nodes = ref(nodesFromWatch)
+            }
+        })
+
+        onMounted(() => {
+            mainIp = route.query.ip
+        })
+
+        return {
+            mainIp,
+            nodes: ref(nodes)
+        }
     },
-    openConfig(){
-        this.$emit('config', true);
+    methods:{
+        openConsole(){
+            this.$emit('console', true);
+        },
+        openConfig(){
+            this.$emit('config', true);
+        },
+        openInfo(){
+            this.$emit('info', true);
+        }
     },
-    openInfo(){
-        this.$emit('info', true);
+
+    computed: {
+        name(){
+            let nodes = this.nodes.value.data;
+            for(let j=0; j < nodes.length; j++){
+                for(let k=0; k < nodes[j].interfaces.length; k++){
+                    if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
+                        return nodes[j].name.value
+                }
+            }
+            return ''
+        },
+        username(){
+            let nodes = this.nodes.value.data;
+            for(let j=0; j < nodes.length; j++){
+                for(let k=0; k < nodes[j].interfaces.length; k++){
+                    if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
+                        return nodes[j].username.value
+                }
+            }
+            return ''
+        },
+        password(){
+            let nodes = this.nodes.value.data;
+            for(let j=0; j < nodes.length; j++){
+                for(let k=0; k < nodes[j].interfaces.length; k++){
+                    if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
+                        return nodes[j].password.value
+                }
+            }
+            return ''
+        },
+        vendor(){
+            let nodes = this.nodes.value.data;
+            for(let j=0; j < nodes.length; j++){
+                for(let k=0; k < nodes[j].interfaces.length; k++){
+                    if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
+                        return nodes[j].vendor.value
+                }
+            }
+            return ''
+        },
+        type(){
+            let nodes = this.nodes.value.data;
+            for(let j=0; j < nodes.length; j++){
+                for(let k=0; k < nodes[j].interfaces.length; k++){
+                    if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
+                        return nodes[j].type.value
+                }
+            }
+            return ''
+        },
+        status(){
+            let nodes = this.nodes.value.data;
+            for(let j=0; j < nodes.length; j++){
+                for(let k=0; k < nodes[j].interfaces.length; k++){
+                    if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
+                        return nodes[j].status.value ? 'Active' : 'Inactive'
+                }
+            }
+            return ''
+        }
     }
-}
 }
 </script>
 
