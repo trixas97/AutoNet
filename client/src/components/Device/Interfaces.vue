@@ -12,14 +12,10 @@
       :pagination="pagination"
     >
     
-    <template v-slot:top>
-        <label>Interfaces</label>
-
-        <q-space />
-
-
-
-        <q-select standout v-model="model" :options="options"  label-color="white" color="teal"  bg-color="blue"/>
+      <template v-slot:top>
+          <label>Interfaces</label>
+          <q-space />
+          <q-select standout v-model="model" :options="options"  label-color="white" color="teal"  bg-color="blue"/>
       </template>
      
     </q-table>
@@ -27,183 +23,96 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-const columns = [
-  {
-    name: 'name',
-    required: true,
-    label: 'Option',
-    align: 'left',
-    field: row => row.name,
-    format: val => `${val}`,
-    sortable: true
-  },
-  { name: 'calories', align: 'left', label: 'Value', field: 'calories', sortable: true },
-//   { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
-//   { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
-//   { name: 'protein', label: 'Protein (g)', field: 'protein' },
-//   { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
-//   { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-//   { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
-]
+import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
+import { ref, watch } from 'vue'
+import store from '@/store';
+import { computed } from '@vue/runtime-core';
+import _ from "lodash";
 
-const rows = [
-  {
-    name: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    sodium: 87,
-    calcium: '14%',
-    iron: '1%'
-  },
-  {
-    name: 'Ice cream sandwich',
-    calories: 237,
-    fat: 9.0,
-    carbs: 37,
-    protein: 4.3,
-    sodium: 129,
-    calcium: '8%',
-    iron: '1%'
-  },
-  {
-    name: 'Eclair',
-    calories: 262,
-    fat: 16.0,
-    carbs: 23,
-    protein: 6.0,
-    sodium: 337,
-    calcium: '6%',
-    iron: '7%'
-  },
-  {
-    name: 'Cupcake',
-    calories: 305,
-    fat: 3.7,
-    carbs: 67,
-    protein: 4.3,
-    sodium: 413,
-    calcium: '3%',
-    iron: '8%'
-  },
-  {
-    name: 'Gingerbread',
-    calories: 356,
-    fat: 16.0,
-    carbs: 49,
-    protein: 3.9,
-    sodium: 327,
-    calcium: '7%',
-    iron: '16%'
-  },
-  {
-    name: 'Jelly bean',
-    calories: 375,
-    fat: 0.0,
-    carbs: 94,
-    protein: 0.0,
-    sodium: 50,
-    calcium: '0%',
-    iron: '0%'
-  },
-  {
-    name: 'Lollipop',
-    calories: 392,
-    fat: 0.2,
-    carbs: 98,
-    protein: 0,
-    sodium: 38,
-    calcium: '0%',
-    iron: '2%'
-  },
-  {
-    name: 'Honeycomb',
-    calories: 408,
-    fat: 3.2,
-    carbs: 87,
-    protein: 6.5,
-    sodium: 562,
-    calcium: '0%',
-    iron: '45%'
-  },
-  {
-    name: 'Donut',
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    sodium: 326,
-    calcium: '2%',
-    iron: '22%'
-  },
-  {
-    name: 'KitKat1',
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    sodium: 54,
-    calcium: '12%',
-    iron: '6%'
-  },
-  {
-    name: 'KitKat2',
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    sodium: 54,
-    calcium: '12%',
-    iron: '6%'
-  },
-  {
-    name: 'KitKat3',
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    sodium: 54,
-    calcium: '12%',
-    iron: '6%'
-  },
-  {
-    name: 'KitKat4',
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    sodium: 54,
-    calcium: '12%',
-    iron: '6%'
-  },
-  {
-    name: 'KitKat5',
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    sodium: 54,
-    calcium: '12%',
-    iron: '6%'
-  }
-]
-      let options= [
-        'F0/0', 'F0/1', 'F0/2', 'F0/3', 'F0/4'
-      ]
+// let options= [
+//   'G0/0', 'G0/1', 'G0/2', 'G0/3', 'G0/4'
+// ]
+
 export default {
   setup () {
+
+    const columns = [
+      { name: 'name', required: true, label: 'Option', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+      { name: 'value', align: 'left', label: 'Value', field: 'value', sortable: true },
+    ]
+    const route = useRoute()
+    let mainIp = ''
+
+    let nodesFromWatch = ref(store.getters['UserData/getNodes'])
+    let nodes = computed(() => ref(nodesFromWatch));
+
+    watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => { 
+        if(dataNodes != null){
+            nodesFromWatch.value = dataNodes
+            nodes = ref(nodesFromWatch)
+        }
+    })
+
+    onMounted(() => {
+        mainIp = route.query.ip
+    })
+
     return {
       columns,
-      rows,
-        pagination: ref({
-        rowsPerPage: 0
-      }),      
-      options,
-      model: ref(options[0]),
-
+      nodes: ref(nodes),
+      pagination: ref({ rowsPerPage: 0 }),     
+      model: ref([]), 
+      mainIp
     }
+  },
+  methods:{
+      initModel(val){
+        this.model = val
+      }
+  },
+
+  computed:{
+      rows(){
+        let rowsArray = [];
+        let node = this.node;
+        try{
+          for(let k=0; k < node.interfaces.length; k++){
+            if(node.interfaces[k].interface_short.value == this.model){
+              Object.keys(node.interfaces[k]).forEach(key => {
+                if(node.interfaces[k][key].visible)
+                  rowsArray.push({name: node.interfaces[k][key].name, value: node.interfaces[k][key].value})
+              });
+              return rowsArray
+            }
+          }
+        }catch(error){return rowsArray}
+        return rowsArray
+      },
+      options(){
+        let optionsArray = [];
+        let node = this.node;
+        try{
+          for(let i=0; i < node.interfaces.length; i++){
+            optionsArray.push(node.interfaces[i].interface_short.value)
+            if(i == node.interfaces.length - 1){
+              this.initModel(optionsArray[0])
+              return optionsArray
+            }
+          }
+        }catch(error){ return optionsArray}
+        return optionsArray
+      },
+      node(){
+        let nodes = this.nodes.value.data;
+        for(let j=0; j < nodes.length; j++){
+          for(let k=0; k < nodes[j].interfaces.length; k++){
+            if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
+              return nodes[j]
+          }
+        }
+        return {}
+      }
   }
 }
 </script>
