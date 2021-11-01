@@ -22,7 +22,6 @@ export const sockets = () => {
         store.dispatch('User/setSocket', socket.id);
         store.dispatch('Socket/setSocketReady', true);
     });
-
     // Listener to receive user data (nodes, topologies...) changes
     socket.on(store.getters['User/getUsername'], (msg) => {
         switch(msg.type){

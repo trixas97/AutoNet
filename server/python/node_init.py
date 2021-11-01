@@ -57,7 +57,13 @@ try:
         config_commands.append('exit')
         output = net_connect.send_config_set(config_commands)
         
-    
+    config_commands = []
+    config_commands.append('event manager applet AutonetTraffic')
+    config_commands.append('event timer watchdog time 300')
+    config_commands.append('action '+ str(i+1) + ' puts Traffic_Finish"')
+    config_commands.append('exit')
+    output = net_connect.send_config_set(config_commands)
+
     net_connect.send_command('wr')      
 
     net_connect.disconnect()

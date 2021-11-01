@@ -47,8 +47,10 @@ export default {
       ]
       let nodesFromWatch = ref(store.getters['UserData/getNodes'])
       let nodes = computed(() => ref(nodesFromWatch));
-
-      watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => { 
+      console.log(nodesFromWatch);
+      console.log(store.getters['UserData/getNodes']); 
+      watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
+        console.log(dataNodes); 
         if(dataNodes != null){
             nodesFromWatch.value = dataNodes
             nodes = ref(nodesFromWatch)
