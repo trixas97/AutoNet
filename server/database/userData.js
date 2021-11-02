@@ -13,6 +13,11 @@ const getUserData = async (username) => {
     return completeData
 }
 
+const getUsersNode = async (node) => {
+    let users = await User.find({_id: node.user})
+    return users;
+}
+
 linksParams = async (nodes) => {
     return new Promise(async resolve => { 
         let res = [];
@@ -25,3 +30,4 @@ linksParams = async (nodes) => {
 }
 
 module.exports.getUserData = getUserData;
+module.exports.getUsersNode = getUsersNode;

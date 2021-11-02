@@ -14,7 +14,7 @@ module.exports = function(io) {
         
         if(value.message.includes("AutonetTraffic")){
             if(value.message.includes("Finish")){
-                saveTraffic(value.host)
+                saveTraffic(value.host, io)
             }else{
                 value = await modifyMessage(value, typeMessage.traffic)
                 if(traffic[value.host]){
@@ -67,7 +67,7 @@ pushTraffic = async (value) => {
     }
 }
 
-saveTraffic = async (host) => {
-   await setTraffic(host, traffic[host])
+saveTraffic = async (host, io) => {
+   await setTraffic(host, traffic[host],io)
    delete traffic[host]
 }

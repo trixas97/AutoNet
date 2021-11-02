@@ -37,6 +37,9 @@ export const sockets = () => {
             case 'nodes':
                 store.dispatch('UserData/setNodes', msg.nodes);
                 break;
+            case 'node':
+                // store.dispatch('UserData/setNodes', msg.nodes);
+                break;
             case 'links':
                 //code
                 break;

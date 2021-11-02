@@ -1,5 +1,7 @@
+// const { emit } = require('./database/models/Topology');
 const userData = require('./database/userData');
-module.exports = function(io) {
+let mainIo;
+const listeners = (io) => {
 
     io.on('connection', (socket) => {
         socket.on('initUser', async (data) => {
@@ -23,6 +25,23 @@ module.exports = function(io) {
         })
 
     })
-
-    return io
+    mainIo = io;
+    return mainIo
 }
+
+const emitNode = (users, node) => {
+    let msg = {
+        node: {
+            data: node,
+            changedFromUser: false
+        },
+        type: 'node'
+    }
+    users.forEach(element => {
+        mainIo.emit(element.username, msg)
+    });
+}
+
+
+module.exports.emitNode = emitNode;
+module.exports.socketsListeners = listeners

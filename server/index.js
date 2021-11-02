@@ -21,7 +21,8 @@ let io = socket(server, {
 
 const snmp = require('./snmp')(io);
 const syslog = require('./syslog')(io);
-const socketsListeners = require('./sockets')(io);
+const { socketsListeners } = require('./sockets');
+socketsListeners(io)
 const authRoute = require("./routes/auth.js");
 const nodesFinder = require('./routes/api/nodes_find.js')(io);
 const nodesSave = require('./routes/api/nodes_save.js')(io);
