@@ -24,6 +24,7 @@ export const sockets = () => {
     });
     // Listener to receive user data (nodes, topologies...) changes
     socket.on(store.getters['User/getUsername'], (msg) => {
+        console.log(msg);
         switch(msg.type){
             case 'userData':
                 store.dispatch('UserData/setNodes', { data: msg.data.nodes, changedFromUser: false });
@@ -38,7 +39,8 @@ export const sockets = () => {
                 store.dispatch('UserData/setNodes', msg.nodes);
                 break;
             case 'node':
-                // store.dispatch('UserData/setNodes', msg.nodes);
+                console.log(msg);
+                store.dispatch('UserData/setNode', msg.node);
                 break;
             case 'links':
                 //code
@@ -48,9 +50,11 @@ export const sockets = () => {
                 break; 
         }
     })
+    
 
 
     watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (nodes) => { 
+        console.log('watch change from sockets');
         if(initFlag.nodes && nodes.changedFromUser){
             if(nodes != null){
                 socket.emit('nodes', {nodes: nodes.data, user: store.getters['User/getUsername']});

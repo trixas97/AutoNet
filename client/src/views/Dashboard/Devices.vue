@@ -50,6 +50,7 @@ export default {
       console.log(nodesFromWatch);
       console.log(store.getters['UserData/getNodes']); 
       watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
+        console.log('watch change from DEVICE');
         console.log(dataNodes); 
         if(dataNodes != null){
             nodesFromWatch.value = dataNodes

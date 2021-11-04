@@ -38,6 +38,8 @@ const emitNode = (users, node) => {
         type: 'node'
     }
     users.forEach(element => {
+        console.log('emit ' + element.username);
+        console.log(msg);
         mainIo.emit(element.username, msg)
     });
 }

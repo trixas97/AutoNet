@@ -13,6 +13,13 @@ export const UserDataModule = {
         setNodes(state, val){
             state.nodes = val
         },
+        setNode(state, val){
+            for(let i=0; i < state.nodes.data.length; i++){
+                if(state.nodes.data[i]._id == val.data._id){
+                    state.nodes.data[i] = val.data
+                }
+            }
+        },
         addNode(state,val){
             state.nodes.data.push(val);
         },
@@ -59,6 +66,9 @@ export const UserDataModule = {
 
         setNodes({ commit }, val){
             commit('setNodes', val);
+        },
+        setNode({ commit }, val){
+            commit('setNode', val)
         },
         addNode({ commit }, val){
             commit('addNode', val);

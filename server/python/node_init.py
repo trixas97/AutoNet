@@ -35,7 +35,7 @@ try:
 
         config_commands = []
         config_commands.append('event manager applet AutonetTraffic')
-        config_commands.append('event timer watchdog time 300')
+        config_commands.append('event timer watchdog time 60')
 
         if flag:
             config_commands.append('action '+ str(i) + ' cli command "en"')
@@ -59,8 +59,8 @@ try:
         
     config_commands = []
     config_commands.append('event manager applet AutonetTraffic')
-    config_commands.append('event timer watchdog time 300')
-    config_commands.append('action '+ str(i+1) + ' puts Traffic_Finish"')
+    config_commands.append('event timer watchdog time 60')
+    config_commands.append('action '+ str(i) + ' puts Traffic_Finish"')
     config_commands.append('exit')
     output = net_connect.send_config_set(config_commands)
 
