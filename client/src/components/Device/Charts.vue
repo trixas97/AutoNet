@@ -5,7 +5,6 @@
                 Charts
             </q-toolbar-title>
             
-                <!-- <q-select filled v-model="model" :options="options"  bg-color="blue" /> -->
                 <q-select standout v-model="model" :options="options" input-style="color: white;" label-color="white" color="teal-10" bg-color="blue"/>
         </q-toolbar>
         <div class="chartContainer">
@@ -15,8 +14,7 @@
 </template>
 
 <script>
-// import * as Chart from 'chart.js'
-// const Chart = require('chart.js');
+import { useRoute } from 'vue-router'
 import { ref, onMounted, watch } from 'vue'
 import { computed } from '@vue/runtime-core';
 import store from '@/store';
@@ -24,6 +22,7 @@ import _ from "lodash";
 import Chart from 'chart.js/auto';
 export default {
     setup(){
+        const route = useRoute()
         const chart = ref(null);
         let dateFlag = '';
         const labels = [];
@@ -62,6 +61,12 @@ export default {
             'CPU', 'TRAFFIC'
         ]
         let myChart = ref()
+        let node =  ref()
+
+
+        let nodesFromWatch = ref(store.getters['UserData/getNodes'])
+        let nodes = computed(() => ref(nodesFromWatch));
+
         onMounted(() => {
             myChart = new Chart(
                 chart.value,
@@ -69,13 +74,17 @@ export default {
             );
         })
 
-        let nodesFromWatch = ref(store.getters['UserData/getNodes'])
-        let nodes = computed(() => ref(nodesFromWatch));
-
         watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => { 
             if(dataNodes != null){
                 nodesFromWatch.value = dataNodes
                 nodes = ref(nodesFromWatch)
+                try{
+                    node = ref(findNodeById(node.value._id))
+                }catch(error){
+                    node = ref(findNodeByIp(route.query.ip))      
+                }
+                    
+
                 if(labels.length == 0){
                     initData()
                 }else{
@@ -87,7 +96,7 @@ export default {
         })
 
         async function addData() {
-            let ifs = nodes.value.data[0].interfaces;
+            let ifs = node.value.interfaces;
             for(let j=0; j < ifs.length; j++){
                 let trafficIf = ifs[j].traffic.value;
                 if(j == 0){
@@ -103,7 +112,7 @@ export default {
         }
 
         async function initData(){
-            let ifs = nodes.value.data[0].interfaces
+            let ifs = node.value.interfaces
             
             for(let j=0; j < ifs.length; j++){
                 await myChart.data.datasets.push({
@@ -162,10 +171,29 @@ export default {
         }
 
         function updatedTraffic(){
-            let trafficIf = nodes.value.data[0].interfaces[0].traffic.value
+            let trafficIf = node.value.interfaces[0].traffic.value
             let date = new Date(trafficIf[trafficIf.length-2].date)
             let result = labels[labels.length-1].includes(("0" + date.getHours()).slice(-2) + ':' +  ("0" + date.getMinutes()).slice(-2))
             return result
+        }
+
+        function findNodeByIp(ip) {
+            let nodesArray = nodes.value.data;
+            for(let j=0; j < nodesArray.length; j++){
+                for(let k=0; k < nodesArray[j].interfaces.length; k++){
+                    if(nodesArray[j].interfaces[k].ip_address.value.includes(ip)){
+                        return nodesArray[j]
+                    }
+                }
+            }
+        }
+
+        function findNodeById(id) {
+            let nodesArray = nodes.value.data;
+            for(let j=0; j < nodesArray.length; j++){
+                if(nodesArray[j]._id.includes(id))
+                    return nodesArray[j]
+            }
         }
         
         return{

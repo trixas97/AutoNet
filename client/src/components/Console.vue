@@ -41,9 +41,9 @@ setup() {
    async function consoleInit() {
         const data = {
             socket: store.state.User.socket,
-            ip: '192.168.78.133',
-            username: 'trixas',
-            password: 'trixas',
+            ip: '192.168.78.150',
+            username: 'autonet',
+            password: 'autonet',
             port: 22
         }
             
