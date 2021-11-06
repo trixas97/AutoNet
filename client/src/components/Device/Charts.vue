@@ -25,38 +25,32 @@ import Chart from 'chart.js/auto';
 export default {
     setup(){
         const chart = ref(null);
-        const labels = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-        ];
+        let dateFlag = '';
+        const labels = [];
         const dataChart = {
             labels: labels,
-            datasets: [
-                {
-                    label: 'F0/0',
-                    backgroundColor: 'rgb(46, 64, 83)',
-                    borderColor: 'rgb(46, 64, 83)',
-                    data: [],
-                },
-                {
-                    label: 'F0/1',
-                    backgroundColor: 'rgb(40, 180, 99)',
-                    borderColor: 'rgb(40, 180, 99)',
-                    data: [0, 23, 15, 2, 50, 25],
-                }
-            ]
+            datasets: []
         };
         const config = {
             type: 'line',
             data: dataChart,
             options: {
+                hoverRadius: 10,
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value){
+                                if(value >= 1000000000)
+                                    return value/1000000000 + ' Gbps'
+                                else if(value >= 1000000)
+                                    return value/1000000 + ' Mbps'
+                                else if(value >= 1000)
+                                    return value/1000 + ' Kbps'
+                                else
+                                    return value + ' bps'
+                            }
+                        }
                     }
                 }
             }
@@ -80,7 +74,10 @@ export default {
                 nodesFromWatch.value = dataNodes
                 nodes = ref(nodesFromWatch)
                 // console.log(chart);
-                addData(35, 'Jule')
+                if(labels.length == 0)
+                    initData()
+                else
+                    addData(35, 'Jule')
             }
         })
 
@@ -104,9 +101,62 @@ export default {
             myChart.update();
         }
 
-        // function getTraffic(traffic){
+        async function initData(){
+            let ifs = nodes.value.data[0].interfaces
             
-        // }
+            for(let j=0; j < ifs.length; j++){
+                await myChart.data.datasets.push({
+                    label: ifs[j].interface_short.value,
+                    backgroundColor: 'rgb(46, 64, 83)',
+                    borderColor: 'rgb(46, 64, 83)',
+                    data: [],
+                })
+                let trafficIf = ifs[j].traffic.value
+
+                if(trafficIf.length >= 5){
+                    for(let i=trafficIf.length-5; i < trafficIf.length; i++){
+                        if(j == 0){
+                            await pushLabelTime(trafficIf[i].date);
+                        }
+                        await myChart.data.datasets[j].data.push(((parseInt(trafficIf[i].bytes.out) + parseInt(trafficIf[i].bytes.in)) - (parseInt(trafficIf[i-1].bytes.out) + parseInt(trafficIf[i-1].bytes.in)))/60);
+                    } 
+                }else{
+                    for(let i=0; i < trafficIf.length; i++){
+                        if(j == 0){
+                            await pushLabelTime(trafficIf[i].date);
+                        }
+                        
+                        if(i == 0){
+                            await myChart.data.datasets[j].data.push((parseInt(trafficIf[i].bytes.out) + parseInt(trafficIf[i].bytes.in))/60);
+                        }else{
+                            await myChart.data.datasets[j].data.push(((parseInt(trafficIf[i].bytes.out) + parseInt(trafficIf[i].bytes.in)) - (parseInt(trafficIf[i-1].bytes.out) + parseInt(trafficIf[i-1].bytes.in)))/60);
+                        }
+                        console.log(i);
+                    } 
+                }
+            }
+
+            if(dateFlag != null){
+                for(let k=0; k < myChart.data.labels.length; k++){
+                    myChart.data.labels[k] = await myChart.data.labels[k].split(' ')[1];
+                }
+            }
+
+            myChart.update();
+            
+        }
+
+        async function pushLabelTime(date){
+            let dateObj = new Date(date)
+            let monthDayFlag = ("0" + dateObj.getDate()).slice(-2) + '/' + ("0" + parseInt(dateObj.getMonth()+1)).slice(-2)
+            if(dateFlag != '' && dateFlag != null){
+                dateFlag == monthDayFlag ? dateFlag = monthDayFlag : dateFlag = null
+            }else{
+                if(dateFlag == '')
+                    dateFlag = monthDayFlag
+            }
+            await myChart.data.labels.push(monthDayFlag + ' ' +  ("0" + dateObj.getHours()).slice(-2) + ':' +  ("0" + dateObj.getMinutes()).slice(-2))
+        }
         
         return{
             config,
