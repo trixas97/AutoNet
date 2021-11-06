@@ -55,6 +55,9 @@ export default {
                 }
             }
         };
+
+        const colors = ['rgb(46, 64, 83)', 'rgb(40, 180, 99)', 'rgb(203, 68, 53)', 'rgb(241, 196, 15)', 'rgb(115, 198, 182)', 'rgb(52, 152, 219)', 'rgb(125, 60, 152)']
+        let colorIndex = 0;
         let options= [
             'CPU', 'TRAFFIC'
         ]
@@ -73,31 +76,29 @@ export default {
             if(dataNodes != null){
                 nodesFromWatch.value = dataNodes
                 nodes = ref(nodesFromWatch)
-                // console.log(chart);
-                if(labels.length == 0)
+                if(labels.length == 0){
                     initData()
-                else
-                    addData(35, 'Jule')
+                }else{
+                    if(updatedTraffic())
+                        addData()
+                }
+                    
             }
         })
 
-        function addData(data,label) {
-            // myChart.data.labels.push(label);
-            console.log(data + ' ' + label);
-            // for(let i=nodes.value.data[0].interfaces[0].traffic.value.length - 5 < nodes.value.data[0].interfaces[0].traffic.value.length; i++){
+        async function addData() {
+            let ifs = nodes.value.data[0].interfaces;
+            for(let j=0; j < ifs.length; j++){
+                let trafficIf = ifs[j].traffic.value;
+                if(j == 0){
+                    await pushLabelTime(trafficIf[trafficIf.length-1].date);
+                }
+                await myChart.data.datasets[j].data.push(((parseInt(trafficIf[trafficIf.length-1].bytes.out) + parseInt(trafficIf[trafficIf.length-1].bytes.in)) - (parseInt(trafficIf[trafficIf.length-2].bytes.out) + parseInt(trafficIf[trafficIf.length-2].bytes.in)))/60);  
 
-            // }
-            let traffic = nodes.value.data[0].interfaces[0].traffic.value
-            let traffic2 = nodes.value.data[0].interfaces[16].traffic.value
-            console.log(nodes.value.data[0].interfaces[0].interface.value);
-            console.log(nodes.value.data[0].interfaces[16].interface.value);
-            myChart.data.datasets[0].data = [traffic[traffic.length - 5].bytes.out, traffic[traffic.length - 4].bytes.out, traffic[traffic.length - 3].bytes.out, traffic[traffic.length - 2].bytes.out, traffic[traffic.length - 1].bytes.out]
-            myChart.data.datasets[1].data = [traffic2[traffic2.length - 5].bytes.out, traffic2[traffic2.length - 4].bytes.out, traffic2[traffic2.length - 3].bytes.out, traffic2[traffic2.length - 2].bytes.out, traffic2[traffic2.length - 1].bytes.out]
-            // myChart.data.datasets.forEach((dataset) => {
-            //     dataset.data.push(data);
-            // });
-        
-            console.log(myChart.data.datasets[0].data );
+            }
+            if(dateFlag != null){
+                myChart.data.labels[myChart.data.labels.length-1] = await myChart.data.labels[myChart.data.labels.length-1].split(' ')[1];
+            }
             myChart.update();
         }
 
@@ -107,8 +108,8 @@ export default {
             for(let j=0; j < ifs.length; j++){
                 await myChart.data.datasets.push({
                     label: ifs[j].interface_short.value,
-                    backgroundColor: 'rgb(46, 64, 83)',
-                    borderColor: 'rgb(46, 64, 83)',
+                    backgroundColor: colors[colorIndex],
+                    borderColor: colors[colorIndex],
                     data: [],
                 })
                 let trafficIf = ifs[j].traffic.value
@@ -131,9 +132,12 @@ export default {
                         }else{
                             await myChart.data.datasets[j].data.push(((parseInt(trafficIf[i].bytes.out) + parseInt(trafficIf[i].bytes.in)) - (parseInt(trafficIf[i-1].bytes.out) + parseInt(trafficIf[i-1].bytes.in)))/60);
                         }
-                        console.log(i);
                     } 
                 }
+                if(colorIndex == colors.length-1)
+                    colorIndex = 0
+                else 
+                    colorIndex++
             }
 
             if(dateFlag != null){
@@ -141,7 +145,6 @@ export default {
                     myChart.data.labels[k] = await myChart.data.labels[k].split(' ')[1];
                 }
             }
-
             myChart.update();
             
         }
@@ -156,6 +159,13 @@ export default {
                     dateFlag = monthDayFlag
             }
             await myChart.data.labels.push(monthDayFlag + ' ' +  ("0" + dateObj.getHours()).slice(-2) + ':' +  ("0" + dateObj.getMinutes()).slice(-2))
+        }
+
+        function updatedTraffic(){
+            let trafficIf = nodes.value.data[0].interfaces[0].traffic.value
+            let date = new Date(trafficIf[trafficIf.length-2].date)
+            let result = labels[labels.length-1].includes(("0" + date.getHours()).slice(-2) + ':' +  ("0" + date.getMinutes()).slice(-2))
+            return result
         }
         
         return{
