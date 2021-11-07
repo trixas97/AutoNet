@@ -2,10 +2,10 @@
     <div class="containerChart container">
         <q-toolbar class="text-white bar">
             <q-toolbar-title>
-                Charts
+                Traffic
             </q-toolbar-title>
             
-                <q-select standout v-model="model" :options="options" input-style="color: white;" label-color="white" color="teal-10" bg-color="blue"/>
+                <!-- <q-select standout v-model="model" :options="options" input-style="color: white;" label-color="white" color="teal-10" bg-color="blue"/> -->
         </q-toolbar>
         <div class="chartContainer">
             <canvas ref="chart" class="chart"></canvas>
@@ -14,17 +14,18 @@
 </template>
 
 <script>
-import { useRoute } from 'vue-router'
 import { ref, onMounted, watch } from 'vue'
-import { computed } from '@vue/runtime-core';
-import store from '@/store';
 import _ from "lodash";
 import Chart from 'chart.js/auto';
 export default {
-    setup(){
-        const route = useRoute()
+    props:{
+        node: { type: Object, required: true}
+    },
+    setup(props){
         const chart = ref(null);
         let dateFlag = '';
+        let initFlag = false;
+        let trafficFlag = 0;
         const labels = [];
         const dataChart = {
             labels: labels,
@@ -58,61 +59,54 @@ export default {
         const colors = ['rgb(46, 64, 83)', 'rgb(40, 180, 99)', 'rgb(203, 68, 53)', 'rgb(241, 196, 15)', 'rgb(115, 198, 182)', 'rgb(52, 152, 219)', 'rgb(125, 60, 152)']
         let colorIndex = 0;
         let options= [
-            'CPU', 'TRAFFIC'
+            'TRAFFIC', 'CPU'
         ]
         let myChart = ref()
-        let node =  ref()
-
-
-        let nodesFromWatch = ref(store.getters['UserData/getNodes'])
-        let nodes = computed(() => ref(nodesFromWatch));
 
         onMounted(() => {
             myChart = new Chart(
                 chart.value,
                 config
-            );
+            );            
         })
 
-        watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => { 
-            if(dataNodes != null){
-                nodesFromWatch.value = dataNodes
-                nodes = ref(nodesFromWatch)
-                try{
-                    node = ref(findNodeById(node.value._id))
-                }catch(error){
-                    node = ref(findNodeByIp(route.query.ip))      
-                }
-                    
-
-                if(labels.length == 0){
-                    initData()
-                }else{
-                    if(updatedTraffic())
-                        addData()
-                }
-                    
-            }
+        watch(() => _.cloneDeep(props.node), () => {          
+            if(!initFlag){
+                initData()
+                initFlag = true
+            }else{
+                console.log(updatedTraffic());
+                if(updatedTraffic())
+                    addData()
+            }          
         })
 
         async function addData() {
-            let ifs = node.value.interfaces;
+            let ifs = props.node.interfaces;
             for(let j=0; j < ifs.length; j++){
                 let trafficIf = ifs[j].traffic.value;
-                if(j == 0){
-                    await pushLabelTime(trafficIf[trafficIf.length-1].date);
-                }
-                await myChart.data.datasets[j].data.push(((parseInt(trafficIf[trafficIf.length-1].bytes.out) + parseInt(trafficIf[trafficIf.length-1].bytes.in)) - (parseInt(trafficIf[trafficIf.length-2].bytes.out) + parseInt(trafficIf[trafficIf.length-2].bytes.in)))/60);  
 
+                if(trafficIf.length > 1){
+                    if(j == 0){
+                        await pushLabelTime(trafficIf[trafficIf.length-1].date);
+                    }
+
+                    let rate = 0;
+                    if(parseInt(trafficIf[trafficIf.length-1].bytes.out) < parseInt(trafficIf[trafficIf.length-2].bytes.out))
+                        rate = parseInt(trafficIf[trafficIf.length-1].bytes.out) + parseInt(trafficIf[trafficIf.length-1].bytes.in);
+                    else 
+                        rate = (parseInt(trafficIf[trafficIf.length-1].bytes.out) + parseInt(trafficIf[trafficIf.length-1].bytes.in)) - (parseInt(trafficIf[trafficIf.length-2].bytes.out) + parseInt(trafficIf[trafficIf.length-2].bytes.in));
+                    await myChart.data.datasets[j].data.push(rate/60);
+                }
             }
-            if(dateFlag != null){
+            if(dateFlag != null && myChart.data.labels.length > 0){
                 myChart.data.labels[myChart.data.labels.length-1] = await myChart.data.labels[myChart.data.labels.length-1].split(' ')[1];
             }
             myChart.update();
         }
 
         async function initData(){
-            let ifs = node.value.interfaces
+            let ifs = props.node.interfaces
             
             for(let j=0; j < ifs.length; j++){
                 await myChart.data.datasets.push({
@@ -122,34 +116,30 @@ export default {
                     data: [],
                 })
                 let trafficIf = ifs[j].traffic.value
+                let trafficIfIndex = 0;
+                trafficIf.length >= 5 ? trafficIfIndex = trafficIf.length-5 : trafficIfIndex=0
+                trafficFlag = trafficIf.length;
+                for(let i=trafficIfIndex; i < trafficIf.length; i++){
+                    if(i != 0){
+                        if(j == 0){
+                            await pushLabelTime(trafficIf[i].date);
+                        }
+                        let rate = 0;
+                        if(parseInt(trafficIf[i].bytes.out) < parseInt(trafficIf[i-1].bytes.out))
+                            rate = parseInt(trafficIf[i].bytes.out) + parseInt(trafficIf[i].bytes.in);
+                        else 
+                            rate = (parseInt(trafficIf[i].bytes.out) + parseInt(trafficIf[i].bytes.in)) - (parseInt(trafficIf[i-1].bytes.out) + parseInt(trafficIf[i-1].bytes.in));
+                        await myChart.data.datasets[j].data.push(rate/60);
+                    }
+                } 
 
-                if(trafficIf.length >= 5){
-                    for(let i=trafficIf.length-5; i < trafficIf.length; i++){
-                        if(j == 0){
-                            await pushLabelTime(trafficIf[i].date);
-                        }
-                        await myChart.data.datasets[j].data.push(((parseInt(trafficIf[i].bytes.out) + parseInt(trafficIf[i].bytes.in)) - (parseInt(trafficIf[i-1].bytes.out) + parseInt(trafficIf[i-1].bytes.in)))/60);
-                    } 
-                }else{
-                    for(let i=0; i < trafficIf.length; i++){
-                        if(j == 0){
-                            await pushLabelTime(trafficIf[i].date);
-                        }
-                        
-                        if(i == 0){
-                            await myChart.data.datasets[j].data.push((parseInt(trafficIf[i].bytes.out) + parseInt(trafficIf[i].bytes.in))/60);
-                        }else{
-                            await myChart.data.datasets[j].data.push(((parseInt(trafficIf[i].bytes.out) + parseInt(trafficIf[i].bytes.in)) - (parseInt(trafficIf[i-1].bytes.out) + parseInt(trafficIf[i-1].bytes.in)))/60);
-                        }
-                    } 
-                }
                 if(colorIndex == colors.length-1)
                     colorIndex = 0
                 else 
                     colorIndex++
             }
 
-            if(dateFlag != null){
+            if(dateFlag != null && myChart.data.labels.length > 0){
                 for(let k=0; k < myChart.data.labels.length; k++){
                     myChart.data.labels[k] = await myChart.data.labels[k].split(' ')[1];
                 }
@@ -171,29 +161,7 @@ export default {
         }
 
         function updatedTraffic(){
-            let trafficIf = node.value.interfaces[0].traffic.value
-            let date = new Date(trafficIf[trafficIf.length-2].date)
-            let result = labels[labels.length-1].includes(("0" + date.getHours()).slice(-2) + ':' +  ("0" + date.getMinutes()).slice(-2))
-            return result
-        }
-
-        function findNodeByIp(ip) {
-            let nodesArray = nodes.value.data;
-            for(let j=0; j < nodesArray.length; j++){
-                for(let k=0; k < nodesArray[j].interfaces.length; k++){
-                    if(nodesArray[j].interfaces[k].ip_address.value.includes(ip)){
-                        return nodesArray[j]
-                    }
-                }
-            }
-        }
-
-        function findNodeById(id) {
-            let nodesArray = nodes.value.data;
-            for(let j=0; j < nodesArray.length; j++){
-                if(nodesArray[j]._id.includes(id))
-                    return nodesArray[j]
-            }
+            return props.node.interfaces[0].traffic.value.length > trafficFlag ? true : false
         }
         
         return{
@@ -201,7 +169,6 @@ export default {
             chart,
             options,
             model: ref(options[0]),
-            nodes: ref(nodes),
             myChart: ref(myChart)
         }
     }

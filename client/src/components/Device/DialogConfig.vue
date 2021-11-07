@@ -15,11 +15,11 @@
 
         <q-tab-panels v-model="tab" animated class="bg-white text-black">
           <q-tab-panel name="running">
-            <Configuration title="Running"/>
+            <Configuration title="Running" :node="node"/>
           </q-tab-panel>
 
           <q-tab-panel name="startup">
-            <Configuration title="Startup"/>
+            <Configuration title="Startup" :node="node"/>
           </q-tab-panel>
         </q-tab-panels>
       </q-card>
@@ -31,6 +31,9 @@
 import { ref } from 'vue'
 import Configuration from "@/components/Device/Configuration.vue";
 export default {
+  props:{
+    node: {type: Object, required: true}
+  },
   components:{
     Configuration
   },

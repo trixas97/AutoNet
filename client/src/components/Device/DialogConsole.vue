@@ -10,7 +10,7 @@
         </q-header>
 
         <q-page-container class="page">
-            <Console class="consoleClass" />
+            <Console class="consoleClass" :node="node"/>
         </q-page-container>
 
       </q-layout>
@@ -22,6 +22,9 @@
 import Console from '@/components/Console.vue'
 
 export default {
+    props:{
+        node: {type: Object, required: true},
+    },
     components:{
         Console
     },

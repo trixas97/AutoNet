@@ -79,6 +79,14 @@ const nodeSchema = new mongoose.Schema({
     topologyInfo:{
         type: Object,
         required: false
+    },
+    status: {
+        type: Object,
+        required: true
+    },
+    os: {
+        type: Object,
+        required: true
     }
 });
 

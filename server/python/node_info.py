@@ -139,6 +139,8 @@ try:
     acl = net_connect.send_command('show access-list', use_textfsm=True)
     cdp = net_connect.send_command('show cdp neighbors detail', use_textfsm=True)
 
+    os = net_connect.send_command('show version')
+
     # Modify Interfaces
     for interface in interfaces:
         interface["interface_short"] = {}
@@ -168,6 +170,7 @@ try:
     node = {
         "username": {keysNames["name"]: "Username", keysNames["value"]: sys.argv[2], keysNames["edit"]: True},
         "password": {keysNames["name"]: "Password", keysNames["value"]: sys.argv[3], keysNames["edit"]: True},
+        "status": {keysNames["name"]: "Status", keysNames["value"]: True, keysNames["edit"]: False},
         "vendor": {keysNames["name"]: "Vendor", keysNames["value"]: 'Cisco', keysNames["edit"]: False},
         "name": {keysNames["name"]: "Name", keysNames["value"]:version[0]['hostname'], keysNames["edit"]: True},
         "model": {keysNames["name"]: "Model", keysNames["value"]:version[0]['hardware'][0], keysNames["edit"]: False},
@@ -180,7 +183,8 @@ try:
         "arp_table": arpTable,
         "acl": acl,
         "cdp": cdp,
-        "serial": version[0]['serial'][0]
+        "serial": version[0]['serial'][0],
+        "os": { "name": os.split(",")[0], "version": os.split("Version ")[1].split(",")[0] }
     }
 except NameError:
     print(NameError)

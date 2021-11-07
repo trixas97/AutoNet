@@ -7,14 +7,18 @@ import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { ref, onMounted, watch } from 'vue'
 import store from '../store';
+import { useRoute } from 'vue-router';
 const { initConsoleSSHRequest } = require('@/services/api');
 
 
 export default {
-
-setup() {
+props:{
+    node: {type: Object, required: true},
+},
+setup(props) {
     const term = ref(null);
     let initConFlag = true;
+    const route = useRoute();
 
     var theme = {
         foreground: '#eff0eb',
@@ -39,11 +43,12 @@ setup() {
     };
 
    async function consoleInit() {
+       console.log(props.mainIp);
         const data = {
             socket: store.state.User.socket,
-            ip: '192.168.78.150',
-            username: 'autonet',
-            password: 'autonet',
+            ip: route.query.ip,
+            username: props.node.username.value,
+            password: props.node.password.value,
             port: 22
         }
             
@@ -74,8 +79,6 @@ setup() {
             
         })
         consoleInit()
-        // terminal.write('\r\n*** SSH CONNECTION ESTABLISHED ***\r\n');
-        // terminal.write('\r\nR1>:');
         terminal.onKey(function (ev) {
             store.dispatch('Socket/setConsoleDataEmit', ev);            
         });

@@ -30,13 +30,10 @@ import store from '@/store';
 import { computed } from '@vue/runtime-core';
 import _ from "lodash";
 
-// let options= [
-//   'G0/0', 'G0/1', 'G0/2', 'G0/3', 'G0/4'
-// ]
-
 export default {
   setup () {
 
+    let initDataFlag = false;
     const columns = [
       { name: 'name', required: true, label: 'Option', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       { name: 'value', align: 'left', label: 'Value', field: 'value', sortable: true },
@@ -63,12 +60,16 @@ export default {
       nodes: ref(nodes),
       pagination: ref({ rowsPerPage: 0 }),     
       model: ref([]), 
-      mainIp
+      mainIp,
+      initDataFlag
     }
   },
   methods:{
       initModel(val){
         this.model = val
+      },
+      modifyInitFlagData(){
+        this.initDataFlag = true
       }
   },
 
@@ -96,7 +97,9 @@ export default {
           for(let i=0; i < node.interfaces.length; i++){
             optionsArray.push(node.interfaces[i].interface_short.value)
             if(i == node.interfaces.length - 1){
-              this.initModel(optionsArray[0])
+              if(!this.initDataFlag)
+                this.initModel(optionsArray[0])
+              this.modifyInitFlagData()
               return optionsArray
             }
           }

@@ -1,12 +1,12 @@
 <template>
   <div class="deviceInfo">
-      <Info class="info" @console="openConsole" @config="openConfig" @info="openInfo"/>
-      <Charts class="chartPanel"/>
-      <Interfaces class="interfaces"/>
-      <MoreInfo class="moreInfo"/>
-      <DialogConsole v-model="consoleFlag"/>
-      <DialogConfig v-model="configFlag"/>
-      <DialogInfo v-model="infoFlag"/>
+      <Info class="info" @console="openConsole" @config="openConfig" @info="openInfo" :node="node"/>
+      <Charts class="chartPanel" :node="node"/>
+      <Interfaces class="interfaces" :node="node"/>
+      <MoreInfo class="moreInfo" :node="node"/>
+      <DialogConsole v-model="consoleFlag" :node="node" :mainIp="mainIp"/>
+      <DialogConfig v-model="configFlag" :node="node"/>
+      <DialogInfo v-model="infoFlag" :node="node"/>
   </div>
 </template>
 
@@ -18,8 +18,12 @@ import MoreInfo from '@/components/Device/MoreInfo.vue'
 import DialogConsole from '@/components/Device/DialogConsole'
 import DialogConfig from '@/components/Device/DialogConfig'
 import DialogInfo from '@/components/Device/DialogInfo'
-import { ref } from 'vue';
-
+import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
+import { computed } from '@vue/runtime-core';
+import { ref, watch } from 'vue'
+import store from '@/store';
+import _ from "lodash";
 export default {
   components: {
     Info,
@@ -30,11 +34,30 @@ export default {
     DialogConfig,
     DialogInfo
   },
-  data(){
+  setup(){
+    const route = useRoute()
+    let mainIp = ''
+
+    let nodesFromWatch = ref(store.getters['UserData/getNodes'])
+    let nodes = computed(() => ref(nodesFromWatch));
+
+    watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => { 
+      if(dataNodes != null){
+          nodesFromWatch.value = dataNodes
+          nodes = ref(nodesFromWatch)
+      }
+    })
+
+    onMounted(() => {
+      mainIp = route.query.ip
+    })
+
     return {
       consoleFlag: ref(false),
       configFlag: ref(false),
-      infoFlag: ref(false)
+      infoFlag: ref(false),
+      mainIp,
+      nodes: ref(nodes)
     }
   },
   methods:{
@@ -46,6 +69,18 @@ export default {
     },
     openInfo(value){
       this.infoFlag = value;
+    }
+  },
+  computed:{
+   node(){
+      let nodes = this.nodes.value.data;
+      for(let j=0; j < nodes.length; j++){
+          for(let k=0; k < nodes[j].interfaces.length; k++){
+              if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
+                  return  nodes[j]
+          }
+      }
+      return {}
     }
   }
 }

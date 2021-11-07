@@ -50,6 +50,7 @@ io.on('connection', (socket) => {
                 name: node.name,
                 vendor: node.vendor,
                 type: node.type,
+                status: node.status,
                 model: node.model,
                 upTime: node.upTime,
                 runConf: node.runConf,
@@ -59,7 +60,8 @@ io.on('connection', (socket) => {
                 acl: node.acl,
                 cdp: node.cdp,
                 serial: node.serial,
-                interfaces: node.interfaces
+                interfaces: node.interfaces,
+                os: { name: node.os.name, version: node.os.version}
             });
 
             try{

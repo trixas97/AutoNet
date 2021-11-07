@@ -20,13 +20,13 @@
             <div class="element1">
               <q-card>
                 <span class="title">Operating System</span>
-                <span class="value">IOS v 15.5</span>
+                <span class="value">{{node.os.name}}</span>
               </q-card>
             </div>
             <div class="element2">
               <q-card>
-                <span class="title">Element 2</span>
-                <span class="value">Value 2</span>
+                <span class="title">Version</span>
+                <span class="value">{{node.os.version}}</span>
               </q-card>
             </div>
             <div class="element3">
@@ -55,6 +55,9 @@
 import TableInfo from "@/components/Device/TableInfo.vue";
 import { ref } from 'vue'
 export default {
+  props: {
+    node: {type: Object, required: true }
+  },
   components:{
     TableInfo
   },

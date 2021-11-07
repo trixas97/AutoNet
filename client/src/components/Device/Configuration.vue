@@ -32,7 +32,8 @@ import _ from "lodash";
 
 export default {
     props:{
-        title: String
+        title: String,
+        node: {type: Object, required: true}
     },
     components:{
         Prism
@@ -45,14 +46,11 @@ export default {
             dataConfig = ref(nodesFromWatch).value.data[0].runConf
         else
             dataConfig = ref(nodesFromWatch).value.data[0].startConf
-        watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => { 
-            if(dataNodes != null) {
-                nodesFromWatch.value = dataNodes
-                if(props.title.includes('Running'))
-                    dataConfig = ref(nodesFromWatch).value.data[0].runConf
-                else
-                    dataConfig = ref(nodesFromWatch).value.data[0].startConf
-            }
+        watch(() => _.cloneDeep(props.node), () => { 
+            if(props.title.includes('Running'))
+                dataConfig = props.node.runConf
+            else
+                dataConfig = props.node.startConf
         })
 
 
