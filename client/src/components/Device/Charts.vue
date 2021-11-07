@@ -67,19 +67,24 @@ export default {
             myChart = new Chart(
                 chart.value,
                 config
-            );            
+            ); 
+            if(props.node.interfaces)
+                fillChart()
         })
 
         watch(() => _.cloneDeep(props.node), () => {          
+            fillChart()
+        })
+
+        function fillChart(){
             if(!initFlag){
                 initData()
                 initFlag = true
             }else{
-                console.log(updatedTraffic());
                 if(updatedTraffic())
                     addData()
-            }          
-        })
+            } 
+        }
 
         async function addData() {
             let ifs = props.node.interfaces;

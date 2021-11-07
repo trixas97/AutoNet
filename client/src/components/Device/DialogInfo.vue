@@ -44,7 +44,7 @@
               </q-input>
             </div>
             <div class="tableComp">
-              <TableInfo />
+              <TableInfo :node="node"/>
             </div>
           </div>
       </q-card>

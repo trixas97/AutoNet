@@ -35,7 +35,7 @@ export default {
 
     let initDataFlag = false;
     const columns = [
-      { name: 'name', required: true, label: 'Option', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+      { name: 'name', required: true, label: 'Option', align: 'left', field:'name', sortable: true },
       { name: 'value', align: 'left', label: 'Value', field: 'value', sortable: true },
     ]
     const route = useRoute()
