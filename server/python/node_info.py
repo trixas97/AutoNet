@@ -80,7 +80,7 @@ def modifyRouteTable(route, key):
     elif key == "nexthop_ip":
         return {keysNames["name"]: "Nexthop-IP", keysNames["value"]: route[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "nexthop_if":
-        return {keysNames["name"]: "Nexthop-IF", keysNames["value"]: route[key], keysNames["edit"]: True, keysNames["visible"]: True}
+        return {keysNames["name"]: "Interface", keysNames["value"]: route[key], keysNames["edit"]: True, keysNames["visible"]: True}
     elif key == "uptime":
         return {keysNames["name"]: "Uptime", keysNames["value"]: route[key], keysNames["edit"]: False, keysNames["visible"]: True}
 
@@ -120,6 +120,25 @@ def modifyACL(acl, key):
         return {keysNames["name"]: "Modifier", keysNames["value"]: acl[key], keysNames["edit"]: False, keysNames["visible"]: True}
 
 
+def modifyCdp(cdp, key):
+    if key == "destination_host":
+        return {keysNames["name"]: "Destination Host", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "management_ip":
+        return {keysNames["name"]: "Management Ip", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "platform":
+        return {keysNames["name"]: "Platform", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "remote_port":
+        return {keysNames["name"]: "Remote Port", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "local_port":
+        return {keysNames["name"]: "Local Port", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "software_version":
+        return {keysNames["name"]: "Software Version", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "capabilities":
+        return {keysNames["name"]: "Capabilities", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+
+
+
+
 try:
     cisco_881 = {
         'device_type': 'cisco_ios',
@@ -138,7 +157,9 @@ try:
     arpTable = net_connect.send_command('show ip arp', use_textfsm=True)
     acl = net_connect.send_command('show access-list', use_textfsm=True)
     cdp = net_connect.send_command('show cdp neighbors detail', use_textfsm=True)
-
+    eigrpNeighbors = net_connect.send_command('show ip eigrp neighbors', use_textfsm=True)
+    eigrpTopology = net_connect.send_command('show ip eigrp topology', use_textfsm=True)
+    spanningTree = net_connect.send_command('show spanning-tree', use_textfsm=True)
     os = net_connect.send_command('show version')
 
     # Modify Interfaces
@@ -165,6 +186,11 @@ try:
     for aclItem in acl:
         for key in aclItem:
             aclItem[key] = modifyACL(aclItem, key)
+
+    # Modify ACL
+    for cdpItem in cdp:
+        for key in cdpItem:
+            cdpItem[key] = modifyCdp(cdpItem, key)
             
 
     node = {
@@ -184,7 +210,9 @@ try:
         "acl": acl,
         "cdp": cdp,
         "serial": version[0]['serial'][0],
-        "os": { "name": os.split(",")[0], "version": os.split("Version ")[1].split(",")[0] }
+        "os": { "name": os.split(",")[0], "version": os.split("Version ")[1].split(",")[0] },
+        "eigrp" : { "neighbors" : eigrpNeighbors, "topology" : eigrpTopology}
+        # "spanningTree": spanningTree
     }
 except NameError:
     print(NameError)

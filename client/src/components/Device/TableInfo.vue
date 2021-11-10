@@ -31,10 +31,11 @@ export default {
   },
   setup (props) {
     let rows = ref([])
-    let options= ['Addresses', 'Route', 'ARP', 'ACL', 'Users']
+    let options= ['Route', 'ARP', 'ACL']
     let model =  ref(options[0]);
-    setTable()
+    
     let columns = ref([{name: 'name', field:'name'}])
+    setTable()
     watch(() => model.value, () => {
       setTable()
     })
@@ -42,20 +43,17 @@ export default {
     watch(() => _.cloneDeep(props.node), () => { 
         setTable();
     })
-
     async function setTable(){
       switch(model.value){
         case options[0]:
-          break;
-        case options[1]:
           await getColumns('route_table')
           await getRows('route_table')
           break;
-        case options[2]:
+        case options[1]:
           await getColumns('arp_table')
           await getRows('arp_table')
           break;
-        case options[3]:
+        case options[2]:
           await getColumns('acl')
           await getRows('acl')
           break;
