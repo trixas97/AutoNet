@@ -31,7 +31,7 @@ export default {
   },
   setup (props) {
     let rows = ref([])
-    let options= ['Route', 'ARP', 'ACL']
+    let options= ['Route', 'Mac', 'CDP','STP','ARP', 'ACL']
     let model =  ref(options[0]);
     
     let columns = ref([{name: 'name', field:'name'}])
@@ -50,10 +50,22 @@ export default {
           await getRows('route_table')
           break;
         case options[1]:
+          await getColumns('mac')
+          await getRows('mac')
+          break;
+        case options[2]:
+          await getColumns('cdp')
+          await getRows('cdp')
+          break;
+        case options[3]:
+          await getColumns('stp')
+          await getRows('stp')
+          break;
+        case options[4]:
           await getColumns('arp_table')
           await getRows('arp_table')
           break;
-        case options[2]:
+        case options[5]:
           await getColumns('acl')
           await getRows('acl')
           break;

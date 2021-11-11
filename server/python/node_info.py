@@ -132,11 +132,39 @@ def modifyCdp(cdp, key):
     elif key == "local_port":
         return {keysNames["name"]: "Local Port", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "software_version":
-        return {keysNames["name"]: "Software Version", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+        return {keysNames["name"]: "Software Version", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: False}
     elif key == "capabilities":
         return {keysNames["name"]: "Capabilities", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
 
 
+def modifyStp(cdp, key):
+    if key == "vlan_id":
+        return {keysNames["name"]: "Vlan", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "interface":
+        return {keysNames["name"]: "Interface", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "role":
+        return {keysNames["name"]: "Role", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "status":
+        return {keysNames["name"]: "Status", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "cost":
+        return {keysNames["name"]: "Cost", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "port_priority":
+        return {keysNames["name"]: "Port Priority", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "port_id":
+        return {keysNames["name"]: "Port Id", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "type":
+        return {keysNames["name"]: "Type", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+
+
+def modifyMac(cdp, key):
+    if key == "destination_address":
+        return {keysNames["name"]: "Destination Address", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "type":
+        return {keysNames["name"]: "Type", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "vlan":
+        return {keysNames["name"]: "Vlan", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "destination_port":
+        return {keysNames["name"]: "Interface", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
 
 
 try:
@@ -159,8 +187,9 @@ try:
     cdp = net_connect.send_command('show cdp neighbors detail', use_textfsm=True)
     eigrpNeighbors = net_connect.send_command('show ip eigrp neighbors', use_textfsm=True)
     eigrpTopology = net_connect.send_command('show ip eigrp topology', use_textfsm=True)
-    spanningTree = net_connect.send_command('show spanning-tree', use_textfsm=True)
+    stp = net_connect.send_command('show spanning-tree', use_textfsm=True)
     os = net_connect.send_command('show version')
+    mac = net_connect.send_command('show mac address-table', use_textfsm=True)
 
     # Modify Interfaces
     for interface in interfaces:
@@ -187,10 +216,20 @@ try:
         for key in aclItem:
             aclItem[key] = modifyACL(aclItem, key)
 
-    # Modify ACL
+    # Modify CDP
     for cdpItem in cdp:
         for key in cdpItem:
             cdpItem[key] = modifyCdp(cdpItem, key)
+    
+    # Modify STP
+    for stpItem in stp:
+        for key in stpItem:
+            stpItem[key] = modifyStp(stpItem, key)
+
+    # Modify MAC
+    for macItem in mac:
+        for key in macItem:
+            macItem[key] = modifyMac(macItem, key)
             
 
     node = {
@@ -209,10 +248,12 @@ try:
         "arp_table": arpTable,
         "acl": acl,
         "cdp": cdp,
+        "stp": stp,
+        "mac": mac,
         "serial": version[0]['serial'][0],
         "os": { "name": os.split(",")[0], "version": os.split("Version ")[1].split(",")[0] },
         "eigrp" : { "neighbors" : eigrpNeighbors, "topology" : eigrpTopology}
-        # "spanningTree": spanningTree
+        
     }
 except NameError:
     print(NameError)

@@ -59,6 +59,8 @@ io.on('connection', (socket) => {
                 arp_table: node.arp_table,
                 acl: node.acl,
                 cdp: node.cdp,
+                stp: node.stp,
+                mac: node.mac,
                 serial: node.serial,
                 interfaces: node.interfaces,
                 os: { name: node.os.name, version: node.os.version}

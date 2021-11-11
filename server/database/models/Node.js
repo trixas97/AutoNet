@@ -67,11 +67,18 @@ const nodeSchema = new mongoose.Schema({
         type: Object,
         required: true,
     },
+    stp: {
+        type: Object,
+        required: true
+    },
+    mac: {
+        type: Object,
+        required: true
+    },
     serial: {
         type: Object,
         required: true,
     },
-
     interfaces:{
         type: Array,
         required: true
