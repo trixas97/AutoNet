@@ -94,7 +94,8 @@ export default {
         columns.value = []
         let keys = Object.keys(props.node[type][0]);
         for(let key=0; key < keys.length; key++){
-          columns.value.push({name: keys[key], required: false, label: props.node[type][0][keys[key]].name, align: 'center', field: keys[key] })
+          if(props.node[type][0][keys[key]].visible)
+            columns.value.push({name: keys[key], required: false, label: props.node[type][0][keys[key]].name, align: 'center', field: keys[key] })
         }
         resolve(columns)
       })

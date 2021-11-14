@@ -24,7 +24,6 @@
 
 <script>
 import { useRoute } from 'vue-router'
-import { onMounted } from 'vue'
 import { ref, watch } from 'vue'
 import store from '@/store';
 import { computed } from '@vue/runtime-core';
@@ -39,7 +38,7 @@ export default {
       { name: 'value', align: 'left', label: 'Value', field: 'value', sortable: true },
     ]
     const route = useRoute()
-    let mainIp = ''
+    let mainIp = route.query.ip
 
     let nodesFromWatch = ref(store.getters['UserData/getNodes'])
     let nodes = computed(() => ref(nodesFromWatch));
@@ -49,10 +48,6 @@ export default {
             nodesFromWatch.value = dataNodes
             nodes = ref(nodesFromWatch)
         }
-    })
-
-    onMounted(() => {
-        mainIp = route.query.ip
     })
 
     return {

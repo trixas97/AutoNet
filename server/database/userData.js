@@ -6,6 +6,7 @@ const User = require('./models/User');
 const getUserData = async (username) => {
     let user = await User.findOne({username: username})
     let nodes = await Node.find({user: user._id})
+    nodes = await modifyNodesData(nodes)
     let topologies = await Topology.find({user: user._id})
     let linksParameters = await linksParams(nodes)
     let links = await Link.find({ $or: linksParameters });
@@ -27,6 +28,23 @@ linksParams = async (nodes) => {
             if(i == nodes.length-1) resolve(res);
         }
     });
+}
+
+modifyNodesData = (nodes) => {
+    return new Promise(async resolve => {
+        for(let i=0; i < nodes.length; i++){
+            for(let j=0; j < nodes[i].interfaces.length; j++){
+                let res = [];
+                let trafficLength = nodes[i].interfaces[j].traffic.value.length;
+                for(let k=trafficLength-6; k < trafficLength; k++){
+                    res.push(await new Promise(resolve => resolve(nodes[i].interfaces[j].traffic.value[k])))
+                }
+                nodes[i].interfaces[j].traffic.value = res;
+            }
+            if(i == nodes.length-1)
+                resolve(nodes)
+        }
+    })
 }
 
 module.exports.getUserData = getUserData;

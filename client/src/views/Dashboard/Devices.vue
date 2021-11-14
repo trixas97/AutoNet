@@ -47,11 +47,7 @@ export default {
       ]
       let nodesFromWatch = ref(store.getters['UserData/getNodes'])
       let nodes = computed(() => ref(nodesFromWatch));
-      console.log(nodesFromWatch);
-      console.log(store.getters['UserData/getNodes']); 
       watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
-        console.log('watch change from DEVICE');
-        console.log(dataNodes); 
         if(dataNodes != null){
             nodesFromWatch.value = dataNodes
             nodes = ref(nodesFromWatch)
@@ -77,6 +73,21 @@ export default {
         nodes.data[0].type.value = "Switch"
         nodes.changedFromUser = true
         store.dispatch('UserData/setNodes', nodes);
+      },
+        mainIp(node){
+        try{
+          for(let k=0; k < node.interfaces.length; k++){
+            if(node.interfaces[k].mainIf.value){
+              if(node.interfaces[k].ip_address.value.includes('/'))
+                return node.interfaces[k].ip_address.value.split('/')[0]
+              else
+                return node.interfaces[k].ip_address.value
+            }
+          }
+        }catch(error){
+          return ''
+        }
+        return ''
       }
     },
     computed:{
@@ -87,7 +98,7 @@ export default {
           rowsArray[i] ={
             type: nodesArray[i].type.value,
             name: nodesArray[i].name.value,
-            ip: this.mainIp,
+            ip: this.mainIp(nodesArray[i]),
             network: '192.168.78.0/24',
             traffic: 1.5,
             status: true,
@@ -97,20 +108,6 @@ export default {
             return(rowsArray)
         }
         return rowsArray
-      },
-      mainIp(){
-        let nodes = this.nodes.value.data;
-        for(let j=0; j < nodes.length; j++){
-          for(let k=0; k < nodes[j].interfaces.length; k++){
-            if(nodes[j].interfaces[k].mainIf.value){
-              if(nodes[j].interfaces[k].ip_address.value.includes('/'))
-                return nodes[j].interfaces[k].ip_address.value.split('/')[0]
-              else
-                return nodes[j].interfaces[k].ip_address.value
-            }
-          }
-        }
-        return ''
       } 
     } 
   }

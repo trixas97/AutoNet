@@ -180,7 +180,7 @@ try:
     startConf = net_connect.send_command('show startup-config', use_textfsm=True)
     interfaces = net_connect.send_command('show interfaces', use_textfsm=True)
     version = net_connect.send_command('show version', use_textfsm=True)
-    typeNode = net_connect.send_command('show version', use_textfsm=False)
+    typeNode = 'Switch'
     routeTable = net_connect.send_command('show ip route', use_textfsm=True)
     arpTable = net_connect.send_command('show ip arp', use_textfsm=True)
     acl = net_connect.send_command('show access-list', use_textfsm=True)
@@ -222,15 +222,21 @@ try:
             cdpItem[key] = modifyCdp(cdpItem, key)
     
     # Modify STP
-    for stpItem in stp:
-        for key in stpItem:
-            stpItem[key] = modifyStp(stpItem, key)
+    try:
+        for stpItem in stp:
+            for key in stpItem:
+                stpItem[key] = modifyStp(stpItem, key)
+    except:
+        stp = []
+        typeNode = 'Router'
 
     # Modify MAC
-    for macItem in mac:
-        for key in macItem:
-            macItem[key] = modifyMac(macItem, key)
-            
+    try:
+        for macItem in mac:
+            for key in macItem:
+                macItem[key] = modifyMac(macItem, key)
+    except:
+        mac = []      
 
     node = {
         "username": {keysNames["name"]: "Username", keysNames["value"]: sys.argv[2], keysNames["edit"]: True},
@@ -239,7 +245,7 @@ try:
         "vendor": {keysNames["name"]: "Vendor", keysNames["value"]: 'Cisco', keysNames["edit"]: False},
         "name": {keysNames["name"]: "Name", keysNames["value"]:version[0]['hostname'], keysNames["edit"]: True},
         "model": {keysNames["name"]: "Model", keysNames["value"]:version[0]['hardware'][0], keysNames["edit"]: False},
-        "type": {keysNames["name"]: "Type", keysNames["value"]:"Switch" if "Router" not in typeNode else "Router", keysNames["edit"]: False},
+        "type": {keysNames["name"]: "Model", keysNames["value"]:typeNode, keysNames["edit"]: False},
         "upTime": {keysNames["name"]: "UpTime", keysNames["value"]:version[0]['uptime'], keysNames["edit"]: False},
         "runConf": runConf,
         "startConf": startConf,

@@ -19,7 +19,7 @@ import DialogConsole from '@/components/Device/DialogConsole'
 import DialogConfig from '@/components/Device/DialogConfig'
 import DialogInfo from '@/components/Device/DialogInfo'
 import { useRoute } from 'vue-router'
-import { onMounted } from 'vue'
+// import { onMounted } from 'vue'
 import { computed } from '@vue/runtime-core';
 import { ref, watch } from 'vue'
 import store from '@/store';
@@ -36,7 +36,7 @@ export default {
   },
   setup(){
     const route = useRoute()
-    let mainIp = ''
+    let mainIp = route.query.ip
 
     let nodesFromWatch = ref(store.getters['UserData/getNodes'])
     let nodes = computed(() => ref(nodesFromWatch));
@@ -48,9 +48,9 @@ export default {
       }
     })
 
-    onMounted(() => {
-      mainIp = route.query.ip
-    })
+    // onMounted(() => {
+    //   mainIp = route.query.ip
+    // })
 
     return {
       consoleFlag: ref(false),

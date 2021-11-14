@@ -93,7 +93,6 @@
 
 <script>
 import { useRoute } from 'vue-router'
-import { onMounted } from 'vue'
 import { computed } from '@vue/runtime-core';
 import { ref, watch } from 'vue'
 import store from '@/store';
@@ -103,7 +102,7 @@ export default {
 
     data(){
         const route = useRoute()
-        let mainIp = ''
+        let mainIp = route.query.ip
 
         let nodesFromWatch = ref(store.getters['UserData/getNodes'])
         let nodes = computed(() => ref(nodesFromWatch));
@@ -113,10 +112,6 @@ export default {
                 nodesFromWatch.value = dataNodes
                 nodes = ref(nodesFromWatch)
             }
-        })
-
-        onMounted(() => {
-            mainIp = route.query.ip
         })
 
         return {

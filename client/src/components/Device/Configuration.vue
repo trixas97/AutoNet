@@ -26,8 +26,8 @@ import"prismjs/prism";
 import "prismjs/themes/prism-tomorrow.css";
 import "prismjs/components/prism-editorconfig"
 import Prism from "vue-prism-component";
-import { ref, watch } from 'vue'
-import store from '@/store';
+import { watch } from 'vue'
+// import store from '@/store';
 import _ from "lodash";
 
 export default {
@@ -39,13 +39,12 @@ export default {
         Prism
     },
     setup(props){
-        console.log();
         let dataConfig;
-        let nodesFromWatch = ref(store.getters['UserData/getNodes'])
+        // let nodesFromWatch = ref(store.getters['UserData/getNodes'])
         if(props.title.includes('Running'))
-            dataConfig = ref(nodesFromWatch).value.data[0].runConf
+            dataConfig = props.node.runConf
         else
-            dataConfig = ref(nodesFromWatch).value.data[0].startConf
+            dataConfig = props.node.startConf
         watch(() => _.cloneDeep(props.node), () => { 
             if(props.title.includes('Running'))
                 dataConfig = props.node.runConf

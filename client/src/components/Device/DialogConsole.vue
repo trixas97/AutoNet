@@ -4,7 +4,7 @@
 
         <q-header class="bg-primary" style="width: 100%">
           <q-toolbar>
-            <label class="info">R2</label>  
+            <label class="info">{{node.name.value}}</label>  
             <q-btn flat v-close-popup round dense icon="close" />          
           </q-toolbar>
         </q-header>
