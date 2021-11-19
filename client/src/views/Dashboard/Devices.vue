@@ -74,7 +74,7 @@ export default {
         nodes.changedFromUser = true
         store.dispatch('UserData/setNodes', nodes);
       },
-        mainIp(node){
+      mainIp(node){
         try{
           for(let k=0; k < node.interfaces.length; k++){
             if(node.interfaces[k].mainIf.value){
@@ -82,6 +82,19 @@ export default {
                 return node.interfaces[k].ip_address.value.split('/')[0]
               else
                 return node.interfaces[k].ip_address.value
+            }
+          }
+        }catch(error){
+          return ''
+        }
+        return ''
+      },
+      network(node){
+        try{
+          let mainip = this.mainIp(node)
+          for(let k=0; k < node.route_table.length; k++){
+            if(node.route_table[k].network.value == mainip){
+              return `${node.route_table[k-1].network.value}/${node.route_table[k-1].mask.value}`
             }
           }
         }catch(error){
@@ -99,9 +112,9 @@ export default {
             type: nodesArray[i].type.value,
             name: nodesArray[i].name.value,
             ip: this.mainIp(nodesArray[i]),
-            network: '192.168.78.0/24',
+            network: this.network(nodesArray[i]),
             traffic: 1.5,
-            status: true,
+            status:  nodesArray[i].status.value,
             delete: '',
           };
           if(i == nodesArray.length-1)

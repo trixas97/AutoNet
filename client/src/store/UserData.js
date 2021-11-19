@@ -15,8 +15,8 @@ export const UserDataModule = {
         },
         setNode(state, val){
             for(let i=0; i < state.nodes.data.length; i++){
-                if(state.nodes.data[i]._id == val.data._id){
-                    state.nodes.data[i] = val.data
+                if(state.nodes.data[i]._id == val._id){
+                    state.nodes.data[i] = val
                 }
             }
         },

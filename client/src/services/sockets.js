@@ -2,6 +2,7 @@ import io from 'socket.io-client';
 import store from '../store';
 import { watch } from 'vue';
 import _ from "lodash";
+import { updateTraffic } from './storeService'
 
 export const sockets = () => {
     store.dispatch('Socket/setSocketReady', false);
@@ -47,6 +48,10 @@ export const sockets = () => {
                 break;
             case 'networks':
                 //code
+                break; 
+            case 'traffic':
+                //code
+                updateTraffic(msg.data)
                 break; 
         }
     })

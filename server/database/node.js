@@ -1,6 +1,6 @@
 const Node = require('./models/Node');
 const { getUsersNode } = require('./userData');
-const { emitNode } = require('../sockets');
+const { emitTraffic } = require('../sockets');
 
 const getNodeInfoByIP = async (ip) => {
     let node = await Node.findOne({ 'interfaces.ip_address.value': { $regex: ip} });
@@ -12,9 +12,11 @@ const setTraffic = async (ip, traffic, io) => {
     node = await modifyNodeData('traffic', node, traffic);
 
     try{
+        // console.log(traffic);
         const savedNode = await Node.updateOne({ _id: node._id }, { interfaces: node.interfaces });
         const users = await getUsersNode(node)
-        emitNode(users,node)
+        // console.log(traffic);
+        emitTraffic(users,traffic)
     }catch (err){
         console.log(err);
     }

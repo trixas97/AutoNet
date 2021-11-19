@@ -29,21 +29,19 @@ const listeners = (io) => {
     return mainIo
 }
 
-const emitNode = (users, node) => {
+const emitTraffic = (users, data) => {
+    console.log(data);
     let msg = {
-        node: {
-            data: node,
-            changedFromUser: false
-        },
-        type: 'node'
+        data: data,
+        type: 'traffic'
     }
     users.forEach(element => {
-        console.log('emit ' + element.username);
-        console.log(msg);
+        // console.log('emit ' + element.username);
+        // console.log(msg);
         mainIo.emit(element.username, msg)
     });
 }
 
 
-module.exports.emitNode = emitNode;
+module.exports.emitTraffic = emitTraffic;
 module.exports.socketsListeners = listeners
