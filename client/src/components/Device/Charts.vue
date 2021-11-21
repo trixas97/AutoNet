@@ -72,7 +72,9 @@ export default {
                 fillChart()
         })
 
-        watch(() => _.cloneDeep(props.node), () => {          
+        watch(() => _.cloneDeep(props.node), () => {  
+            console.log('eeee');
+            console.log(props.node);        
             fillChart()
         })
 
@@ -108,6 +110,7 @@ export default {
                 myChart.data.labels[myChart.data.labels.length-1] = await myChart.data.labels[myChart.data.labels.length-1].split(' ')[1];
             }
             myChart.update();
+            trafficFlag++
         }
 
         async function initData(){
@@ -166,6 +169,8 @@ export default {
         }
 
         function updatedTraffic(){
+            console.log(props.node.interfaces[0].traffic.value.length);
+            console.log(trafficFlag);
             return props.node.interfaces[0].traffic.value.length > trafficFlag ? true : false
         }
         

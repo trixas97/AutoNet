@@ -4,15 +4,15 @@
             v-for="node in nodesData.length"
             :key="node"
             :ref="setItemRef"
-            src="@/assets/elements/router.svg" 
-            :style="{width:'4.6em', height:'3.2em'}"
+            :src="nodesData[node-1].type.value == 'Router' ? require('@/assets/elements/router.svg') : require('@/assets/elements/switch.svg')"
+            :style="nodesData[node-1].type.value == 'Router' ? {width:'4.6em', height:'3.2em'} : {width:'4.7em', height:'2.7em'}"
+            :id="node"
             alt="">
         <label        
             v-for="node in nodesData.length"
             :key="'NodeLabel' + node"
             :ref="setItemRef"
-
-            alt="">{{nodesData[node-1].name}}
+            alt="">{{nodesData[node-1].name.value}}
         </label>
   </div>
 </template>
@@ -53,7 +53,7 @@ export default {
     },
     methods:{
 
-        setItemRef(el) {
+        setItemRef(el) {         
             if(el){ el.src ? this.imgRefs.push(el) : this.labelRefs.push(el); }
         },
 
@@ -104,7 +104,7 @@ export default {
             this.nodes[this.nodesData[i]._id] = new NetNode(this.nodesData[i]._id,this.imgRefs[i], {name: this.labelRefs[i], x: this.nodesData[i].topologyInfo.label.x, y:this.nodesData[i].topologyInfo.label.y}, [], this.nodesData[i].interfaces);
             this.nodes[this.nodesData[i]._id].dragnode.left = this.nodesData[i].topologyInfo.x;
             this.nodes[this.nodesData[i]._id].dragnode.top = this.nodesData[i].topologyInfo.y;
-            this.nodes[this.nodesData[i]._id].labelPosition();
+            this.nodes[this.nodesData[i]._id].labelPosition(); 
         }
 
         for(let i=0; i < this.linksData.length; i++){

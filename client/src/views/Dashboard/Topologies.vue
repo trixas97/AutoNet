@@ -22,9 +22,13 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import Table from '@/components/Dashboard/Table'
+
 import { useStore } from 'vuex';
+import { ref, watch } from 'vue'
+import Table from '@/components/Dashboard/Table'
+import { computed } from '@vue/runtime-core';
+import _ from "lodash";
+
 export default {
     name: 'Topologies',
     components: {
@@ -41,44 +45,53 @@ export default {
         { name: 'delete', label: '', field: 'delete', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
       ]
 
-      const rows = [
-        {
-          type: 'topology',
-          name: 'MyTopology 1',
-          network: '192.168.78.0 / 24',
-          netlength: 1,
-          devices: 3,
-          delete: '',
-        },
-        {
-          type: 'topology',
-          name: 'MyTopology 2',
-          network: 'Multiple Networks',
-          netlength: 3,
-          devices: 13,
-          delete: '',
-        },
-        {
-          type: 'topology',
-          name: 'MyTopology 3',
-          network: 'Multiple Networks',
-          netlength: 4,
-          devices: 33,
-          delete: '',
-        },
-        {
-          type: 'topology',
-          name: 'Test Topology',
-          network: '13.13.13.0 / 24',
-          netlength: 1,
-          devices: 2,
-          delete: '',
-        }        
-      ]
-      return{
+      // const rows = [
+      //   {
+      //     type: 'topology',
+      //     name: 'MyTopology 1',
+      //     network: '192.168.78.0 / 24',
+      //     netlength: 1,
+      //     devices: 3,
+      //     delete: '',
+      //   },
+      //   {
+      //     type: 'topology',
+      //     name: 'MyTopology 2',
+      //     network: 'Multiple Networks',
+      //     netlength: 3,
+      //     devices: 13,
+      //     delete: '',
+      //   },
+      //   {
+      //     type: 'topology',
+      //     name: 'MyTopology 3',
+      //     network: 'Multiple Networks',
+      //     netlength: 4,
+      //     devices: 33,
+      //     delete: '',
+      //   },
+      //   {
+      //     type: 'topology',
+      //     name: 'Test Topology',
+      //     network: '13.13.13.0 / 24',
+      //     netlength: 1,
+      //     devices: 2,
+      //     delete: '',
+      //   }        
+      // ]
+
+      let toposFromWatch = ref(store.getters['UserData/getTopologies'])
+      let topologies = computed(() => ref(toposFromWatch));
+      watch(() => _.cloneDeep(store.getters['UserData/getTopologies']), (dataTopos) => {
+        if(dataTopos != null){
+            toposFromWatch.value = dataTopos
+            topologies = ref(toposFromWatch)
+        }
+      })
+      return {
          filter: ref(''),
          columns,
-         rows,
+         topologies: ref(topologies),
          store
       }
     },
@@ -86,7 +99,26 @@ export default {
       newTopology(){
         
       }
-    }
+    },
+    computed:{
+      rows(){
+        let rowsArray = [];
+        let toposArray = this.topologies.value;
+        for(let  i=0; i< toposArray.length; i++){
+          rowsArray[i] ={
+            type: 'topology',
+            name: toposArray[i].name,
+            network: '192.168.78.0 / 24',
+            netlength: 1,
+            devices: toposArray[i].nodes.length,
+            delete: '',
+          };
+          if(i == toposArray.length-1)
+            return(rowsArray)
+        }
+        return rowsArray
+      } 
+    } 
 }
 </script>
 

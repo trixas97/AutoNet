@@ -1,7 +1,7 @@
 let plainDraggable = require('plain-draggable').default;
 export default class NetNode {
     
-    img = "file:///C:/Program%20Files/GNS3/symbols/classic/router.svg";
+    // img = "file:///C:/Program%20Files/GNS3/symbols/classic/router.svg";
 
     constructor(id,node,label,links,ifs){
         this.id = id;
@@ -11,7 +11,6 @@ export default class NetNode {
         this.label = {element: label.name, x: label.x, y: label.y};
         this.draglabel = new plainDraggable(this.label.element);
         this.dragnode = new plainDraggable(node);
-
         this.draglabel.onDragEnd = () =>{    
             this.label.y = this.draglabel.top - this.dragnode.top;
             this.label.x = this.draglabel.left - this.dragnode.left

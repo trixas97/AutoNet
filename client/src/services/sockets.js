@@ -50,7 +50,6 @@ export const sockets = () => {
                 //code
                 break; 
             case 'traffic':
-                //code
                 updateTraffic(msg.data)
                 break; 
         }
