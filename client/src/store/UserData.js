@@ -116,11 +116,20 @@ export const UserDataModule = {
         getNodes(state){
             return state.nodes
         },
+        getNodesById: (state) => async (ids) => {
+            return state.nodes.find(node => node._id.includes(ids))
+        },
         getNetworks(state) {
             return state.networks
         },
         getTopologies(state){
             return state.topologies
+        },
+        getTopology: (state) => (name) => {
+            return state.topologies.find(topo => topo.name === name)
+        },
+        getTopologyNodes: (state) => (name) => {
+            return state.nodes.data.filter(node => state.topologies.find(topo => topo.name === name).nodes.find(nodeTopo => nodeTopo.id === node._id))
         },
         getLinks(state){
             return state.links
