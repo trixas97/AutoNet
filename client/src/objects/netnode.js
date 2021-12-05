@@ -34,16 +34,16 @@ export default class NetNode {
     }
 
     //Recalculate Links positions and Label position when drag the node
-    dragLink(links){
+    dragLink(){
         this.dragnode.onDrag = () => {
             this.labelPosition();
-            links.forEach(element => {
+            this.links.forEach(element => {
                 element.link.position();
             });
         }
         this.dragnode.onDragEnd = () => {
             this.labelPosition();
-            links.forEach(element => {
+            this.links.forEach(element => {
                 element.link.position();
             });
         }

@@ -21,7 +21,7 @@
 <script>
 // @ is an alias to /src
 import NetNode from '@/objects/netnode.js'
-// import Link from '@/objects/link.js'
+import Link from '@/objects/link.js'
 // import io from 'socket.io-client'
 import store from '@/store'
 import { ref, watch } from 'vue'
@@ -79,18 +79,71 @@ export default {
 
         setItemRef(el) {        
             if(el){ el.src ? this.imgRefs.push(el) : this.labelRefs.push(el); }
+        },
+
+        findLinks(){
+            console.log(this.nodesData.value[1]);
+            this.nodesData.value.map(node => {
+                node.cdp.map(cdpEntry => {
+                    // console.log(cdpEntry);
+                    // this.addLink(node,cdpEntry)
+                    this.isValidCdpEntry(node,cdpEntry)
+                })
+            })
+            // thio
+        },
+
+        isValidCdpEntry(nodeStart, cdpEntry){
+            let nodeEnd = this.nodesData.value.find(node => node.interfaces.find(inter => inter.ip_address.value.includes(`${cdpEntry.management_ip.value}/`)))
+            if(nodeEnd){
+                // If link is not exist then add it
+                if(!this.links.find(link => (link.ifstart.id == nodeEnd._id && nodeEnd.interfaces.find(inter => inter.interface_short.value == link.ifstart.name)) || (link.ifend.id == nodeEnd._id && nodeEnd.interfaces.find(inter => inter.interface_short.value == link.ifend.name)))){
+                    this.addLink(nodeStart,nodeEnd,cdpEntry)
+                }
+            }
+        },
+
+        
+
+        addLink(nodeStart, nodeEnd, cdpEntry){
+            console.log('innnn');
+            let start = {};
+            let end = {};
+            let nodeInterface = nodeStart.interfaces.find(inter => inter.interface.value == cdpEntry.local_port.value)
+
+            start.id = nodeStart._id; 
+            start.name = nodeInterface.interface_short.value
+            start.state = (nodeInterface.protocol_status.value.includes('up') && nodeInterface.link_status.value.includes('up')) ? true : false
+
+            // neighborNode = this.nodesData.value.find(node => node.interfaces.find(inter => inter.ip_address.value.includes(`${cdpEntry.management_ip.value}/`)))
+            nodeInterface = nodeEnd.interfaces.find(inter => inter.interface.value == cdpEntry.remote_port.value)
+
+            end.id = nodeEnd._id; 
+            end.name = nodeInterface.interface_short.value
+            end.state = (nodeInterface.protocol_status.value.includes('up') && nodeInterface.link_status.value.includes('up')) ? true : false
+
+            let link = new Link(this.nodes[start.id].node, this.nodes[end.id].node,{id: start.id, name: start.name, state: start.state},{id: end.id, name: end.name, state: end.state}); 
+            this.links.push(link)
+            this.nodes[start.id].links.push(link);
+            this.nodes[end.id].links.push(link);
+            this.nodes[start.id].dragLink();
+            this.nodes[end.id].dragLink();
+            
+            // console.log(start);
+            // console.log(end);
+            console.log(link);
         }
 
-    //     newLink(start,end){
-    //         this.links.push(new Link(this.nodes[start.id].node, this.nodes[end.id].node,{id: start.id, name: start.name, state: start.state},{id: end.id, name: end.name, state: end.state}));
+        // newLink(start,end){
+        //     this.links.push(new Link(this.nodes[start.id].node, this.nodes[end.id].node,{id: start.id, name: start.name, state: start.state},{id: end.id, name: end.name, state: end.state}));
 
             
-    //         this.nodes[start.id].links.push(this.links[this.links.length - 1]);
-    //         this.nodes[end.id].links.push(this.links[this.links.length - 1]);
+        //     this.nodes[start.id].links.push(this.links[this.links.length - 1]);
+        //     this.nodes[end.id].links.push(this.links[this.links.length - 1]);
 
-    //         this.nodes[start.id].dragLink(this.nodes[start.id].links);
-    //         this.nodes[end.id].dragLink(this.nodes[end.id].links);
-    //     },
+        //     this.nodes[start.id].dragLink(this.nodes[start.id].links);
+        //     this.nodes[end.id].dragLink(this.nodes[end.id].links);
+        // },
     //     async getTopoInfo(){
     //         const data = {
     //             token: this.$store.state.User.token,
@@ -131,6 +184,9 @@ export default {
             this.nodes[nodesData[i]._id].dragnode.top = topoNode.y;
             this.nodes[nodesData[i]._id].labelPosition(); 
         }
+
+        this.findLinks()
+
 
         // for(let i=0; i < this.linksData.length; i++){
         //     let start = {};
