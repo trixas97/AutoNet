@@ -69,6 +69,23 @@ export const sockets = () => {
     })
 
 
+    // watch(() => _.cloneDeep(store.getters['UserData/getTopologies']), (topos,prev) => { 
+    //     console.log('watch change from sockets');
+    //     console.log(prev);
+    //     console.log(topos);
+    //     topos.map(topo => {
+    //         if(topo === prev)
+    //     })
+    //     // if(initFlag.nodes && nodes.changedFromUser){
+    //     //     if(nodes != null){
+    //     //         socket.emit('nodes', {nodes: nodes.data, user: store.getters['User/getUsername']});
+    //     //     }
+    //     // }
+    //     // else
+    //     //     initFlag.nodes = true
+    // })
+
+
     // For console device live stream - watch user actions and emit
     watch(() => store.getters['Socket/getConsoleDataEmit'], (data) => {
         if(data != null){

@@ -48,6 +48,11 @@ export const UserDataModule = {
         deleteTopology(state,val){
             state.topologies.splice(val, 1);
         },
+        updateTopology(state,val){
+            let node = state.topologies.find(topology => topology._id == val.id).nodes.find(node => node.id == val.node.id)
+            node.x = val.node.x
+            node.y = val.node.y
+        },
 
 
         setLinks(state, val){
@@ -97,6 +102,9 @@ export const UserDataModule = {
         },
         deleteTopology({ commit }){
             commit('deleteTopology');
+        },
+        updateTopology({ commit }, val){
+            commit('updateTopology', val)
         },
 
 

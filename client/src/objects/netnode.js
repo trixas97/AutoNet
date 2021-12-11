@@ -1,10 +1,12 @@
 let plainDraggable = require('plain-draggable').default;
+let store = require('@/store')
 export default class NetNode {
     
     // img = "file:///C:/Program%20Files/GNS3/symbols/classic/router.svg";
 
-    constructor(id,node,label,links,ifs){
+    constructor(id,topoId,node,label,links,ifs){
         this.id = id;
+        this.topoId = topoId
         this.ifs = ifs;
         this.node = node;
         this.links = links;
@@ -43,6 +45,8 @@ export default class NetNode {
         }
         this.dragnode.onDragEnd = () => {
             this.labelPosition();
+            console.log(this.id);
+            store.default.dispatch('UserData/updateTopology', {id: this.topoId, node: {id: this.id, x: this.dragnode.left, y: this.dragnode.top}});
             this.links.forEach(element => {
                 element.link.position();
             });
