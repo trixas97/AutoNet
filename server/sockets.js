@@ -24,6 +24,15 @@ const listeners = (io) => {
             io.emit(data.user, msg)
         })
 
+        socket.on('topology', (data) => {
+            console.log(`Changes TOPOLOGY from ${data.user}` );
+            let msg = {
+                topology: data.topology,
+                type: 'topology'
+            }
+            io.emit(data.user, msg)
+        })
+
     })
     mainIo = io;
     return mainIo

@@ -47,7 +47,6 @@ export default {
         watch(() => _.cloneDeep(store.getters['UserData/getTopology'](route.query.name)), (dataTopo) => { 
             if(dataTopo != null){
                 topo = ref(dataTopo)
-                nodesData.value
             }
         })
 
@@ -64,6 +63,7 @@ export default {
             imgRefs: [],
             labelRefs: [],
             initData,
+            initFlag: false,
             topo,
             nodes,
             links,
@@ -130,10 +130,21 @@ export default {
             }
 
             this.findLinks()
+        },
+
+        updateNodes(){
+            this.topo.value.nodes.map(node => {
+                this.nodes[node.id].updateAllPositions(node.x, node.y)
+            })
         }
     },
-    updated() {   
-        this.initNodes()
+    updated() {  
+        if(!this.initFlag)
+            this.initNodes()
+        else{
+            this.updateNodes()
+        }
+        this.initFlag = true
     },
     mounted(){
         this.initNodes()   

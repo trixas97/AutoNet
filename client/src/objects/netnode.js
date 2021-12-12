@@ -35,6 +35,19 @@ export default class NetNode {
         this.dragnode.position();
     }
 
+
+    updateAllPositions = (x,y) => {
+        this.dragnode.left = x
+        this.dragnode.top = y
+        this.dragnode.position();
+        this.labelPosition()
+        this.links.forEach(element => {
+            element.link.position();
+        });
+    }
+
+
+
     //Recalculate Links positions and Label position when drag the node
     dragLink(){
         this.dragnode.onDrag = () => {
@@ -45,8 +58,7 @@ export default class NetNode {
         }
         this.dragnode.onDragEnd = () => {
             this.labelPosition();
-            console.log(this.id);
-            store.default.dispatch('UserData/updateTopology', {id: this.topoId, node: {id: this.id, x: this.dragnode.left, y: this.dragnode.top}});
+            store.default.dispatch('UserData/updateTopology', {id: this.topoId, node: {id: this.id, x: this.dragnode.left, y: this.dragnode.top}, changedFromUser: true});
             this.links.forEach(element => {
                 element.link.position();
             });

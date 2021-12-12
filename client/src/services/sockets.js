@@ -25,7 +25,6 @@ export const sockets = () => {
     });
     // Listener to receive user data (nodes, topologies...) changes
     socket.on(store.getters['User/getUsername'], (msg) => {
-        console.log(msg);
         switch(msg.type){
             case 'userData':
                 store.dispatch('UserData/setNodes', { data: msg.data.nodes, changedFromUser: false });
@@ -36,11 +35,13 @@ export const sockets = () => {
             case 'topologies':
                 //code
                 break;
+            case 'topology':
+                store.dispatch('UserData/updateTopologyFull', msg.topology)
+            break;
             case 'nodes':
                 store.dispatch('UserData/setNodes', msg.nodes);
                 break;
             case 'node':
-                console.log(msg);
                 store.dispatch('UserData/setNode', msg.node);
                 break;
             case 'links':
@@ -58,7 +59,7 @@ export const sockets = () => {
 
 
     watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (nodes) => { 
-        console.log('watch change from sockets');
+        console.log('watch change from sockets Nodes');
         if(initFlag.nodes && nodes.changedFromUser){
             if(nodes != null){
                 socket.emit('nodes', {nodes: nodes.data, user: store.getters['User/getUsername']});
@@ -69,21 +70,16 @@ export const sockets = () => {
     })
 
 
-    // watch(() => _.cloneDeep(store.getters['UserData/getTopologies']), (topos,prev) => { 
-    //     console.log('watch change from sockets');
-    //     console.log(prev);
-    //     console.log(topos);
-    //     topos.map(topo => {
-    //         if(topo === prev)
-    //     })
-    //     // if(initFlag.nodes && nodes.changedFromUser){
-    //     //     if(nodes != null){
-    //     //         socket.emit('nodes', {nodes: nodes.data, user: store.getters['User/getUsername']});
-    //     //     }
-    //     // }
-    //     // else
-    //     //     initFlag.nodes = true
-    // })
+    watch(() => _.cloneDeep(store.getters['UserData/getTopologies']), (topos,prev) => { 
+        if(initFlag.topologies && store.getters['UserData/getTopologiesFull'].changedFromUser){
+            for (let i=0; i < topos.length; i++){
+                if(topos[i] != prev[i]) {
+                    socket.emit('topology', {topology: topos[i], user: store.getters['User/getUsername']})
+                }
+            }
+        }else
+            initFlag.topologies = true
+    })   
 
 
     // For console device live stream - watch user actions and emit

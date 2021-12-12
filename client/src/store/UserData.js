@@ -5,7 +5,7 @@ export const UserDataModule = {
     state: {
         nodes: {data: [], changedFromUser: false},
         networks: [],
-        topologies: [],
+        topologies: {data: [], changedFromUser: false},
         links: []
     },
 
@@ -40,18 +40,27 @@ export const UserDataModule = {
 
 
         setTopologies(state, val){
-            state.topologies = val
+            state.topologies.data = val
         },
         addTopology(state,val){
-            state.topologies.push(val);
+            state.topologies.data.push(val);
         },
         deleteTopology(state,val){
-            state.topologies.splice(val, 1);
+            state.topologies.data.splice(val, 1);
         },
         updateTopology(state,val){
-            let node = state.topologies.find(topology => topology._id == val.id).nodes.find(node => node.id == val.node.id)
+            let node = state.topologies.data.find(topology => topology._id == val.id).nodes.find(node => node.id == val.node.id)
             node.x = val.node.x
             node.y = val.node.y
+            state.topologies.changedFromUser = true
+        },
+        updateTopologyFull(state,val){
+            for(let i=0; i < state.topologies.data.length; i++){
+                if(state.topologies.data[i]._id == val._id){
+                    state.topologies.data[i] = val
+                }
+            }
+            state.topologies.changedFromUser = false
         },
 
 
@@ -106,6 +115,9 @@ export const UserDataModule = {
         updateTopology({ commit }, val){
             commit('updateTopology', val)
         },
+        updateTopologyFull({ commit },val){
+            commit('updateTopologyFull', val)
+        },
 
 
         setLinks({ commit }, val){
@@ -131,13 +143,16 @@ export const UserDataModule = {
             return state.networks
         },
         getTopologies(state){
+            return state.topologies.data
+        },
+        getTopologiesFull(state){
             return state.topologies
         },
         getTopology: (state) => (name) => {
-            return state.topologies.find(topo => topo.name === name)
+            return state.topologies.data.find(topo => topo.name === name)
         },
         getTopologyNodes: (state) => (name) => {
-            return state.nodes.data.filter(node => state.topologies.find(topo => topo.name === name).nodes.find(nodeTopo => nodeTopo.id === node._id))
+            return state.nodes.data.filter(node => state.topologies.data.find(topo => topo.name === name).nodes.find(nodeTopo => nodeTopo.id === node._id))
         },
         getLinks(state){
             return state.links
