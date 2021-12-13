@@ -16,6 +16,7 @@
             </q-input>
         </div>
       </div>
+      <Dialog v-model="dialogFlag" :ipnet="ipNetOpen"/>
       <Table :filter="filter" :rows="rows" :columns="columns"/>
     </div>
   </div>
@@ -45,41 +46,6 @@ export default {
         { name: 'delete', label: '', field: 'delete', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
       ]
 
-      // const rows = [
-      //   {
-      //     type: 'topology',
-      //     name: 'MyTopology 1',
-      //     network: '192.168.78.0 / 24',
-      //     netlength: 1,
-      //     devices: 3,
-      //     delete: '',
-      //   },
-      //   {
-      //     type: 'topology',
-      //     name: 'MyTopology 2',
-      //     network: 'Multiple Networks',
-      //     netlength: 3,
-      //     devices: 13,
-      //     delete: '',
-      //   },
-      //   {
-      //     type: 'topology',
-      //     name: 'MyTopology 3',
-      //     network: 'Multiple Networks',
-      //     netlength: 4,
-      //     devices: 33,
-      //     delete: '',
-      //   },
-      //   {
-      //     type: 'topology',
-      //     name: 'Test Topology',
-      //     network: '13.13.13.0 / 24',
-      //     netlength: 1,
-      //     devices: 2,
-      //     delete: '',
-      //   }        
-      // ]
-
       let toposFromWatch = ref(store.getters['UserData/getTopologies'])
       let topologies = computed(() => ref(toposFromWatch));
       watch(() => _.cloneDeep(store.getters['UserData/getTopologies']), (dataTopos) => {
@@ -90,12 +56,18 @@ export default {
       })
       return {
          filter: ref(''),
+         ipNetOpen: ref(''),
+         dialogFlag: ref(false),
          columns,
          topologies: ref(topologies),
          store
       }
     },
     methods:{
+      openDialog(value){
+        this.ipNetOpen = value;
+        this.dialogFlag = true
+      },
       newTopology(){
         
       }

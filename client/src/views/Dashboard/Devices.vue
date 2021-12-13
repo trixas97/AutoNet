@@ -51,8 +51,8 @@ export default {
         if(dataNodes != null){
             nodesFromWatch.value = dataNodes
             nodes = ref(nodesFromWatch)
-          }
-        })
+        }
+      })
       
       return{
         filter: ref(''),
@@ -62,17 +62,23 @@ export default {
     },
     methods:{
       newNode(){
-        let nodes = store.getters['UserData/getNodes'];
-        nodes.data.push({
-          type: { value: "Router"},
-          name: { value: "R13"},
-          interfaces: [{mainIf: {value: true}, ip_address: {value: '192.168.778.1'}}, {mainIf: {value: false}, ip_address: {value: '13.13.13.1'}}],
-        });
+        
+        // store.dispatch('UserData/setNetworks', [
+        //   {ip: '13.13.13.0/24', mask: '255.255.255.0', gateway: '13.13.13.1'}, 
+        //   {ip: '10.10.10.0/24', mask: '255.255.255.0', gateway: '10.10.10.1'},
+        //   {ip: '192.168.78.0/24', mask: '255.255.255.0', gateway: '192.168.78.1'}])
+        
+        // let nodes = store.getters['UserData/getNodes'];
+        // nodes.data.push({
+        //   type: { value: "Router"},
+        //   name: { value: "R13"},
+        //   interfaces: [{mainIf: {value: true}, ip_address: {value: '192.168.778.1'}}, {mainIf: {value: false}, ip_address: {value: '13.13.13.1'}}],
+        // });
 
-        nodes.data[0].name.value = "S2"
-        nodes.data[0].type.value = "Switch"
-        nodes.changedFromUser = true
-        store.dispatch('UserData/setNodes', nodes);
+        // nodes.data[0].name.value = "S2"
+        // nodes.data[0].type.value = "Switch"
+        // nodes.changedFromUser = true
+        // store.dispatch('UserData/setNodes', nodes);
       },
       mainIp(node){
         try{

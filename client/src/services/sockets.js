@@ -69,6 +69,19 @@ export const sockets = () => {
             initFlag.nodes = true
     })
 
+    watch(() => _.cloneDeep(store.getters['UserData/getNetworks']), (networks) => { 
+        console.log('tetetete');
+        console.log(initFlag.networks);
+        console.log(networks);
+        if(initFlag.networks ){
+            if(networks != null){
+                socket.emit('networks', {networks: networks, user: store.getters['User/getUsername']});
+            }
+        }
+        else
+            initFlag.networks = true
+    })
+
 
     watch(() => _.cloneDeep(store.getters['UserData/getTopologies']), (topos,prev) => { 
         if(initFlag.topologies && store.getters['UserData/getTopologiesFull'].changedFromUser){
@@ -90,6 +103,8 @@ export const sockets = () => {
             store.dispatch('Socket/setConsoleDataEmit', null);
         }
     })
+
+    
 
     // For console device live stream - listener 
     socket.on('consoleData',(data) => {

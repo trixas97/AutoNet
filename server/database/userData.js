@@ -14,6 +14,11 @@ const getUserData = async (username) => {
     return completeData
 }
 
+const getUser = async (username) => {
+    let user = await User.findOne({username: username})
+    return user
+}
+
 const getUsersNode = async (node) => {
     let users = await User.find({_id: node.user})
     return users;
@@ -48,4 +53,5 @@ modifyNodesData = (nodes) => {
 }
 
 module.exports.getUserData = getUserData;
+module.exports.getUser = getUser;
 module.exports.getUsersNode = getUsersNode;

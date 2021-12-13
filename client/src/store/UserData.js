@@ -4,7 +4,7 @@ export const UserDataModule = {
 
     state: {
         nodes: {data: [], changedFromUser: false},
-        networks: [],
+        networks: {data: [], changedFromUser: false},
         topologies: {data: [], changedFromUser: false},
         links: []
     },
@@ -29,13 +29,13 @@ export const UserDataModule = {
 
 
         setNetworks(state, val){
-            state.networks = val
+            state.networks.data = val
         },
         addNetwork(state,val){
-            state.networks.push(val);
+            state.networks.data.push(val);
         },
         deleteNetwork(state,val){
-            state.networks.splice(val, 1);
+            state.networks.data.splice(val, 1);
         },
 
 
@@ -140,6 +140,9 @@ export const UserDataModule = {
             return state.nodes.find(node => node._id.includes(ids))
         },
         getNetworks(state) {
+            return state.networks.data
+        },
+        getNetworksFull(state) {
             return state.networks
         },
         getTopologies(state){

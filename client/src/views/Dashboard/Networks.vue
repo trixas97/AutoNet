@@ -23,7 +23,10 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import store from '@/store';
+import { computed } from '@vue/runtime-core';
+import _ from "lodash";
 import Table from '@/components/Dashboard/Table'
 import Dialog from '@/components/Dashboard/Dialog'
 export default {
@@ -77,10 +80,21 @@ export default {
         //   delete: '',
         // },   
       ]
+
+      let nodesFromWatch = ref(store.getters['UserData/getNodes'])
+      let nodes = computed(() => ref(nodesFromWatch));
+      watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
+        if(dataNodes != null){
+            nodesFromWatch.value = dataNodes
+            nodes = ref(nodesFromWatch)
+        }
+      })
+
       return{
          filter: ref(''),
          ipNetOpen: ref(''),
          dialogFlag: ref(false),
+         nodes: ref(nodes),
          columns,
          rows
       }
@@ -93,7 +107,32 @@ export default {
       newNetwork(){
         this.$router.push('autoScan');
       }
-    }
+    },
+    // computed: {
+    //   rows(){
+    //     let rowsArray = [];
+    //     let nodesArray = this.nodes.value.data;
+    //     nodesArray.map(node => {
+    //       node.interfaces.map(inter => {
+            
+    //       })
+    //     })
+    //     for(let  i=0; i< nodesArray.length; i++){
+    //       rowsArray[i] ={
+    //         type: nodesArray[i].type.value,
+    //         name: nodesArray[i].name.value,
+    //         ip: this.mainIp(nodesArray[i]),
+    //         network: this.network(nodesArray[i]),
+    //         traffic: 1.5,
+    //         status:  nodesArray[i].status.value,
+    //         delete: '',
+    //       };
+    //       if(i == nodesArray.length-1)
+    //         return(rowsArray)
+    //     }
+    //     return rowsArray
+    //   } 
+    // } 
 }
 </script>
 
