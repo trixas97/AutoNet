@@ -46,41 +46,6 @@ export default {
         { name: 'delete', label: '', field: 'delete', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
       ]
 
-      const rows = [
-        {
-          type: 'network',
-          network: '192.168.78.0 / 24',
-          mask: '255.255.255.0',
-          gateway: '192.168.78.1',
-          devices: 3,
-          delete: '',
-        },
-        {
-          type: 'network',
-          network: '10.10.10.0 / 24',
-          mask: '255.255.255.0',
-          gateway: '10.10.10.1',
-          devices: 13,
-          delete: '',
-        },
-        {
-          type: 'network',
-          network: '13.13.13.0 / 24',
-          mask: '255.255.255.0',
-          gateway: '13.13.13.1',
-          devices:55,
-          delete: '',
-        },
-        // {
-        //   type: 'network',
-        //   network: '45.46.47.0 / 23',
-        //   mask: '255.255.254.0',
-        //   gateway: '45.46.47.1',
-        //   devices: 78,
-        //   delete: '',
-        // },   
-      ]
-
       let nodesFromWatch = ref(store.getters['UserData/getNodes'])
       let nodes = computed(() => ref(nodesFromWatch));
       watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
@@ -90,13 +55,22 @@ export default {
         }
       })
 
+      let networksFromWatch = ref(store.getters['UserData/getNetworks'])
+      let networks = computed(() => ref(networksFromWatch));
+      watch(() => _.cloneDeep(store.getters['UserData/getNetworks']), (dataNetworks) => {
+        if(dataNetworks != null){
+            networksFromWatch.value = dataNetworks
+            networks = ref(networksFromWatch)
+        }
+      })
+
       return{
          filter: ref(''),
          ipNetOpen: ref(''),
          dialogFlag: ref(false),
          nodes: ref(nodes),
-         columns,
-         rows
+         networks: ref(networks),
+         columns
       }
     },
     methods: {
@@ -108,31 +82,31 @@ export default {
         this.$router.push('autoScan');
       }
     },
-    // computed: {
-    //   rows(){
-    //     let rowsArray = [];
-    //     let nodesArray = this.nodes.value.data;
-    //     nodesArray.map(node => {
-    //       node.interfaces.map(inter => {
-            
-    //       })
-    //     })
-    //     for(let  i=0; i< nodesArray.length; i++){
-    //       rowsArray[i] ={
-    //         type: nodesArray[i].type.value,
-    //         name: nodesArray[i].name.value,
-    //         ip: this.mainIp(nodesArray[i]),
-    //         network: this.network(nodesArray[i]),
-    //         traffic: 1.5,
-    //         status:  nodesArray[i].status.value,
-    //         delete: '',
-    //       };
-    //       if(i == nodesArray.length-1)
-    //         return(rowsArray)
-    //     }
-    //     return rowsArray
-    //   } 
-    // } 
+    computed: {
+      rows(){
+        let rowsArray = [];
+        let networksArray = this.networks.value;
+        networksArray.map(network => {
+          rowsArray.push({
+            type: 'network',
+            network: network.ip.value,
+            mask: network.mask.value,
+            gateway: network.gateway.value,
+            devices: 13,
+            delete: ''
+          })
+        })
+        return rowsArray
+      },
+      
+      // devices(ipNet){
+      //   let nodesArray = this.nodes.value.data
+      //   let counter = 0
+      //   nodesArray.map(node => {
+      //     node.interfaces.map 
+      //   })
+      // }
+    } 
 }
 </script>
 

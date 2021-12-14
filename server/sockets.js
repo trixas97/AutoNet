@@ -38,7 +38,7 @@ const listeners = (io) => {
 
         socket.on('networks', (data) => {
             console.log(data);
-            saveNetworks(data.user, data.networks)
+            // saveNetworks(data.user, data.networks)
         })
 
 
