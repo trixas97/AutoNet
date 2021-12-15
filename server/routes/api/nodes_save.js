@@ -42,6 +42,7 @@ io.on('connection', (socket) => {
         node = await initNode(host)
         node = await getNodeInfo(host);
         node.interfaces = await initTraffic(node.interfaces)
+        node.interfaces = await setInterfacesNetworks(node.interfaces)
         if(node != null){
             const nodeDb = new Node({
                 user: '60aa9e031c1d653434fcf352',
@@ -113,6 +114,24 @@ io.on('connection', (socket) => {
             for (let i=0; i < interfaces.length; i++){
                 interfaces[i].traffic = await { name: 'Traffic', value: [], editable: false, visible: false };
                 if(i == interfaces.length-1) resolve(interfaces)
+            }
+        })
+    }
+
+    setInterfacesNetworks = async (interfaces) => {
+        return new Promise(async resolve => {
+            for(let i=0; i < interfaces.length; i++){
+                
+                interfaces[i].network = await { 
+                    name: 'Network',
+                    value: `${interfaces[i].ip_address.value.length>0 ? ipValid.cidr(interfaces[i].ip_address.value) : ""}/${interfaces[i].ip_address.value.split('/')[1]}`,
+                    editable: false,
+                    visible: true
+                }
+                if(interfaces[i].ip_address.value.length==0)
+                    interfaces[i].network.value = ""
+                if(i == interfaces.length-1)
+                    resolve(interfaces)
             }
         })
     }

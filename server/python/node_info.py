@@ -217,9 +217,12 @@ try:
             aclItem[key] = modifyACL(aclItem, key)
 
     # Modify CDP
-    for cdpItem in cdp:
-        for key in cdpItem:
-            cdpItem[key] = modifyCdp(cdpItem, key)
+    try:
+        for cdpItem in cdp:
+            for key in cdpItem:
+                cdpItem[key] = modifyCdp(cdpItem, key)
+    except:
+        cdp = []
     
     # Modify STP
     try:
