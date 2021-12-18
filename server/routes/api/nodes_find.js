@@ -6,6 +6,7 @@ const {spawn} = require('child_process');
 const {PythonShell} = require('python-shell');
 const ping = require('ping');
 let completeScan = []
+const { saveNetworks } = require('../../database/network')
 
 
 io.on('connection', (socket) => {
@@ -23,6 +24,7 @@ io.on('connection', (socket) => {
 
         let ipnet = (ipFinder.cidrSubnet(req.query.ip).networkAddress + '/' + ipFinder.cidrSubnet(req.query.ip).subnetMaskLength);
         io.to(req.query.id).emit('net-length', ipFinder.cidrSubnet(ipnet).numHosts);
+        saveNetworks(req.query.user, [ipFinder.cidrSubnet(req.query.ip)])
         let ips = await ipsFinder(ipnet);
         let finishedLoop = false;
         completeScan[req.query.id] = {

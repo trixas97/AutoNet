@@ -20,25 +20,25 @@
             <div class="element1">
               <q-card>
                 <span class="title">First IP</span>
-                <span class="value">192.168.78.1</span>
+                <span class="value">{{firstIp}}</span>
               </q-card>
             </div>
             <div class="element2">
               <q-card>
                 <span class="title">Devices</span>
-                <span class="value">15</span>
+                <span class="value">{{devices}}</span>
               </q-card>
             </div>
             <div class="element3">
               <q-card>
-                <span class="title">Default Gateway</span>
-                <span class="value">192.168.78.254</span>
+                <span class="title">Last Ip</span>
+                <span class="value">{{lastIp}}</span>
               </q-card>
             </div>
             <div class="element4">
               <q-card>
                 <span class="title">Broadcast</span>
-                <span class="value">192.168.78.255</span>
+                <span class="value">{{broadIp}}</span>
               </q-card>
             </div>
             <div class="tableComp">
@@ -51,7 +51,10 @@
 
 <script>
 import TableInfo from "@/components/Dashboard/Table.vue";
-import { ref } from 'vue'
+import store from '@/store'
+import { ref, watch } from 'vue'
+import { computed } from '@vue/runtime-core';
+import _ from "lodash";
 export default {
   components:{
     TableInfo
@@ -59,33 +62,51 @@ export default {
   props:{
       ipnet: String
   },
-  setup(){
-    let privilege = ref("");
-    let privilegeStore = "";
-    let configure = ref("");
-    let configureStore = "";
+  setup(props){
+
+      let nodesFromWatch = ref(store.getters['UserData/getNodes'])
+      let nodes = computed(() => ref(nodesFromWatch));
+      watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
+        if(dataNodes != null){
+            nodesFromWatch.value = dataNodes
+            nodes = ref(nodesFromWatch)
+        }
+      })
+
+      let netFromWatch = ref(store.getters['UserData/getNetworkByIp'](props.ipnet))
+      let net = computed(() => ref(netFromWatch));
+      watch(() => _.cloneDeep(store.getters['UserData/getNetworkByIp'](props.ipnet)), (dataNet) => {
+        if(dataNet != null){
+            netFromWatch.value = dataNet
+            net = ref(netFromWatch)
+        }
+      })
     return{
-      privilege,
-      privilegeStore,
-      configure,
-      configureStore,
+      nodes,
+      net
     }
   },
-  methods:{
-    focusPr(){
-      this.privilege = this.privilegeStore;
+  computed:{
+    firstIp(){
+        return this.net.value.firstAddress.value
     },
-    blurPr(){
-      this.privilegeStore = this.privilege;
-      this.privilege = "";
+    lastIp(){
+        return this.net.value.lastAddress.value
     },
-    focusCo(){
-      this.configure = this.configureStore;
+    broadIp(){
+        return this.net.value.broadcastAddress.value
     },
-    blurCo(){
-      this.configureStore = this.configure;
-      this.configure = "";
+    devices(){
+      let count = 0
+      this.nodes.value.data.map(node =>{
+        node.interfaces.map(inter => {
+          if(inter.network.value == this.ipnet)
+            count++
+        })
+      })
+      return count
     }
+
   }
 
 }

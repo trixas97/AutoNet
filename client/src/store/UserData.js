@@ -142,6 +142,9 @@ export const UserDataModule = {
         getNetworks(state) {
             return state.networks.data
         },
+        getNetworkByIp: (state) => (ip) => {
+            return state.networks.data.find(network => network.ipNetwork.value === ip)
+        },
         getNetworksFull(state) {
             return state.networks
         },

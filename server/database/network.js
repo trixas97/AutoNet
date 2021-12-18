@@ -8,17 +8,37 @@ const saveNetworks = (username, networks) => {
         networks.map(async network => {
             let net = new Network({
                 user: user._id,
-                ip: {
+                ipNetwork: {
                     name: 'IP Network',
-                    value: network.ip
+                    value: `${network.networkAddress}/${network.subnetMaskLength}`
                 },
-                mask: {
+                ipAddress: {
+                    name: 'IP Address',
+                    value: network.networkAddress
+                },
+                firstAddress:{
+                    name: 'First Address',
+                    value: network.firstAddress
+                },
+                lastAddress:{
+                    name: 'Last Address',
+                    value: network.lastAddress
+                },
+                broadcastAddress:{
+                    name: 'Broadcast Address',
+                    value: network.broadcastAddress
+                },
+                subnetMask: {
                     name: 'Mask',
-                    value: network.mask
+                    value: network.subnetMask
                 },
-                gateway: {
-                    name: 'Default Gateway',
-                    value: network.gateway
+                subnetMaskLength:{
+                    name: 'Mask Length',
+                    value: network.subnetMaskLength
+                },
+                numHosts: {
+                    name: 'Number of Hosts',
+                    value: network.numHosts
                 }
             });
             res = await addNetworkToDB(net)

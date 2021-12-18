@@ -73,7 +73,8 @@ export default {
       autoScan: {
         path: `${location.protocol}//${location.hostname}:5000/api/devices?`,
         p1: "ip=",
-        p2: "&id="
+        p2: "&id=",
+        p3: "&user="
       }
     }
 
@@ -119,7 +120,7 @@ export default {
         }
       });
 
-      axios.get(`${apiLinks.autoScan.path}${apiLinks.autoScan.p1}${network}${apiLinks.autoScan.p2}${socket.id}`).then(response => {
+      axios.get(`${apiLinks.autoScan.path}${apiLinks.autoScan.p1}${network}${apiLinks.autoScan.p2}${socket.id}${apiLinks.autoScan.p3}${store.getters['User/getUsername']}`).then(response => {
         console.log(response.data);
         let flagNetExist = false;
         nodes.forEach((element) => { 

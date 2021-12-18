@@ -41,19 +41,10 @@ export default {
         { name: 'type', align: 'center', field: 'type', sortable: false },
         { name: 'network', label: 'IP Network', align: 'center', field: 'network', sortable: false },
         { name: 'mask', label: 'Mask', align: 'center', field: 'mask', sortable: false },
-        { name: 'gateway', label: 'Default Gateway', align: 'center', field: 'gateway', sortable: false },
-        { name: 'devices', label: 'Devices', align: 'center', field: 'devices', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
+        { name: 'maxDevices', label: 'Max Devices', align: 'center', field: 'maxDevices', sortable: false },
+        { name: 'devices', label: 'Current Devices', align: 'center', field: 'devices', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
         { name: 'delete', label: '', field: 'delete', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
       ]
-
-      let nodesFromWatch = ref(store.getters['UserData/getNodes'])
-      let nodes = computed(() => ref(nodesFromWatch));
-      watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
-        if(dataNodes != null){
-            nodesFromWatch.value = dataNodes
-            nodes = ref(nodesFromWatch)
-        }
-      })
 
       let networksFromWatch = ref(store.getters['UserData/getNetworks'])
       let networks = computed(() => ref(networksFromWatch));
@@ -68,7 +59,7 @@ export default {
          filter: ref(''),
          ipNetOpen: ref(''),
          dialogFlag: ref(false),
-         nodes: ref(nodes),
+        //  nodes: ref(nodes),
          networks: ref(networks),
          columns
       }
@@ -86,12 +77,13 @@ export default {
       rows(){
         let rowsArray = [];
         let networksArray = this.networks.value;
+        console.log(networksArray);
         networksArray.map(network => {
           rowsArray.push({
             type: 'network',
-            network: network.ip.value,
-            mask: network.mask.value,
-            gateway: network.gateway.value,
+            network: network.ipNetwork.value,
+            mask: network.subnetMask.value,
+            maxDevices: network.numHosts.value,
             devices: 13,
             delete: ''
           })

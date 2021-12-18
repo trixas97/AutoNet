@@ -7,18 +7,38 @@ const networkSchema = new mongoose.Schema({
         required: true,
         ref: 'users'
     },
-    ip:{
+    ipNetwork:{
         type: Object,
         required: true
     },
-    mask:{
+    ipAddress:{
         type: Object,
         required: true
     },
-    gateway:{
+    firstAddress:{
         type: Object,
         required: true
-    }
+    },
+    lastAddress:{
+        type: Object,
+        required: true
+    },
+    broadcastAddress:{
+        type: Object,
+        required: true
+    },
+    subnetMask:{
+        type: Object,
+        required: true
+    },
+    subnetMaskLength:{
+        type: Object,
+        required: true
+    },
+    numHosts:{
+        type: Object,
+        required: true
+    },
 })
 
 module.exports = mongoose.model('networks',networkSchema);
