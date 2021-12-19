@@ -25,14 +25,14 @@
             </div>
             <div class="element2">
               <q-card>
-                <span class="title">Devices</span>
-                <span class="value">{{devices}}</span>
+                <span class="title">Last Ip</span>
+                <span class="value">{{lastIp}}</span>
               </q-card>
             </div>
             <div class="element3">
               <q-card>
-                <span class="title">Last Ip</span>
-                <span class="value">{{lastIp}}</span>
+                <span class="title">Devices</span>
+                <span class="value">{{devicesCount}}</span>
               </q-card>
             </div>
             <div class="element4">
@@ -42,7 +42,7 @@
               </q-card>
             </div>
             <div class="tableComp">
-              <TableInfo />
+              <TableInfo :rows="devices" :columns="columns" />
             </div>
           </div>
       </q-card>
@@ -64,27 +64,69 @@ export default {
   },
   setup(props){
 
-      let nodesFromWatch = ref(store.getters['UserData/getNodes'])
-      let nodes = computed(() => ref(nodesFromWatch));
-      watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
-        if(dataNodes != null){
-            nodesFromWatch.value = dataNodes
-            nodes = ref(nodesFromWatch)
-        }
-      })
+    let nodesFromWatch = ref(store.getters['UserData/getNodes'])
+    let nodes = computed(() => ref(nodesFromWatch));
+    watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
+      if(dataNodes != null){
+          nodesFromWatch.value = dataNodes
+          nodes = ref(nodesFromWatch)
+      }
+    })
 
-      let netFromWatch = ref(store.getters['UserData/getNetworkByIp'](props.ipnet))
-      let net = computed(() => ref(netFromWatch));
-      watch(() => _.cloneDeep(store.getters['UserData/getNetworkByIp'](props.ipnet)), (dataNet) => {
-        if(dataNet != null){
-            netFromWatch.value = dataNet
-            net = ref(netFromWatch)
-        }
-      })
+    let netFromWatch = ref(store.getters['UserData/getNetworkByIp'](props.ipnet))
+    let net = computed(() => ref(netFromWatch));
+    watch(() => _.cloneDeep(store.getters['UserData/getNetworkByIp'](props.ipnet)), (dataNet) => {
+      if(dataNet != null){
+          netFromWatch.value = dataNet
+          net = ref(netFromWatch)
+      }
+    })
+
+    const columns = [
+      { name: 'type', label: 'Type', align: 'left', field: row => row.type, format: val => `${val}`, sortable: true },
+      { name: 'name',  label: 'Name', align: 'center', field: 'name', sortable: false },
+      { name: 'ip', label: 'IP', field: 'thisNetIp', align: 'center', sortable: false },
+      // { name: 'network', label: 'Network', align: 'center', field: 'network' },
+      // { name: 'traffic', label: 'Traffic (Kbps)', align: 'center', field: 'traffic', sortable: true },
+      { name: 'status', label: 'Status', align: 'center', field: 'status', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
+      // { name: 'delete', label: '', field: 'delete', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
+    ]
+
     return{
       nodes,
-      net
+      net,
+      columns
     }
+  },
+  methods:{
+          mainIp(node){
+        try{
+          for(let k=0; k < node.interfaces.length; k++){
+            if(node.interfaces[k].mainIf.value){
+              if(node.interfaces[k].ip_address.value.includes('/'))
+                return node.interfaces[k].ip_address.value.split('/')[0]
+              else
+                return node.interfaces[k].ip_address.value
+            }
+          }
+        }catch(error){
+          return ''
+        }
+        return ''
+      },
+      network(node){
+        try{
+          let mainip = this.mainIp(node)
+          for(let k=0; k < node.route_table.length; k++){
+            if(node.route_table[k].network.value == mainip){
+              return `${node.route_table[k-1].network.value}/${node.route_table[k-1].mask.value}`
+            }
+          }
+        }catch(error){
+          return ''
+        }
+        return ''
+      }
   },
   computed:{
     firstIp(){
@@ -96,7 +138,7 @@ export default {
     broadIp(){
         return this.net.value.broadcastAddress.value
     },
-    devices(){
+    devicesCount(){
       let count = 0
       this.nodes.value.data.map(node =>{
         node.interfaces.map(inter => {
@@ -105,6 +147,26 @@ export default {
         })
       })
       return count
+    },
+    devices(){
+      let nodes = []
+      this.nodes.value.data.map(node =>{
+        node.interfaces.map(inter => {
+          if(inter.network.value == this.ipnet){
+            nodes.push({
+              type: node.type.value,
+              name: node.name.value,
+              ip: this.mainIp(node),
+              thisNetIp: inter.ip_address.value,
+              network: this.network(node),
+              // traffic: 1.5,
+              status:  node.status.value,
+              // delete: '',
+            })
+          }
+        })
+      })
+      return nodes
     }
 
   }
