@@ -1,18 +1,21 @@
 <template>
-    <div class="q-pa-md">
-    <q-table 
-      class="dashboard-table"
+  <div class="q-pa-md">
+    <q-table
+      ref="tableRef"
+      title="Devices"
+      class="newTopoTable"
       :rows="rows"
       :columns="columns"
-      row-key="ip"
-      flat
+      row-key="name"
+      :selected-rows-label="getSelectedString"
+      selection="multiple"
+      :selected="selected"
+      @selection="onSelection"
       hide-pagination
-      :filter="filter"
       :pagination="pagination"
       bordered
     >
-
-      <template v-slot:body="props">
+    <!-- <template v-slot:body="props">
         <q-tr :props="props" >
 
           <q-td
@@ -31,55 +34,91 @@
             <q-img v-if="col.name == 'type' && col.value == 'Switch'" src="@/assets/elements/switch.svg" />
             <q-img v-if="col.name == 'type' && col.value == 'topology'" src="@/assets/elements/topology.svg" />      
             <q-img v-if="col.name == 'type' && col.value == 'network'" src="@/assets/elements/network.svg" />
-
-            <q-btn size="md" v-if="col.name == 'delete'" color="negative" round dense @click="deleteItem" icon="delete_forever" />
           </q-td>
           
         </q-tr>
-      </template>
+      </template> -->
     </q-table>
   </div>
 </template>
 
-
 <script>
 import { ref } from 'vue'
 
+const columns = [
+  {
+    name: 'desc',
+    required: true,
+    label: 'Name',
+    align: 'center',
+    field: row => row.name,
+    format: val => `${val}`,
+    sortable: true
+  },
+  { name: 'ip', align: 'center', label: 'Ip', field: 'calories'},
+  { name: 'network', label: 'Network', field: 'fat', align: 'center'},
+  { name: 'traffic', label: 'Traffic (kbps)', field: 'carbs',  align: 'center'},
+]
+
+const rows = [
+  {
+    name: 'R1',
+    calories: '192.168.78.1 /24',
+    fat: '192.168.78.0 /24',
+    carbs: 1500,
+    protein: 4.0,
+    sodium: 250,
+    calcium: '14%',
+    iron: '1%'
+  },
+  {
+    name: 'S1',
+    calories: '13.13.13.1 /24',
+    fat: '13.13.13.0 /24',
+    carbs: 1.5,
+    protein: 4.3,
+    sodium: 129,
+    calcium: '8%',
+    iron: '1%'
+  },
+
+]
 
 export default {
-  props:{
-    filter: String,
-    columns: Array,
-    rows: Array
-  },
   setup () {
+    const selected = ref([])
+    const lastIndex = ref(null)
+    const tableRef = ref(null)
 
     return {
+      selected,
+      lastIndex,
+      tableRef,
+      columns,
+      rows,
         pagination: ref({
           rowsPerPage: 0
         }),
+
+      getSelectedString () {
+        return selected.value.length === 0 ? '' : `${selected.value.length} device${selected.value.length > 1 ? 's' : ''} selected of ${rows.length}`
+      },
+
+      onSelection ({ rows, added }) {
+          rows.map(row => {
+              if(added){
+                  selected.value.push(row)
+              }else{
+                  selected.value.splice(selected.value.indexOf(row),1)
+              }
+          })
+      }
     }
   },
-  methods: {
-    deleteItem(){
-      console.log("Delete");
-    },
+  methods:{
     showItem(key, props) {
-      console.log(props);
-      if(key != 'delete'){
-        switch(props.row.type){
-          case 'topology':
-            this.$router.push('topology?name='+props.row.name);
-            break;
-          case 'network':
-            this.$emit('networkInfo', props.row.network);
-            break;
-          default:
-            this.$router.push('device?ip='+ props.row.ip);
-            break;
-        }
-        
-      }
+        console.log(key);
+        console.log(props);
     },
   }
 }
@@ -87,23 +126,26 @@ export default {
 
 <style lang="scss" >
 @import "@/styles/quasar.variables.scss";
-    .dashboard-table{
-        max-height: 50em;
+    .newTopoTable{
+        max-height: 30em;
 
         .q-table__top, .q-table__bottom, thead tr:first-child th {  
             background-color: teal;
             color: white;
             font: {
-                size: 1.2em;
+                size: 1em;
                 weight: bold;
                 family: Roboto;
             }
         }
+        
 
         thead tr th {
             position: sticky;
             z-index: 1;
-            height: 4em;
+            height: 2em;
+            
+
             // text-align: center;
         }
         thead tr:first-child th {
@@ -136,5 +178,6 @@ export default {
         }
 
     }
+
 
 </style>

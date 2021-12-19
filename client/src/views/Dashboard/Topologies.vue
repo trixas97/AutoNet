@@ -16,31 +16,33 @@
             </q-input>
         </div>
       </div>
-      <Dialog v-model="dialogFlag" :ipnet="ipNetOpen"/>
+      <NewTopology v-model="dialogFlag"/>
       <Table :filter="filter" :rows="rows" :columns="columns"/>
     </div>
   </div>
 </template>
 
 <script>
-
+import NewTopology from '@/components/Dashboard/NewTopology'
 import { useStore } from 'vuex';
 import { ref, watch } from 'vue'
 import Table from '@/components/Dashboard/Table'
+
 import { computed } from '@vue/runtime-core';
 import _ from "lodash";
 
 export default {
     name: 'Topologies',
     components: {
-      Table
+      Table,
+      NewTopology
     },
     setup(){
       const store = useStore();
       const columns = [
         { name: 'type', align: 'center', field: 'type', sortable: true },
         { name: 'name',  label: 'Name', align: 'center', field: 'name', sortable: true },
-        { name: 'network', label: 'IP Network', align: 'center', field: 'network' },
+        // { name: 'network', label: 'IP Network', align: 'center', field: 'network' },
         { name: 'netlength', label: 'Networks', align: 'center', field: 'netlength', sortable: true },
         { name: 'devices', label: 'Devices', align: 'center', field: 'devices', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
         { name: 'delete', label: '', field: 'delete', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
@@ -64,12 +66,8 @@ export default {
       }
     },
     methods:{
-      openDialog(value){
-        this.ipNetOpen = value;
-        this.dialogFlag = true
-      },
       newTopology(){
-        
+        this.dialogFlag = true
       }
     },
     computed:{
@@ -80,7 +78,7 @@ export default {
           rowsArray[i] ={
             type: 'topology',
             name: toposArray[i].name,
-            network: '192.168.78.0 / 24',
+            // network: '192.168.78.0 / 24',
             netlength: 1,
             devices: toposArray[i].nodes.length,
             delete: '',
