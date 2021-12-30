@@ -159,7 +159,11 @@ export const UserDataModule = {
             return state.topologies.data.find(topo => topo.name === name)
         },
         getTopologyNodes: (state) => (name) => {
-            return state.nodes.data.filter(node => state.topologies.data.find(topo => topo.name === name).nodes.find(nodeTopo => nodeTopo.id === node._id))
+            try{
+                return state.nodes.data.filter(node => state.topologies.data.find(topo => topo.name === name).nodes.find(nodeTopo => nodeTopo.id === node._id))
+            }catch{
+                return []
+            }
         },
         getLinks(state){
             return state.links
