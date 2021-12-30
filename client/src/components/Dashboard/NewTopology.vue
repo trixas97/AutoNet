@@ -9,8 +9,7 @@
           </q-toolbar>
           <div class="infoContent">
               <q-input outlined v-model="name" label="Name" />
-                        <!-- <div > -->
-            <Table class="newTopoTable"/>  
+            <Table class="newTopoTable" :rows="rows"/>  
             <div class="btn"> 
                 <q-btn
                     size="22px"
@@ -27,20 +26,77 @@
 
 <script>
 import Table from "@/components/Dashboard/NewTopologyTable.vue";
-// import store from '@/store'
-// import { ref, watch } from 'vue'
-// import { computed } from '@vue/runtime-core';
-// import _ from "lodash";
+import store from '@/store'
+import { ref, watch } from 'vue'
+import { computed } from '@vue/runtime-core';
+import _ from "lodash";
 export default {
     components: {
         Table
     },
     setup(){
-        return{
-            name: ''
-        }
-    }
 
+      let nodesFromWatch = ref(store.getters['UserData/getNodes'])
+      let nodes = computed(() => ref(nodesFromWatch));
+      watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
+        if(dataNodes != null){
+            nodesFromWatch.value = dataNodes
+            nodes = ref(nodesFromWatch)
+        }
+      })
+
+      return{
+          name: '',
+          nodes: ref(nodes)
+      }
+    },
+    methods: {
+      mainIp(node){
+        try{
+          for(let k=0; k < node.interfaces.length; k++){
+            if(node.interfaces[k].mainIf.value){
+              if(node.interfaces[k].ip_address.value.includes('/'))
+                return node.interfaces[k].ip_address.value.split('/')[0]
+              else
+                return node.interfaces[k].ip_address.value
+            }
+          }
+        }catch(error){
+          return ''
+        }
+        return ''
+      },
+      network(node){
+        try{
+          let mainip = this.mainIp(node)
+          for(let k=0; k < node.route_table.length; k++){
+            if(node.route_table[k].network.value == mainip){
+              return `${node.route_table[k-1].network.value}/${node.route_table[k-1].mask.value}`
+            }
+          }
+        }catch(error){
+          return ''
+        }
+        return ''
+      }
+    },
+    computed: {
+      rows(){
+        let rowsArray = [];
+        let nodesArray = this.nodes.value.data;
+        for(let  i=0; i< nodesArray.length; i++){
+          rowsArray[i] ={
+            name: nodesArray[i].name.value,
+            ip: this.mainIp(nodesArray[i]),
+            network: this.network(nodesArray[i]),
+            traffic: 1542
+          };
+          if(i == nodesArray.length-1)
+            return(rowsArray)
+        }
+        return rowsArray
+      } 
+  }
 }
 </script>
 
