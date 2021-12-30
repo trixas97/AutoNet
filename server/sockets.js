@@ -3,7 +3,7 @@
 const userData = require('./database/userData');
 let mainIo;
 const listeners = (io) => {
-    const { setNodesTopology } = require('./database/topology');
+    const { setNodesTopology, newTopology } = require('./database/topology');
     const { saveNetworks } = require('./database/network')
     io.on('connection', (socket) => {
         socket.on('initUser', async (data) => {
@@ -30,9 +30,18 @@ const listeners = (io) => {
             console.log(`Changes TOPOLOGY from ${data.user}` );
             let msg = {
                 topology: data.topology,
-                type: 'topology'
+                type: 'topology',
+                method: data.method
             }
-            setNodesTopology(data.topology)
+
+            switch(data.method){
+                case 'new': 
+                    newTopology(data.name, data.nodes)
+                    break
+                case 'update':
+                    setNodesTopology(data.topology)
+                    break
+            }
             io.emit(data.user, msg)
         })
 
