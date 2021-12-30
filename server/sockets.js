@@ -36,7 +36,7 @@ const listeners = (io) => {
 
             switch(data.method){
                 case 'new': 
-                    newTopology(data.name, data.nodes)
+                    newTopology(data.user, data.name, data.nodes)
                     break
                 case 'update':
                     setNodesTopology(data.topology)

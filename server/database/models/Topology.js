@@ -7,6 +7,9 @@ const topologySchema = new mongoose.Schema({
         required: true,
         ref: 'users'
     },
+    name: {
+        type: String
+    },
     nodes: {
         type: Array,
         required: false

@@ -1,5 +1,7 @@
 const Topology = require('./models/Topology');
 const Node = require('./node');
+const mongoose = require('mongoose');
+const { getUser } = require('./userData');
 
 const modifyTypeTopo = {
     save: 'save',
@@ -17,12 +19,12 @@ const getTopologies = async (ip) => {
     return topologies
 }
 
-const newTopology = async (name, nodes) => {
+const newTopology = async (user, name, nodes) => {
 
-    nodes = await modifyDataTopo(nodes, modifyTypeTopo.save);
-
+    nodes = await modifyDataTopos(nodes, modifyTypeTopo.save);
+    user = await getUser(user)
     const topology = new Topology({
-        user: req.user._id,
+        user: mongoose.Types.ObjectId(user._id),
         name: name,
         nodes: nodes
     })
@@ -45,7 +47,7 @@ const setNodesTopology = async (topology) => {
 }
 
 
-modifyDataTopo = async (data, type) => {
+modifyDataTopos = async (data, type) => {
     return new Promise(async resolve => { 
         let res = [];
         switch(type){
