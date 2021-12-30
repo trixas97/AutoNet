@@ -54,9 +54,11 @@ modifyDataTopos = async (data, type) => {
             
             case modifyTypeTopo.save:
                 let position = 0;
+                if (data.length ==0)
+                    resolve([])
                 for (let i=0; i < data.length; i++){
-                    data[i] = await new Promise(resolve => resolve({ id: mongoose.Types.ObjectId(data[i]), x: position, y: 0, label: { x: 0, y: 0 } }));
-                    position += 50
+                    data[i] = await new Promise(resolve => resolve({ id: mongoose.Types.ObjectId(data[i]), x: position, y: 0, label: { x: position+20, y: position+40 } }));
+                    position += 60
                     if(i == data.length-1) resolve(data);
                 }
                 break;

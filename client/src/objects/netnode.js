@@ -23,6 +23,7 @@ export default class NetNode {
         }
         this.dragnode.onDragEnd = () => {
             this.labelPosition();
+            store.default.dispatch('UserData/updateTopology', {id: this.topoId, node: {id: this.id, x: this.dragnode.left, y: this.dragnode.top}, changedFromUser: true});
         }
 
     }

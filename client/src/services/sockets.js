@@ -70,9 +70,6 @@ export const sockets = () => {
     })
 
     watch(() => _.cloneDeep(store.getters['UserData/getNetworks']), (networks) => { 
-        console.log('tetetete');
-        console.log(initFlag.networks);
-        console.log(networks);
         if(initFlag.networks ){
             if(networks != null){
                 socket.emit('networks', {networks: networks, user: store.getters['User/getUsername']});
@@ -86,7 +83,7 @@ export const sockets = () => {
     watch(() => _.cloneDeep(store.getters['UserData/getTopologies']), (topos,prev) => { 
         if(initFlag.topologies && store.getters['UserData/getTopologiesFull'].changedFromUser){
             if(topos.length > prev.length){
-                socket.emit('topology', { user: store.getters['User/getUsername'], name: topos[topos.length-1].name, nodes:topos[topos.length-1].nodes.map(node => node.id), method:'new'})
+                socket.emit('topology', { user: store.getters['User/getUsername'], name: topos[topos.length-1].name, nodes:topos[topos.length-1].nodes, method:'new'})
             }else{
                 for (let i=0; i < topos.length; i++){
                     if(topos[i] != prev[i]) {
