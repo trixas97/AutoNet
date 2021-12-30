@@ -43,7 +43,8 @@ export const UserDataModule = {
             state.topologies.data = val
         },
         addTopology(state,val){
-            state.topologies.data.push(val);
+            state.topologies.data.push(val.data);
+            state.topologies.changedFromUser = val.changedFromUser
         },
         deleteTopology(state,val){
             state.topologies.data.splice(val, 1);

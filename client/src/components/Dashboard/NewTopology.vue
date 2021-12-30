@@ -9,13 +9,14 @@
           </q-toolbar>
           <div class="infoContent">
               <q-input outlined v-model="name" label="Name" />
-            <Table class="newTopoTable" :rows="rows"/>  
+            <Table class="newTopoTable" :rows="rows" :selected="selected"/>  
             <div class="btn"> 
                 <q-btn
                     size="22px"
                     class="q-px-xl q-py-xs"
                     color="positive"
                     label="Save"
+                    @click="newNode()"
                 />
             </div>
           </div>
@@ -35,7 +36,7 @@ export default {
         Table
     },
     setup(){
-
+      const selected = ref([])
       let nodesFromWatch = ref(store.getters['UserData/getNodes'])
       let nodes = computed(() => ref(nodesFromWatch));
       watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
@@ -46,7 +47,8 @@ export default {
       })
 
       return{
-          name: '',
+          selected,
+          name: ref(''),
           nodes: ref(nodes)
       }
     },
@@ -78,6 +80,13 @@ export default {
           return ''
         }
         return ''
+      },
+      newNode(){
+        console.log('ADDD NEWEEWW ' + this.name.value);
+        console.log(this.name);
+        console.log(this.selected);
+        console.log(this.selected.map(node => node.id));
+        store.dispatch('UserData/addTopology', {data: {name: this.name, nodes: this.selected.map(node => node.id)}, changedFromUser: true})
       }
     },
     computed: {
@@ -86,6 +95,7 @@ export default {
         let nodesArray = this.nodes.value.data;
         for(let  i=0; i< nodesArray.length; i++){
           rowsArray[i] ={
+            id: nodesArray[i]._id,
             name: nodesArray[i].name.value,
             ip: this.mainIp(nodesArray[i]),
             network: this.network(nodesArray[i]),

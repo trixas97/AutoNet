@@ -29,49 +29,33 @@ const columns = [
   { name: 'traffic', label: 'Traffic (kbps)', field: 'traffic',  align: 'center'},
 ]
 
-// const rows = [
-//   {
-//     name: 'R1',
-//     ip: '192.168.78.1 /24',
-//     network: '192.168.78.0 /24',
-//     traffic: 1500,
-//   },
-//   {
-//     name: 'S1',
-//     ip: '13.13.13.1 /24',
-//     network: '13.13.13.0 /24',
-//     traffic: 1.5,
-//   },
-// ]
-
 export default {
   props:{
-    rows: Array
+    rows: Array,
+    selected: Array
   },
   setup (props) {
-    const selected = ref([])
     const lastIndex = ref(null)
     const tableRef = ref(null)
 
     return {
-      selected,
       lastIndex,
       tableRef,
       columns,
-        pagination: ref({
-          rowsPerPage: 0
-        }),
+      pagination: ref({
+        rowsPerPage: 0
+      }),
 
       getSelectedString () {
-        return selected.value.length === 0 ? '' : `${selected.value.length} device${selected.value.length > 1 ? 's' : ''} selected of ${props.rows.length}`
+        return props.selected.length === 0 ? '' : `${props.selected.length} device${props.selected.length > 1 ? 's' : ''} selected of ${props.rows.length}`
       },
 
       onSelection ({ rows, added }) {
           rows.map(row => {
               if(added){
-                  selected.value.push(row)
+                  props.selected.push(row)
               }else{
-                  selected.value.splice(selected.value.indexOf(row),1)
+                  props.selected.splice(props.selected.indexOf(row),1)
               }
           })
       }

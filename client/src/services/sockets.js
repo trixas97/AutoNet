@@ -85,9 +85,13 @@ export const sockets = () => {
 
     watch(() => _.cloneDeep(store.getters['UserData/getTopologies']), (topos,prev) => { 
         if(initFlag.topologies && store.getters['UserData/getTopologiesFull'].changedFromUser){
-            for (let i=0; i < topos.length; i++){
-                if(topos[i] != prev[i]) {
-                    socket.emit('topology', {topology: topos[i], user: store.getters['User/getUsername']})
+            if(topos.length > prev.length){
+                socket.emit('topology', { user: store.getters['User/getUsername'], name: topos[topos.length-1].name, nodes:topos[topos.length-1].nodes.map(node => node.id), method:'new'})
+            }else{
+                for (let i=0; i < topos.length; i++){
+                    if(topos[i] != prev[i]) {
+                        socket.emit('topology', {topology: topos[i], user: store.getters['User/getUsername'], method: 'update'})
+                    }
                 }
             }
         }else
