@@ -82,10 +82,6 @@ export default {
         return ''
       },
       newNode(){
-        console.log('ADDD NEWEEWW ' + this.name.value);
-        console.log(this.name);
-        console.log(this.selected);
-        console.log(this.selected.map(node => node.id));
         store.dispatch('UserData/addTopology', {data: {name: this.name, nodes: this.selected.map(node => node.id)}, changedFromUser: true})
       }
     },

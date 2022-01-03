@@ -47,7 +47,8 @@ export const UserDataModule = {
             state.topologies.changedFromUser = val.changedFromUser
         },
         deleteTopology(state,val){
-            state.topologies.data.splice(val, 1);
+            state.topologies.data.splice(state.topologies.data.indexOf(state.topologies.data.find(topo => topo.name = val)), 1);
+            state.topologies.changedFromUser = true
         },
         updateTopology(state,val){
             let node = state.topologies.data.find(topology => topology._id == val.id).nodes.find(node => node.id == val.node.id)
@@ -110,8 +111,8 @@ export const UserDataModule = {
         addTopology({ commit }, val){
             commit('addTopology', val);
         },
-        deleteTopology({ commit }){
-            commit('deleteTopology');
+        deleteTopology({ commit }, val){
+            commit('deleteTopology', val);
         },
         updateTopology({ commit }, val){
             commit('updateTopology', val)

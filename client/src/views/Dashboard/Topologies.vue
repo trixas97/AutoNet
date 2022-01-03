@@ -17,7 +17,7 @@
         </div>
       </div>
       <NewTopology v-model="dialogFlag"/>
-      <Table :filter="filter" :rows="rows" :columns="columns"/>
+      <Table :filter="filter" :rows="rows" :columns="columns" @delete="deleteTopo"/>
     </div>
   </div>
 </template>
@@ -45,6 +45,7 @@ export default {
         // { name: 'network', label: 'IP Network', align: 'center', field: 'network' },
         { name: 'netlength', label: 'Networks', align: 'center', field: 'netlength', sortable: true },
         { name: 'devices', label: 'Devices', align: 'center', field: 'devices', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
+        { name: 'edit', label: '', field: 'edit', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
         { name: 'delete', label: '', field: 'delete', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
       ]
 
@@ -68,6 +69,9 @@ export default {
     methods:{
       newTopology(){
         this.dialogFlag = true
+      },
+      deleteTopo(name){
+        this.store.dispatch('UserData/deleteTopology', name);
       }
     },
     computed:{

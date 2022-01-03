@@ -32,7 +32,8 @@
             <q-img v-if="col.name == 'type' && col.value == 'topology'" src="@/assets/elements/topology.svg" />      
             <q-img v-if="col.name == 'type' && col.value == 'network'" src="@/assets/elements/network.svg" />
 
-            <q-btn size="md" v-if="col.name == 'delete'" color="negative" round dense @click="deleteItem" icon="delete_forever" />
+            <q-btn size="md" v-if="col.name == 'edit'" color="positive" round dense @click="deleteItem(props)" icon="edit" />
+            <q-btn size="md" v-if="col.name == 'delete'" color="negative" round dense @click="deleteItem(props)" icon="delete_forever" />
           </q-td>
           
         </q-tr>
@@ -61,12 +62,14 @@ export default {
     }
   },
   methods: {
-    deleteItem(){
-      console.log("Delete");
+    deleteItem(props){
+      this.$emit('delete', props.row.name)
     },
+    // editItem(props){
+
+    // },
     showItem(key, props) {
-      console.log(props);
-      if(key != 'delete'){
+      if(key != 'delete' && key != 'edit'){
         switch(props.row.type){
           case 'topology':
             this.$router.push('topology?name='+props.row.name);

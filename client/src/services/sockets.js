@@ -36,7 +36,8 @@ export const sockets = () => {
                 //code
                 break;
             case 'topology':
-                store.dispatch('UserData/updateTopologyFull', msg.topology)
+                if(msg.method != 'delete')
+                    store.dispatch('UserData/updateTopologyFull', msg.topology)
             break;
             case 'nodes':
                 store.dispatch('UserData/setNodes', msg.nodes);
@@ -84,6 +85,8 @@ export const sockets = () => {
         if(initFlag.topologies && store.getters['UserData/getTopologiesFull'].changedFromUser){
             if(topos.length > prev.length){
                 socket.emit('topology', { user: store.getters['User/getUsername'], name: topos[topos.length-1].name, nodes:topos[topos.length-1].nodes, method:'new'})
+            }else if(topos.length < prev.length) {
+                socket.emit('topology', { user: store.getters['User/getUsername'], name: prev.find(topo => !topos.includes(topo)).name, method:'delete'})
             }else{
                 for (let i=0; i < topos.length; i++){
                     if(topos[i] != prev[i]) {

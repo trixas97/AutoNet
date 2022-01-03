@@ -46,6 +46,15 @@ const setNodesTopology = async (topology) => {
     }
 }
 
+const deleteTopology = async (user, name) => {
+    user = await getUser(user)
+    try{
+        const deletedTopo = await Topology.deleteOne({user: user._id, name: name})
+    }catch(err){
+        console.log(err)
+    }
+}
+
 
 modifyDataTopos = async (data, type) => {
     return new Promise(async resolve => { 
@@ -71,3 +80,4 @@ modifyDataTopos = async (data, type) => {
 module.exports.getTopologies = getTopologies;
 module.exports.setNodesTopology = setNodesTopology;
 module.exports.newTopology = newTopology;
+module.exports.deleteTopology = deleteTopology;
