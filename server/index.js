@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const socket = require('socket.io');
 const mongoose = require('mongoose');
+const defaultGateway = require('default-gateway');
+const { networkInterfaces } = require('os');
 require('dotenv/config');
 
 const app = express();
@@ -28,6 +30,7 @@ const nodesFinder = require('./routes/api/nodes_find.js')(io);
 const nodesSave = require('./routes/api/nodes_save.js')(io);
 const saveTopology = require('./routes/api/topology');
 const links = require('./routes/api/links');
+const { getServerInfo, updateServerInfo, addServerInfo } = require('./database/server');
 const consoleDevice = require('./routes/api/console')(io);
 
 // Middleware
@@ -41,16 +44,37 @@ app.use('/api/links', links);
 app.use('/api/console', consoleDevice);
 
 
-
-
 mongoose.connect(
-  process.env.DB_CONNECTION, { useUnifiedTopology: true, useNewUrlParser: true }, (err) => {
+  process.env.DB_CONNECTION, { useUnifiedTopology: true, useNewUrlParser: true }, async (err) => {
     
     if(err){
       throw err;
     }
     
     console.log("connected to DB!");
+
+    let server = await getServerInfo()
+    if(!server){
+      const nets = networkInterfaces();
+      const results = Object.create(null); // Or just '{}', an empty object
+
+      for (const name of Object.keys(nets)) {
+        for (const net of nets[name]) {
+        // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+          if (net.family === 'IPv4' && !net.internal) {
+            if (!results[name]) {
+              results[name] = [];
+            }
+              await results[name].push(net.address);
+          }
+        }
+      }
+      const {interface} = defaultGateway.v4.sync();
+      addServerInfo(results[interface][0], process.env.PORT || 5000)
+    }else{
+      updateServerInfo(server)
+    }
+
 
   }
 );
