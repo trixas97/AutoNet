@@ -3,6 +3,7 @@ export const UserDataModule = {
     namespaced: true,
 
     state: {
+        server: {},
         nodes: {data: [], changedFromUser: false},
         networks: {data: [], changedFromUser: false},
         topologies: {data: [], changedFromUser: false},
@@ -76,6 +77,9 @@ export const UserDataModule = {
             state.links.splice(val, 1);
         },
 
+        setServer(state, val){
+            state.server = val
+        }
     },
 
     actions: {
@@ -132,9 +136,16 @@ export const UserDataModule = {
             commit('deleteLink');
         },
 
+        setServer({ commit }, val){
+            commit('setServer', val)
+        }
+
     },
 
     getters: {
+        getServer(state){
+            return state.server
+        },
         getNodes(state){
             return state.nodes
         },

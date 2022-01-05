@@ -5,12 +5,13 @@ const getServerInfo = async () => {
     return server
 }
 
-const addServerInfo = async (ip, port) => {
+const addServerInfo = async (ip, port, frontPort) => {
 
     const server = new Server({
         address: {
             ip: ip,
-            port: port
+            port: port,
+            frontPort: frontPort
         },
         timestamp: Date.now()
     });

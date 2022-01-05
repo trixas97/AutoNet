@@ -31,6 +31,8 @@ export const sockets = () => {
                 store.dispatch('UserData/setTopologies', msg.data.topologies);
                 store.dispatch('UserData/setLinks', msg.data.links);
                 store.dispatch('UserData/setNetworks', msg.data.networks);
+                msg.data.server.users = msg.data.users
+                store.dispatch('UserData/setServer', msg.data.server)
                 break;
             case 'topologies':
                 //code

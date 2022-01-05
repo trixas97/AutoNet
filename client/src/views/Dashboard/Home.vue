@@ -5,11 +5,11 @@
         <div class="title"><q-icon name="dns" />Server</div>
       </div>
       <div class="serverbody">
-        <div class="element"><span class="label"><q-icon class="text-secondary" name="label"/> Ip:</span><span class="value">192.168.78.1</span></div>
-        <div class="element"><span class="label"><q-icon class="text-secondary" name="label"/> Port:</span><span class="value">8080</span></div>
-        <div class="element"><span class="label"><q-icon class="text-secondary" name="label"/> Number of Users:</span><span class="value">5</span></div>
-        <div class="element"><span class="label"><q-icon class="text-secondary" name="label"/> Alive Time:</span><span class="value">5 Days, 3 Hours</span></div>
-        <div class="element currentUser"><span class="label"><q-icon class="text-darkblue" name="person"/> Loged as</span><span class="value text-primary">trixas97</span></div>
+        <div class="element"><span class="label"><q-icon class="text-secondary" name="label"/> Ip:</span><span class="value">{{server.value.address ? server.value.address.ip : ''}}</span></div>
+        <div class="element"><span class="label"><q-icon class="text-secondary" name="label"/> Port:</span><span class="value">{{server.value.address ? server.value.address.frontPort : ''}}</span></div>
+        <div class="element"><span class="label"><q-icon class="text-secondary" name="label"/> Number of Users:</span><span class="value">{{server.value.users}}</span></div>
+        <div class="element"><span class="label"><q-icon class="text-secondary" name="label"/> Alive Time:</span><span class="value">{{aliveTime}}</span></div>
+        <div class="element currentUser"><span class="label"><q-icon class="text-darkblue" name="person"/> Loged as</span><span class="value text-primary">{{user.value}}</span></div>
       </div>
     </div>
     <div class="dashboard-box dashboard-traffic">
@@ -70,9 +70,13 @@
 <script>
 import { ref, onMounted } from 'vue'
 import Chart from 'chart.js/auto';
+import store from '@/store';
+import { computed } from '@vue/runtime-core';
 export default {
   name: 'Home',
   setup(){
+    let server = computed(() => ref(store.getters['UserData/getServer']))
+    let user = computed(() => ref(store.getters['User/getUsername']))
     const chart = ref(null);
     const labels = [
       '192.168.78.0/24',
@@ -111,6 +115,8 @@ export default {
     return{
       config,
       chart,
+      server,
+      user,
       networks: 5,
       devices: 52
     }
@@ -121,7 +127,30 @@ export default {
     },
     openNetworks(){
       this.$router.push('networks');
+    },
+    days(seconds){
+      return `${parseInt(seconds/86400)} Days`
+    },  
+    hours(seconds){
+      return `${parseInt((seconds%86400)/3600)} Hours`
+    },
+    minutes(seconds){
+      return `${parseInt((seconds%3600)/60)} Minutes`
     }
+  },
+  computed:{
+    aliveTime(){
+      let timestamp = Date.now() - this.server.value.timestamp
+      let seconds = timestamp/1000
+      if(seconds >= 86400){
+        return `${this.days(seconds)}, ${this.hours(seconds)}`
+      }else if(seconds >= 3600){
+        return `${this.hours(seconds)}, ${this.minutes(seconds)}`
+      }else{
+        return this.minutes(seconds)
+      }
+    },
+
   }
 }
 </script>

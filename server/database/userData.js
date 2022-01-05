@@ -2,7 +2,8 @@ const Topology = require('./models/Topology');
 const Node = require('./models/Node');
 const Link = require('./models/Link');
 const User = require('./models/User');
-const Networks = require('./models/Network')
+const Networks = require('./models/Network');
+const Server = require('./models/Server');
 
 const getUserData = async (username) => {
     let user = await User.findOne({username: username})
@@ -12,7 +13,9 @@ const getUserData = async (username) => {
     let linksParameters = await linksParams(nodes)
     let links = await Link.find({ $or: linksParameters });
     let networks = await Networks.find({user: user._id})
-    let completeData = {nodes: nodes, topologies: topologies, links: links, networks: networks}
+    let server = await Server.findOne()
+    let users = await User.count()
+    let completeData = {server: server, nodes: nodes, topologies: topologies, links: links, networks: networks, users: users}
     return completeData
 }
 
