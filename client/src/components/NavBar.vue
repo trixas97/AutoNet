@@ -1,6 +1,7 @@
 <template>
 <q-header :class="`shadow-15`" elevated>
   <q-toolbar>
+    <q-btn dense flat round icon="menu" @click="openDrawer" />
     <q-space />
       <img class="logo q-pt-sm q-pb-sm" src="@/assets/logo.svg" alt="">
     <q-space />
@@ -10,7 +11,12 @@
 
 <script>
 export default {
-    name:'NavBar'
+    name:'NavBar',
+    methods:{
+      openDrawer(){
+        this.$emit('openDrawer', true)
+      }
+    }
 }
 </script>
 

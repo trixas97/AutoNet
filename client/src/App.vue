@@ -1,10 +1,14 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="layout">
 
-    <NavBar v-if="$route.name != 'Login' && !visibleComponent($route) "/>
+    <NavBar v-if="$route.name != 'Login' && !visibleComponent " @openDrawer="changeStateDrawer"/>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" :width="250" v-if="visibleComponent($route)" elevated class="bg-navbar">
-      <Drawer />
+    <q-drawer show-if-above side="left" :width="250" v-if="visibleComponent" elevated class="bg-navbar" >
+      <Drawer :showImg="true"/>
+    </q-drawer>
+
+    <q-drawer show-if-above v-model="visibleDrawer" side="left" :width="250" v-if="visibleDrawer" elevated overlay class="bg-navbar" >
+      <Drawer :showImg="false" @closeDrawer="changeStateDrawer"/>
     </q-drawer>
 
     <q-page-container class="layout" >
@@ -22,6 +26,7 @@ import Drawer from '@/components/Drawer.vue'
 import { sockets } from '@/services/sockets.js';
 import store from '@/store';
 import routes from '@/router/routes.js'
+import { useRoute } from 'vue-router';
 
 export default {
   name: 'LayoutDefault',
@@ -32,22 +37,36 @@ export default {
   },
 
   setup () {
+    const route = useRoute();
     if (store.state.User.token != null)
       sockets();
     return {
-      leftDrawerOpen: ref(false)
+      leftDrawerOpen: ref(false),
+      route
     }
   },
 
   methods: {
-    visibleComponent(route){
+    changeStateDrawer(val){
+      this.leftDrawerOpen = val
+    }
+  },
+  computed:{
+    visibleComponent(){
       let flag;
       try{
-        flag = routes.find(element => element.name == route.name).devname.includes('home') ? true : false
+        flag = routes.find(element => element.name == this.route.name).devname.includes('home') ? true : false
       }catch{
         flag = false
       }
       return flag;
+    },
+
+    visibleDrawer(){
+      if(!this.visibleComponent && this.leftDrawerOpen)
+        return true
+      else 
+        return false
     }
   }
 }

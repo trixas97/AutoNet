@@ -1,6 +1,6 @@
 <template>
   <div class="drawer-container">
-      <div class="logo-container"><img class="logo q-pt-sm q-pb-sm" src="@/assets/logo.svg" alt=""></div>
+      <div class="logo-container"><img class="logo q-pt-sm q-pb-sm" v-if="showImg" src="@/assets/logo.svg" alt=""></div>
     
     <q-list class="list">
       <div v-for="(menuItem, index) in menuList" :key="index">
@@ -23,6 +23,16 @@
                 </div>
             </div>
         </q-btn>
+    </div>
+    <div class=" absolute" v-if="!showImg" style="top: 1%; right: -5em">
+      <q-btn
+        dense
+        round
+        size="lg"
+        color="secondary"
+        icon="chevron_left"
+        @click="closeDrawer"
+      />
     </div>
   </div>
 </template>
@@ -58,6 +68,9 @@ const menuList = [
 ]
 
 export default {
+  props:{
+    showImg: {type: Boolean}
+  },
   setup () {
     return {
       menuList
@@ -66,6 +79,7 @@ export default {
   methods:{
     clickItem(value){
       if(value == 'Dashboard') value = '/'
+      this.closeDrawer()
       this.$router.push(value);
     },
     logout(){
@@ -74,6 +88,9 @@ export default {
       store.dispatch('NewNework/resetState')
       store.dispatch('UserData/resetState')
       this.$router.push('login'); 
+    },
+    closeDrawer(){
+      this.$emit('closeDrawer', false)
     }
   }
 }
