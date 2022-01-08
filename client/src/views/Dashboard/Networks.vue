@@ -55,13 +55,23 @@ export default {
         }
       })
 
+      let nodesFromWatch = ref(store.getters['UserData/getNodes'])
+      let nodes = computed(() => ref(nodesFromWatch));
+      watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
+        if(dataNodes != null){
+            nodesFromWatch.value = dataNodes
+            nodes = ref(nodesFromWatch)
+        }
+      })
+
       return{
          filter: ref(''),
          ipNetOpen: ref(''),
          dialogFlag: ref(false),
         //  nodes: ref(nodes),
          networks: ref(networks),
-         columns
+         columns,
+         nodes
       }
     },
     methods: {
@@ -71,7 +81,17 @@ export default {
       },
       newNetwork(){
         this.$router.push('autoScan');
-      }
+      },
+      netNodes(ipnet){
+        let count = 0
+        this.nodes.value.data.map(node =>{
+          node.interfaces.map(inter => {
+            if(inter.network.value == ipnet)
+            count++
+          })
+        })
+        return count
+      },
     },
     computed: {
       rows(){
@@ -84,7 +104,7 @@ export default {
             network: network.ipNetwork.value,
             mask: network.subnetMask.value,
             maxDevices: network.numHosts.value,
-            devices: 13,
+            devices: this.netNodes(network.ipNetwork.value),
             delete: ''
           })
         })
