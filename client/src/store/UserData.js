@@ -1,14 +1,18 @@
-export const UserDataModule = {
-    
-    namespaced: true,
-
-    state: {
+const getDefaultState = () => {
+    return {
         server: {},
         nodes: {data: [], changedFromUser: false},
         networks: {data: [], changedFromUser: false},
         topologies: {data: [], changedFromUser: false},
         links: []
-    },
+    }
+}
+
+export const UserDataModule = {
+    
+    namespaced: true,
+
+    state: getDefaultState(),
 
     mutations: {
         setNodes(state, val){
@@ -79,6 +83,10 @@ export const UserDataModule = {
 
         setServer(state, val){
             state.server = val
+        },
+
+        resetState (state) {
+            Object.assign(state, getDefaultState())
         }
     },
 
@@ -138,6 +146,10 @@ export const UserDataModule = {
 
         setServer({ commit }, val){
             commit('setServer', val)
+        },
+
+        resetState ({ commit }) {
+            commit('resetState')
         }
 
     },

@@ -1,12 +1,17 @@
+
+const getDefaultState = () => {
+    return {
+        username: null,
+        token: null,
+        socket: null
+    }
+}
+
 export const UserModule = {
 
     namespaced: true,
     
-    state:{
-        username: null,
-        token: null,
-        socket: null
-    },
+    state: getDefaultState(),
 
     mutations: {
         setToken(state, value) { 
@@ -17,6 +22,9 @@ export const UserModule = {
         },
         setUsername(state, val){
             state.username = val;
+        },
+        resetState (state) {
+            Object.assign(state, getDefaultState())
         }
     },
 
@@ -29,6 +37,9 @@ export const UserModule = {
         },
         setUsername({ commit }, val){
             commit('setUsername', val);
+        },
+        resetState ({ commit }) {
+            commit('resetState')
         }
     },
 

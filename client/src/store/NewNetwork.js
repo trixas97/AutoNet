@@ -1,11 +1,15 @@
-export const NewNetworkModule = {
-    namespaced: true,
-
-    state: {
+const getDefaultState = () => {
+    return {
         nodes: [],
         networks: [],
         finishedScan: true,
-    },
+    }
+}
+
+export const NewNetworkModule = {
+    namespaced: true,
+
+    state: getDefaultState(),
 
     // Mutations are functions that effect the STATE.
     mutations: {
@@ -23,6 +27,9 @@ export const NewNetworkModule = {
         },
         deleteNetwork(state){
             state.networks.pop();
+        },
+        resetState (state) {
+            Object.assign(state, getDefaultState())
         }
     },
 
@@ -43,6 +50,9 @@ export const NewNetworkModule = {
         deleteNetwork({ commit }){
             commit('deleteNetwork');
         },
+        resetState ({ commit }) {
+            commit('resetState')
+        }
     },
 
     getters: {

@@ -15,7 +15,7 @@
         </div>
     </q-list>
     <div class="logout-container">
-        <q-btn color="negative" push size="md">
+        <q-btn color="negative" push size="md" @click="logout">
             <div class="row items-center no-wrap">
                 <q-icon left name="logout" />
                 <div class="text-center logout-text">
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-
+import store from '@/store';
 const menuList = [
   {
     icon: 'space_dashboard',
@@ -67,6 +67,13 @@ export default {
     clickItem(value){
       if(value == 'Dashboard') value = '/'
       this.$router.push(value);
+    },
+    logout(){
+      store.dispatch('User/resetState')
+      store.dispatch('Socket/resetState')
+      store.dispatch('NewNework/resetState')
+      store.dispatch('UserData/resetState')
+      this.$router.push('login'); 
     }
   }
 }

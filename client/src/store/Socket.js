@@ -1,12 +1,16 @@
+const getDefaultState = () => {
+    return {
+        socketReady: false,
+        consoleDataEmit: null,
+        consoleDataListen: null
+    }
+}
+
 export const SocketModule = {
 
     namespaced: true,
     
-    state:{
-        socketReady: false,
-        consoleDataEmit: null,
-        consoleDataListen: null
-    },
+    state: getDefaultState(),
 
     mutations: {
         setConsoleDataEmit(state, val){
@@ -17,6 +21,9 @@ export const SocketModule = {
         },
         setSocketReady(state, val){
             state.socketReady = val;
+        },
+        resetState (state) {
+            Object.assign(state, getDefaultState())
         }
     },
 
@@ -29,6 +36,9 @@ export const SocketModule = {
         },
         setSocketReady(context, value) {
             context.commit('setSocketReady', value);
+        },
+        resetState ({ commit }) {
+            commit('resetState')
         }
     },
 
