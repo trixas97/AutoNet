@@ -148,8 +148,11 @@ export default {
     openNetworks(){
       this.$router.push('networks');
     },
+    years(seconds){
+      return `${parseInt(seconds/31536000)} Years`
+    },
     days(seconds){
-      return `${parseInt(seconds/86400)} Days`
+      return `${parseInt((seconds%31536000)/86400)} Days`
     },  
     hours(seconds){
       return `${parseInt((seconds%86400)/3600)} Hours`
@@ -172,7 +175,9 @@ export default {
     aliveTime(){
       let timestamp = Date.now() - this.server.value.timestamp
       let seconds = timestamp/1000
-      if(seconds >= 86400){
+      if(seconds >= 31536000){
+        return `${this.years(seconds)}, ${this.days(seconds)}, ${this.hours(seconds)}`
+      }else if(seconds >= 86400){
         return `${this.days(seconds)}, ${this.hours(seconds)}`
       }else if(seconds >= 3600){
         return `${this.hours(seconds)}, ${this.minutes(seconds)}`

@@ -86,12 +86,10 @@ export default {
           })
           avg += trInter / inter.traffic.value.length
         })
-        console.log(this.trafficParam);
         this.modifyTrafficHeader(avg)
         return avg
       },
       modifyTrafficHeader(traffic){
-        console.log(this.trafficParam);
         if(traffic >= 1000000000 && this.trafficParam <= 1000000000){
           this.trafficParam = 1000000000
         }else if(traffic >= 1000000 && this.trafficParam <= 1000000){
