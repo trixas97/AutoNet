@@ -99,7 +99,7 @@ export default {
     }
   },
   methods:{
-          mainIp(node){
+      mainIp(node){
         try{
           for(let k=0; k < node.interfaces.length; k++){
             if(node.interfaces[k].mainIf.value){

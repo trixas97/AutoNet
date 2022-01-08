@@ -37,10 +37,10 @@
           color="primary"
           track-color="grey-3"
         >
-          <span class="circular-value">{{ networks }}</span>
+          <span class="circular-value">{{ networks.value.length }}</span>
         </q-circular-progress>
-        <span class="info-value"><q-icon class="text-positive" name="circle"/><b> 192.168.78.0/24</b> is the biggest network (40 devices)</span>
-        <span class="info-value"><q-icon class="text-negative" name="circle"/><b> 13.13.13.0/24</b> is the smallest network (2 devices)</span>
+        <span class="info-value"><q-icon class="text-positive" name="circle"/><b> {{biggestNet.network}}</b> is the biggest network ({{biggestNet.nodes == 1 ? `${biggestNet.nodes} device` : `${biggestNet.nodes} devices`}})</span>
+        <span class="info-value"><q-icon class="text-negative" name="circle"/><b> {{smallestNet.network}}</b> is the smallest network ({{smallestNet.nodes == 1 ? `${smallestNet.nodes} device` : `${smallestNet.nodes} devices`}})</span>
       </div>
     </div>
     <div class="dashboard-box dashboard-devices" @click="openDevices">
@@ -58,25 +58,45 @@
           color="accent"
           track-color="grey-3"
         >
-        <span class="circular-value">{{ devices }}</span>
+        <span class="circular-value">{{ nodes.value.data.length }}</span>
         </q-circular-progress>
-      <span class="info-value"><q-icon class="text-positive" name="north"/> 2 devices are <span class="text-positive">Up</span></span>
-      <span class="info-value"><q-icon class="text-negative" name="south"/> 50 devices are <span class="text-negative">Down</span></span>
+      <span class="info-value"><q-icon class="text-positive" name="north"/> {{upNodes == 1 ? `${upNodes} device is` : `${upNodes} devices are`}} <span class="text-positive">Up</span></span>
+      <span class="info-value"><q-icon class="text-negative" name="south"/> {{downNodes == 1 ? `${downNodes} device is` : `${downNodes} devices are`}} <span class="text-negative">Down</span></span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import Chart from 'chart.js/auto';
 import store from '@/store';
+import _ from "lodash";
 import { computed } from '@vue/runtime-core';
 export default {
   name: 'Home',
   setup(){
     let server = computed(() => ref(store.getters['UserData/getServer']))
     let user = computed(() => ref(store.getters['User/getUsername']))
+
+    let networksFromWatch = ref(store.getters['UserData/getNetworks'])
+    let networks = computed(() => ref(networksFromWatch));
+    watch(() => _.cloneDeep(store.getters['UserData/getNetworks']), (dataNetworks) => {
+      if(dataNetworks != null){
+          networksFromWatch.value = dataNetworks
+          networks = ref(networksFromWatch)
+      }
+    })
+
+    let nodesFromWatch = ref(store.getters['UserData/getNodes'])
+    let nodes = computed(() => ref(nodesFromWatch));
+    watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
+      if(dataNodes != null){
+          nodesFromWatch.value = dataNodes
+          nodes = ref(nodesFromWatch)
+      }
+    })
+
     const chart = ref(null);
     const labels = [
       '192.168.78.0/24',
@@ -117,8 +137,8 @@ export default {
       chart,
       server,
       user,
-      networks: 5,
-      devices: 52
+      networks,
+      nodes
     }
   },
   methods:{
@@ -136,7 +156,17 @@ export default {
     },
     minutes(seconds){
       return `${parseInt((seconds%3600)/60)} Minutes`
-    }
+    },
+    netNodes(ipnet){
+      let count = 0
+      this.nodes.value.data.map(node =>{
+        node.interfaces.map(inter => {
+          if(inter.network.value == ipnet)
+           count++
+        })
+      })
+      return count
+    },
   },
   computed:{
     aliveTime(){
@@ -150,6 +180,36 @@ export default {
         return this.minutes(seconds)
       }
     },
+    upNodes(){
+      let nodes = this.nodes.value.data
+      let count = 0
+      nodes.map(node => node.status.value ? count++ : null)
+      return count
+    },
+    downNodes(){
+      let nodes = this.nodes.value.data
+      let count = 0
+      nodes.map(node => !node.status.value ? count++ : null)
+      return count
+    },
+    biggestNet(){
+      let networks = this.networks.value
+      let net = {network: '', nodes: -1}
+      networks.map(network => {
+        if(this.netNodes(network.ipNetwork.value) > net.nodes || net.nodes == -1)
+          net = {network: network.ipNetwork.value, nodes: this.netNodes(network.ipNetwork.value)}
+      })
+      return net
+    },
+    smallestNet(){
+      let networks = this.networks.value
+      let net = {network: '', nodes: -1}
+      networks.map(network => {
+        if(this.netNodes(network.ipNetwork.value) < net.nodes || net.nodes == -1)
+          net = {network: network.ipNetwork.value, nodes: this.netNodes(network.ipNetwork.value)}
+      })
+      return net
+    }
 
   }
 }
