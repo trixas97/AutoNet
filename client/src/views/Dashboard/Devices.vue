@@ -33,16 +33,6 @@ export default {
       Table
     },
     setup(){
-
-      const columns = [
-        { name: 'type', label: 'Type', align: 'left', field: row => row.type, format: val => `${val}`, sortable: true },
-        { name: 'name',  label: 'Name', align: 'center', field: 'name', sortable: false },
-        { name: 'ip', label: 'IP', field: 'ip', align: 'center', sortable: false },
-        { name: 'network', label: 'Network', align: 'center', field: 'network' },
-        { name: 'traffic', label: 'Traffic (Mbps)', align: 'center', field: 'traffic', sortable: true },
-        { name: 'status', label: 'Status', align: 'center', field: 'status', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-        { name: 'delete', label: '', field: 'delete', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
-      ]
       let nodesFromWatch = ref(store.getters['UserData/getNodes'])
       let nodes = computed(() => ref(nodesFromWatch));
       watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
@@ -54,8 +44,8 @@ export default {
       
       return{
         filter: ref(''),
-        columns,
-        nodes: ref(nodes)
+        nodes: ref(nodes),
+        trafficParam: ref(0)
       }
     },
     methods:{
@@ -89,21 +79,45 @@ export default {
       },
       traffic(node){
         let avg = 0
-        console.log(node.interfaces.length);
         node.interfaces.map(inter => {
           let trInter = 0
-          console.log(inter.traffic.value.length);
           inter.traffic.value.map(traffic =>{
-            console.log(traffic.bytes.in);
-              trInter += parseInt(traffic.bytes.in) + parseInt(traffic.bytes.out)   
-              console.log(trInter);     
+            trInter += parseInt(traffic.bytes.in) + parseInt(traffic.bytes.out)      
           })
           avg += trInter / inter.traffic.value.length
         })
-        return parseFloat(avg / 1000000).toFixed(2)
+        console.log(this.trafficParam);
+        this.modifyTrafficHeader(avg)
+        return avg
+      },
+      modifyTrafficHeader(traffic){
+        console.log(this.trafficParam);
+        if(traffic >= 1000000000 && this.trafficParam <= 1000000000){
+          this.trafficParam = 1000000000
+        }else if(traffic >= 1000000 && this.trafficParam <= 1000000){
+          this.trafficParam = 1000000
+        }else if(traffic >= 1000 && this.trafficParam <= 1000){
+          this.trafficParam = 1000
+        }else if(this.trafficParam <= 1){
+          this.trafficParam = ref(1)
+        }
+      },
+      calcTraffic(traffic){
+        return traffic == 0 ? parseFloat(0).toFixed(1) : parseFloat(traffic / this.trafficLabel.number).toFixed(2)
       }
     },
     computed:{
+      trafficLabel(){
+        if(this.trafficParam == 1000000000){
+          return {name: 'Gbps', number: this.trafficParam}
+        }else if(this.trafficParam == 1000000){
+          return {name: 'Mbps', number: this.trafficParam}
+        }else if(this.trafficParam == 1000){
+          return {name: 'Kbps', number: this.trafficParam}
+        }else{
+          return {name: 'bps', number: this.trafficParam}
+        }
+      },
       rows(){
         let rowsArray = [];
         let nodesArray = this.nodes.value.data;
@@ -113,7 +127,7 @@ export default {
             name: nodesArray[i].name.value,
             ip: this.mainIp(nodesArray[i]),
             network: this.network(nodesArray[i]),
-            traffic: this.traffic(nodesArray[i]),
+            traffic: this.calcTraffic(this.traffic(nodesArray[i])),
             status:  nodesArray[i].status.value,
             delete: '',
           };
@@ -121,7 +135,19 @@ export default {
             return(rowsArray)
         }
         return rowsArray
-      } 
+      },
+      columns(){ 
+        return [
+          { name: 'type', label: 'Type', align: 'left', field: row => row.type, format: val => `${val}`, sortable: true },
+          { name: 'name',  label: 'Name', align: 'center', field: 'name', sortable: false },
+          { name: 'ip', label: 'IP', field: 'ip', align: 'center', sortable: false },
+          { name: 'network', label: 'Network', align: 'center', field: 'network' },
+          { name: 'traffic', label: `Traffic (${this.trafficLabel.name})`, align: 'center', field: 'traffic', sortable: true },
+          { name: 'status', label: 'Status', align: 'center', field: 'status', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
+          { name: 'delete', label: '', field: 'delete', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
+        ]
+      }
+
     } 
   }
 </script>
