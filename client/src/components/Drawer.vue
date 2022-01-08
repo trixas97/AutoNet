@@ -51,15 +51,10 @@ const menuList = [
     separator: true
   },
   {
-    icon: 'stream',
-    label: 'Protocols',
+    icon: 'account_circle',
+    label: 'Profile',
     separator: false
-  },
-  {
-    icon: 'timeline',
-    label: 'Traffic',
-    separator: false
-  },
+  }
 ]
 
 export default {

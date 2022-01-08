@@ -4,11 +4,11 @@
       <div class="head">
         <div class="title"><q-icon name="router" />Devices</div>
         <div class="filter">
-            <span class="add-btn"><q-btn round color="accent" size="md" icon="add" @click="newNode" >
+            <!-- <span class="add-btn"><q-btn round color="accent" size="md" icon="add" @click="newNode" >
                 <q-tooltip class="bg-accent text-body1" :offset="[10, 10]">
                     New Device
                 </q-tooltip>
-            </q-btn></span>
+            </q-btn></span> -->
             <q-input standout="bg-teal text-white" v-model="filter" placeholder="Search">
                 <template v-slot:prepend>
                     <q-icon name="search" />
@@ -34,14 +34,12 @@ export default {
     },
     setup(){
 
-      // const store = useStore();
-
       const columns = [
         { name: 'type', label: 'Type', align: 'left', field: row => row.type, format: val => `${val}`, sortable: true },
         { name: 'name',  label: 'Name', align: 'center', field: 'name', sortable: false },
         { name: 'ip', label: 'IP', field: 'ip', align: 'center', sortable: false },
         { name: 'network', label: 'Network', align: 'center', field: 'network' },
-        { name: 'traffic', label: 'Traffic (Kbps)', align: 'center', field: 'traffic', sortable: true },
+        { name: 'traffic', label: 'Traffic (Mbps)', align: 'center', field: 'traffic', sortable: true },
         { name: 'status', label: 'Status', align: 'center', field: 'status', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
         { name: 'delete', label: '', field: 'delete', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
       ]
@@ -61,25 +59,6 @@ export default {
       }
     },
     methods:{
-      newNode(){
-        
-        // store.dispatch('UserData/setNetworks', [
-        //   {ip: '13.13.13.0/24', mask: '255.255.255.0', gateway: '13.13.13.1'}, 
-        //   {ip: '10.10.10.0/24', mask: '255.255.255.0', gateway: '10.10.10.1'},
-        //   {ip: '192.168.78.0/24', mask: '255.255.255.0', gateway: '192.168.78.1'}])
-        
-        // let nodes = store.getters['UserData/getNodes'];
-        // nodes.data.push({
-        //   type: { value: "Router"},
-        //   name: { value: "R13"},
-        //   interfaces: [{mainIf: {value: true}, ip_address: {value: '192.168.778.1'}}, {mainIf: {value: false}, ip_address: {value: '13.13.13.1'}}],
-        // });
-
-        // nodes.data[0].name.value = "S2"
-        // nodes.data[0].type.value = "Switch"
-        // nodes.changedFromUser = true
-        // store.dispatch('UserData/setNodes', nodes);
-      },
       mainIp(node){
         try{
           for(let k=0; k < node.interfaces.length; k++){
@@ -107,6 +86,21 @@ export default {
           return ''
         }
         return ''
+      },
+      traffic(node){
+        let avg = 0
+        console.log(node.interfaces.length);
+        node.interfaces.map(inter => {
+          let trInter = 0
+          console.log(inter.traffic.value.length);
+          inter.traffic.value.map(traffic =>{
+            console.log(traffic.bytes.in);
+              trInter += parseInt(traffic.bytes.in) + parseInt(traffic.bytes.out)   
+              console.log(trInter);     
+          })
+          avg += trInter / inter.traffic.value.length
+        })
+        return parseFloat(avg / 1000000).toFixed(2)
       }
     },
     computed:{
@@ -119,7 +113,7 @@ export default {
             name: nodesArray[i].name.value,
             ip: this.mainIp(nodesArray[i]),
             network: this.network(nodesArray[i]),
-            traffic: 1.5,
+            traffic: this.traffic(nodesArray[i]),
             status:  nodesArray[i].status.value,
             delete: '',
           };
