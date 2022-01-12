@@ -4,7 +4,7 @@ const userData = require('./database/userData');
 let mainIo;
 const listeners = (io) => {
     const { setNodesTopology, newTopology, deleteTopology } = require('./database/topology');
-    const { saveNetworks } = require('./database/network')
+    const { saveNetworks, deleteNetwork } = require('./database/network')
     io.on('connection', (socket) => {
         socket.on('initUser', async (data) => {
           console.log(`User ${data} connected with socket ${socket.id}`);
@@ -50,6 +50,20 @@ const listeners = (io) => {
 
         socket.on('networks', (data) => {
             console.log(data);
+            let msg = data
+            switch(data.method){
+                case 'new': 
+                    // newTopology(data.user, data.name, data.nodes)
+                    break
+                case 'delete':
+                    msg.type = 'network'
+                    deleteNetwork(data.network)
+                    break
+                case 'update':
+                    // setNodesTopology(data.topology)
+                    break
+            }
+            io.emit(data.user, msg)
             // saveNetworks(data.user, data.networks)
         })
 

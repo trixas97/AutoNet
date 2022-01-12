@@ -59,4 +59,14 @@ const addNetworkToDB = async (network) =>{
     }
 }
 
+const deleteNetwork = async (ipNet) => {
+    try{
+        const deletedNet = await Network.deleteOne({'ipNetwork.value': ipNet})
+    }catch(err){
+        console.log(err)
+    }
+}
+
+
 module.exports.saveNetworks = saveNetworks;
+module.exports.deleteNetwork = deleteNetwork
