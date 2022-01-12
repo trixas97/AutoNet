@@ -40,7 +40,7 @@ export const sockets = () => {
             case 'topology':
                 if(msg.method != 'delete')
                     store.dispatch('UserData/updateTopologyFull', msg.topology)
-            break;
+                    break;
             case 'nodes':
                 store.dispatch('UserData/setNodes', msg.nodes);
                 break;
@@ -52,7 +52,11 @@ export const sockets = () => {
                 break;
             case 'networks':
                 //code
-                break; 
+                break;
+            case 'network':
+                if(msg.method == 'delete')
+                    store.dispatch('UserData/deleteNetwork', msg.network)
+                break
             case 'traffic':
                 updateTraffic(msg.data)
                 break; 

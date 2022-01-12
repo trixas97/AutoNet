@@ -41,8 +41,10 @@ export const UserDataModule = {
             state.networks.data.push(val);
         },
         deleteNetwork(state,val){
-            state.networks.data.splice(state.networks.data.indexOf(state.networks.data.find(net => net.ipNetwork.value == val)), 1);
-            state.networks.changedFromUser = true
+            if(state.networks.data.find(net => net.ipNetwork.value == val.net)){
+                state.networks.data.splice(state.networks.data.indexOf(state.networks.data.find(net => net.ipNetwork.value == val.net)), 1);
+                state.networks.changedFromUser = val.deleteFlag
+            }
         },
 
 

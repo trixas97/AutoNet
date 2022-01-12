@@ -93,7 +93,7 @@ export default {
         return count
       },
       deleteNet(network){
-        store.dispatch('UserData/deleteNetwork', network);
+        store.dispatch('UserData/deleteNetwork', {net: network, deleteFlag: true});
       }
     },
     computed: {
