@@ -17,7 +17,7 @@
         </div>
       </div>
       <Dialog v-model="dialogFlag" :ipnet="ipNetOpen"/>
-      <Table :filter="filter" :rows="rows" :columns="columns" @networkInfo="openDialog" />
+      <Table :filter="filter" :rows="rows" :columns="columns" @networkInfo="openDialog" @delete="deleteNet"/>
     </div>
   </div>
 </template>
@@ -92,12 +92,14 @@ export default {
         })
         return count
       },
+      deleteNet(network){
+        store.dispatch('UserData/deleteNetwork', network);
+      }
     },
     computed: {
       rows(){
         let rowsArray = [];
         let networksArray = this.networks.value;
-        console.log(networksArray);
         networksArray.map(network => {
           rowsArray.push({
             type: 'network',

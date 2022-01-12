@@ -63,7 +63,18 @@ export default {
   },
   methods: {
     deleteItem(props){
-      this.$emit('delete', props.row.name)
+      switch(props.row.type){
+        case 'topology':
+          this.$emit('delete', props.row.name)
+          break
+        case 'network':
+          this.$emit('delete', props.row.network)
+          break
+        default:
+          this.$emit('delete', props.row.ip)
+          break
+      }
+      
     },
     // editItem(props){
 

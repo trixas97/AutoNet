@@ -29,7 +29,8 @@ export const UserDataModule = {
             state.nodes.data.push(val);
         },
         deleteNode(state,val){
-            state.nodes.data.splice(val, 1);
+            state.nodes.data.splice(state.nodes.data.indexOf(state.nodes.data.find(node => node.interfaces.find(inter => inter.ip_address.value.includes(val+'/')))), 1);
+            state.nodes.changedFromUser = true
         },
 
 
@@ -40,7 +41,8 @@ export const UserDataModule = {
             state.networks.data.push(val);
         },
         deleteNetwork(state,val){
-            state.networks.data.splice(val, 1);
+            state.networks.data.splice(state.networks.data.indexOf(state.networks.data.find(net => net.ipNetwork.value == val)), 1);
+            state.networks.changedFromUser = true
         },
 
 
@@ -112,8 +114,8 @@ export const UserDataModule = {
         addNetwork({ commit }, val){
             commit('addNetwork', val);
         },
-        deleteNetwork({ commit }){
-            commit('deleteNetwork');
+        deleteNetwork({ commit }, val){
+            commit('deleteNetwork', val);
         },
 
 
@@ -140,8 +142,8 @@ export const UserDataModule = {
         addLink({ commit }, val){
             commit('addLink', val);
         },
-        deleteLink({ commit }){
-            commit('deleteLink');
+        deleteLink({ commit }, val){
+            commit('deleteLink', val);
         },
 
         setServer({ commit }, val){

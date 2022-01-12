@@ -16,7 +16,7 @@
             </q-input>
         </div>
       </div>
-      <Table :filter="filter" :rows="rows" :columns="columns"/>
+      <Table :filter="filter" :rows="rows" :columns="columns" @delete="deleteNode"/>
     </div>
   </div>
 </template>
@@ -102,6 +102,9 @@ export default {
       },
       calcTraffic(traffic){
         return traffic == 0 ? parseFloat(0).toFixed(1) : parseFloat(traffic / this.trafficLabel.number).toFixed(2)
+      },
+      deleteNode(ip){
+        store.dispatch('UserData/deleteNode', ip);
       }
     },
     computed:{

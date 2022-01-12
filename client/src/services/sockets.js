@@ -72,10 +72,13 @@ export const sockets = () => {
             initFlag.nodes = true
     })
 
-    watch(() => _.cloneDeep(store.getters['UserData/getNetworks']), (networks) => { 
-        if(initFlag.networks ){
+    watch(() => _.cloneDeep(store.getters['UserData/getNetworks']), (networks, prev) => { 
+        if(initFlag.networks && store.getters['UserData/getNetworksFull'].changedFromUser){
             if(networks != null){
-                socket.emit('networks', {networks: networks, user: store.getters['User/getUsername']});
+                if(networks.length < prev.length) {
+                    socket.emit('networks', { user: store.getters['User/getUsername'], network: prev.find(net => !networks.find(netNew => netNew._id == net._id)).ipNetwork.value, method:'delete'})
+                }else
+                    socket.emit('networks', {networks: networks, user: store.getters['User/getUsername']});
             }
         }
         else

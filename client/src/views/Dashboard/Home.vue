@@ -39,8 +39,10 @@
         >
           <span class="circular-value">{{ networks.value.length }}</span>
         </q-circular-progress>
-        <span class="info-value"><q-icon class="text-positive" name="circle"/><b> {{biggestNet.network}}</b> is the biggest network ({{biggestNet.nodes == 1 ? `${biggestNet.nodes} device` : `${biggestNet.nodes} devices`}})</span>
-        <span class="info-value"><q-icon class="text-negative" name="circle"/><b> {{smallestNet.network}}</b> is the smallest network ({{smallestNet.nodes == 1 ? `${smallestNet.nodes} device` : `${smallestNet.nodes} devices`}})</span>
+
+        <span v-if="biggestNet.nodes == -1" class="info-value"><q-icon class="text-warning" name="circle"/><b> There are no networks </b></span>
+        <span v-if="biggestNet.nodes != -1" class="info-value"><q-icon class="text-positive" name="circle"/><b> {{biggestNet.network}}</b> is the biggest network ({{biggestNet.nodes == 1 ? `${biggestNet.nodes} device` : `${biggestNet.nodes} devices`}})</span>
+        <span v-if="biggestNet.nodes != -1" class="info-value"><q-icon class="text-negative" name="circle"/><b> {{smallestNet.network}}</b> is the smallest network ({{smallestNet.nodes == 1 ? `${smallestNet.nodes} device` : `${smallestNet.nodes} devices`}})</span>
       </div>
     </div>
     <div class="dashboard-box dashboard-devices" @click="openDevices">

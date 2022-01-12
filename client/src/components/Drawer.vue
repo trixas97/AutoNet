@@ -1,6 +1,6 @@
 <template>
   <div class="drawer-container">
-      <div class="logo-container"><img class="logo q-pt-sm q-pb-sm" v-if="showImg" src="@/assets/logo.svg" alt=""></div>
+      <div class="logo-container"><img class="logo q-pt-sm q-pb-sm"  src="@/assets/logo.svg" alt=""></div>
     
     <q-list class="list">
       <div v-for="(menuItem, index) in menuList" :key="index">
