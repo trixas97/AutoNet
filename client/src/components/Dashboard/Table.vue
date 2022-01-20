@@ -32,7 +32,7 @@
             <q-img v-if="col.name == 'type' && col.value == 'topology'" src="@/assets/elements/topology.svg" />      
             <q-img v-if="col.name == 'type' && col.value == 'network'" src="@/assets/elements/network.svg" />
 
-            <q-btn size="md" v-if="col.name == 'edit'" color="positive" round dense @click="deleteItem(props)" icon="edit" />
+            <q-btn size="md" v-if="col.name == 'edit'" color="positive" round dense @click="editItem(props)" icon="edit" />
             <q-btn size="md" v-if="col.name == 'delete'" color="negative" round dense @click="deleteItem(props)" icon="delete_forever" />
           </q-td>
           
@@ -76,9 +76,13 @@ export default {
       }
       
     },
-    // editItem(props){
-
-    // },
+    editItem(props){
+      switch(props.row.type){
+        case 'topology':
+          this.$emit('edit', props.row.name)
+          break
+      }
+    },
     showItem(key, props) {
       if(key != 'delete' && key != 'edit'){
         switch(props.row.type){
@@ -92,7 +96,6 @@ export default {
             this.$router.push('device?ip='+ props.row.ip);
             break;
         }
-        
       }
     },
   }

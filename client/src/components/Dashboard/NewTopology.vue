@@ -35,8 +35,11 @@ export default {
     components: {
         Table
     },
+    props:{
+      name: String,
+      selected: Array
+    },
     setup(){
-      const selected = ref([])
       let nodesFromWatch = ref(store.getters['UserData/getNodes'])
       let nodes = computed(() => ref(nodesFromWatch));
       watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (dataNodes) => {
@@ -47,10 +50,8 @@ export default {
       })
 
       return{
-          selected,
-          name: ref(''),
           nodes: ref(nodes)
-      }
+      }   
     },
     methods: {
       mainIp(node){
