@@ -39,7 +39,7 @@ const listeners = (io) => {
                     newTopology(data.user, data.name, data.nodes)
                     break
                 case 'delete':
-                    deleteTopology(data.user, data.name)
+                    deleteTopology(data.user, data.id)
                     break
                 case 'update':
                     setNodesTopology(data.topology)

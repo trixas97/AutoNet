@@ -46,10 +46,10 @@ const setNodesTopology = async (topology) => {
     }
 }
 
-const deleteTopology = async (user, name) => {
+const deleteTopology = async (user, id) => {
     user = await getUser(user)
     try{
-        const deletedTopo = await Topology.deleteOne({user: user._id, name: name})
+        const deletedTopo = await Topology.deleteOne({user: user._id, _id: id})
     }catch(err){
         console.log(err)
     }

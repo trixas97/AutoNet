@@ -95,7 +95,7 @@ export const sockets = () => {
             if(topos.length > prev.length){
                 socket.emit('topology', { user: store.getters['User/getUsername'], name: topos[topos.length-1].name, nodes:topos[topos.length-1].nodes, method:'new'})
             }else if(topos.length < prev.length) {
-                socket.emit('topology', { user: store.getters['User/getUsername'], name: prev.find(topo => !topos.includes(topo)).name, method:'delete'})
+                socket.emit('topology', { user: store.getters['User/getUsername'], id: prev.find(topo => !topos.find(topoDel => topo._id === topoDel._id))._id, method:'delete'})
             }else{
                 for (let i=0; i < topos.length; i++){
                     if(topos[i] != prev[i]) {

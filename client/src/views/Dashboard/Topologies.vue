@@ -72,8 +72,8 @@ export default {
       newTopology(){
         this.dialogFlag = true
       },
-      deleteTopo(name){
-        this.store.dispatch('UserData/deleteTopology', name);
+      deleteTopo(id){
+        this.store.dispatch('UserData/deleteTopology', id);
       },
       editTopo(name){
         let topo = this.store.getters['UserData/getTopology'](name);
@@ -89,6 +89,7 @@ export default {
         for(let  i=0; i< toposArray.length; i++){
           rowsArray[i] ={
             type: 'topology',
+            id: toposArray[i]._id,
             name: toposArray[i].name,
             // network: '192.168.78.0 / 24',
             netlength: 1,

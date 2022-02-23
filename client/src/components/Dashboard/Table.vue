@@ -65,7 +65,7 @@ export default {
     deleteItem(props){
       switch(props.row.type){
         case 'topology':
-          this.$emit('delete', props.row.name)
+          this.$emit('delete', props.row.id)
           break
         case 'network':
           this.$emit('delete', props.row.network)

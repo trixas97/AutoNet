@@ -56,7 +56,7 @@ export const UserDataModule = {
             state.topologies.changedFromUser = val.changedFromUser
         },
         deleteTopology(state,val){
-            state.topologies.data.splice(state.topologies.data.indexOf(state.topologies.data.find(topo => topo.name = val)), 1);
+            state.topologies.data.splice(state.topologies.data.indexOf(state.topologies.data.find(topo => topo._id == val)), 1);
             state.topologies.changedFromUser = true
         },
         updateTopology(state,val){
