@@ -66,11 +66,12 @@ export const UserDataModule = {
             state.topologies.changedFromUser = true
         },
         updateTopologyFull(state,val){
-            for(let i=0; i < state.topologies.data.length; i++){
-                if(state.topologies.data[i]._id == val._id){
-                    state.topologies.data[i] = val
-                }
-            }
+            const topos = state.topologies.data.map(topo => {
+                if(topo._id == undefined)
+                    topo = val
+                return topo
+            })
+            state.topologies.data = topos
             state.topologies.changedFromUser = false
         },
 

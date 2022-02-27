@@ -84,6 +84,7 @@ export default {
       },
       newNode(){
         store.dispatch('UserData/addTopology', {data: {name: this.name, nodes: this.selected.map(node => node.id)}, changedFromUser: true})
+        this.$emit('closeDialog', false)
       }
     },
     computed: {

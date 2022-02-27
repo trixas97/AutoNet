@@ -16,7 +16,7 @@
             </q-input>
         </div>
       </div>
-      <NewTopology v-model="dialogFlag" :selected="selected" :name="name"/>
+      <NewTopology v-model="dialogFlag" :selected="selected" :name="name" @closeDialog="dialogFlag = false"/>
       <Table :filter="filter" :rows="rows" :columns="columns" @delete="deleteTopo" @edit="editTopo"/>
     </div>
   </div>

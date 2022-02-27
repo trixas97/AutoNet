@@ -26,7 +26,7 @@ const listeners = (io) => {
             io.emit(data.user, msg)
         })
 
-        socket.on('topology', (data) => {
+        socket.on('topology', async (data) => {
             console.log(`Changes TOPOLOGY from ${data.user}` );
             let msg = {
                 topology: data.topology,
@@ -36,7 +36,7 @@ const listeners = (io) => {
 
             switch(data.method){
                 case 'new': 
-                    newTopology(data.user, data.name, data.nodes)
+                    msg.res = await newTopology(data.user, data.name, data.nodes)
                     break
                 case 'delete':
                     deleteTopology(data.user, data.id)

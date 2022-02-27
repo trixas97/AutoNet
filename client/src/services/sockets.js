@@ -39,8 +39,8 @@ export const sockets = () => {
                 break;
             case 'topology':
                 if(msg.method != 'delete')
-                    store.dispatch('UserData/updateTopologyFull', msg.topology)
-                    break;
+                    store.dispatch('UserData/updateTopologyFull', msg.res.data)
+                break;
             case 'nodes':
                 store.dispatch('UserData/setNodes', msg.nodes);
                 break;
