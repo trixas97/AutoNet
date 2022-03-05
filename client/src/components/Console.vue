@@ -43,7 +43,6 @@ setup(props) {
     };
 
    async function consoleInit() {
-       console.log(props.mainIp);
         const data = {
             socket: store.state.User.socket,
             ip: route.query.ip,
@@ -67,7 +66,7 @@ setup(props) {
 
         watch(() => store.getters['Socket/getSocketReady'], (data) => {
             if(data && initConFlag){
-                console.log(consoleInit());
+                consoleInit();
             }
         })
 

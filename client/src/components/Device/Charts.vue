@@ -72,9 +72,7 @@ export default {
                 fillChart()
         })
 
-        watch(() => _.cloneDeep(props.node), () => {  
-            console.log('eeee');
-            console.log(props.node);        
+        watch(() => _.cloneDeep(props.node), () => {       
             fillChart()
         })
 
@@ -169,8 +167,6 @@ export default {
         }
 
         function updatedTraffic(){
-            console.log(props.node.interfaces[0].traffic.value.length);
-            console.log(trafficFlag);
             return props.node.interfaces[0].traffic.value.length > trafficFlag ? true : false
         }
         

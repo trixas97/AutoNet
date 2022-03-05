@@ -1,9 +1,7 @@
 import store from '@/store';
 
 export const updateTraffic = async (data) => {
-    console.log(data);
     let node = await findNodeByIp(data[0].host);
-    console.log(node);
     data.map(traffic => {
         node.interfaces.map(inter => {
             if(inter.interface.value == traffic.interface){
