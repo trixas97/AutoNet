@@ -5,6 +5,7 @@ const { getUser } = require('./userData');
 
 const modifyTypeTopo = {
     save: 'save',
+    update: 'update',
     get: 'get',
     getAll: 'getAll',
     moreInfo: 'moreInfo',
@@ -40,7 +41,10 @@ const newTopology = async (user, name, nodes) => {
 
 const updateTopology = async (topology) => {
     try{
-        const savedTopology = await Topology.updateOne({ _id: topology._id }, { name: topology.name, nodes: topology.nodes });
+        let nodes = await modifyDataTopos(topology.nodes, modifyTypeTopo.update);
+        if(nodes.length === 0)
+            nodes = topology.nodes 
+        const savedTopology = await Topology.updateOne({ _id: topology._id }, { name: topology.name, nodes: nodes });
         return { message: 'Topology Updated', data: topology };
     }catch (err){
         return { message: err};
@@ -60,15 +64,28 @@ const deleteTopology = async (id) => {
 modifyDataTopos = async (data, type) => {
     return new Promise(async resolve => { 
         let res = [];
+        let position = 0;
         switch(type){
             
             case modifyTypeTopo.save:
-                let position = 0;
+                position = 0;
                 if (data.length ==0)
                     resolve([])
                 for (let i=0; i < data.length; i++){
                     data[i] = await new Promise(resolve => resolve({ id: mongoose.Types.ObjectId(data[i]), x: position, y: 0, label: { x: position+20, y: position+40 } }));
                     position += 60
+                    if(i == data.length-1) resolve(data);
+                }
+                break;
+            case modifyTypeTopo.update:
+                position = 0;
+                if (data.length ==0)
+                    resolve([])
+                for (let i=0; i < data.length; i++){
+                    if(data[i].x === undefined){
+                        data[i] = await new Promise(resolve => resolve({ id: mongoose.Types.ObjectId(data[i].id), x: position, y: 0, label: { x: position+20, y: position+40 } }));
+                        position += 60
+                    }
                     if(i == data.length-1) resolve(data);
                 }
                 break;

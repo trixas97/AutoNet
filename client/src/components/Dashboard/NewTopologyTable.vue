@@ -6,7 +6,7 @@
       class="newTopoTable"
       :rows="rows"
       :columns="columns"
-      row-key="name"
+      row-key="id"
       :selected-rows-label="getSelectedString"
       selection="multiple"
       :selected="selected"
@@ -23,7 +23,7 @@
 import { ref } from 'vue'
 
 const columns = [
-  { name: 'name', required: true, label: 'Name', align: 'center', field: row => row.name, format: val => `${val}`, sortable: true },
+  { name: 'name', label: 'Name', align: 'center', field: row => row.name, format: val => `${val}`, sortable: true },
   { name: 'ip', align: 'center', label: 'Ip', field: 'ip'},
   { name: 'network', label: 'Network', field: 'network', align: 'center'},
   { name: 'traffic', label: 'Traffic (kbps)', field: 'traffic',  align: 'center'},

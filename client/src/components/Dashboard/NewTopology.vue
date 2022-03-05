@@ -8,8 +8,8 @@
             <q-btn flat v-close-popup round dense icon="close" size="lg" />          
           </q-toolbar>
           <div class="infoContent">
-              <q-input outlined v-model="name" label="Name" />
-            <Table class="newTopoTable" :rows="rows" :selected="selected"/>  
+              <q-input outlined v-model="editedTopology.name" label="Name" />
+            <Table class="newTopoTable" :rows="rows" :selected="editedTopology.nodes"/>  
             <div class="btn"> 
                 <q-btn
                     size="22px"
@@ -36,8 +36,6 @@ export default {
         Table
     },
     props:{
-      name: String,
-      selected: Array,
       editedTopology: Object
     },
     setup(){
@@ -85,10 +83,9 @@ export default {
       },
       newNode(){
         if(this.editedTopology._id){
-          this.editedTopology.name = this.name
           store.dispatch('UserData/addTopology', {data: this.editedTopology, changedFromUser: true})
         }else
-          store.dispatch('UserData/addTopology', {data: {name: this.name, nodes: this.selected.map(node => node.id)}, changedFromUser: true})
+          store.dispatch('UserData/addTopology', {data: {name: this.editedTopology.name, nodes: this.editedTopology.nodes.map(node => node.id)}, changedFromUser: true})
         this.$emit('closeDialog', false)
       }
     },
