@@ -3,7 +3,7 @@
 const userData = require('./database/userData');
 let mainIo;
 const listeners = (io) => {
-    const { setNodesTopology, newTopology, deleteTopology } = require('./database/topology');
+    const { updateTopology, newTopology, deleteTopology } = require('./database/topology');
     const { saveNetworks, deleteNetwork } = require('./database/network')
     io.on('connection', (socket) => {
         socket.on('initUser', async (data) => {
@@ -39,10 +39,10 @@ const listeners = (io) => {
                     msg.res = await newTopology(data.user, data.name, data.nodes)
                     break
                 case 'delete':
-                    deleteTopology(data.user, data.id)
+                    msg.res = await deleteTopology(data.id)
                     break
                 case 'update':
-                    setNodesTopology(data.topology)
+                    msg.res = await updateTopology(data.topology)
                     break
             }
             io.emit(data.user, msg)

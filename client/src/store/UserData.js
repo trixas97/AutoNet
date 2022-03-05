@@ -52,12 +52,14 @@ export const UserDataModule = {
             state.topologies.data = val
         },
         addTopology(state,val){
-            state.topologies.data.push(val.data);
+            state.topologies.data = saveElement(state.topologies.data, val.data)
             state.topologies.changedFromUser = val.changedFromUser
         },
         deleteTopology(state,val){
-            state.topologies.data.splice(state.topologies.data.indexOf(state.topologies.data.find(topo => topo._id == val)), 1);
-            state.topologies.changedFromUser = true
+            const index = state.topologies.data.indexOf(state.topologies.data.find(topo => topo._id == val.id))
+            if(index >= 0)
+                state.topologies.data.splice(index, 1);
+            state.topologies.changedFromUser = val.changedFromUser
         },
         updateTopology(state,val){
             let node = state.topologies.data.find(topology => topology._id == val.id).nodes.find(node => node.id == val.node.id)
@@ -66,12 +68,7 @@ export const UserDataModule = {
             state.topologies.changedFromUser = true
         },
         updateTopologyFull(state,val){
-            const topos = state.topologies.data.map(topo => {
-                if(topo._id == undefined)
-                    topo = val
-                return topo
-            })
-            state.topologies.data = topos
+            state.topologies.data = saveElement(state.topologies.data, val)
             state.topologies.changedFromUser = false
         },
 
@@ -198,4 +195,27 @@ export const UserDataModule = {
             return state.links
         }
     }
+}
+
+function saveElement(elements, updatedElement){
+    let foundElFlag = false
+    elements = elements.map(element => {
+        if(element._id == updatedElement._id){
+            foundElFlag = true
+            element = updatedElement
+        }
+        return element
+    })
+    if(!foundElFlag)
+        elements = elements.map(element => {
+            if(element._id == undefined){
+                foundElFlag = true
+                element = updatedElement
+            }
+            return element
+        })
+    if(!foundElFlag)
+        elements.push(updatedElement)
+
+    return elements
 }

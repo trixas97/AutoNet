@@ -37,7 +37,8 @@ export default {
     },
     props:{
       name: String,
-      selected: Array
+      selected: Array,
+      editedTopology: Object
     },
     setup(){
       let nodesFromWatch = ref(store.getters['UserData/getNodes'])
@@ -83,7 +84,11 @@ export default {
         return ''
       },
       newNode(){
-        store.dispatch('UserData/addTopology', {data: {name: this.name, nodes: this.selected.map(node => node.id)}, changedFromUser: true})
+        if(this.editedTopology._id){
+          this.editedTopology.name = this.name
+          store.dispatch('UserData/addTopology', {data: this.editedTopology, changedFromUser: true})
+        }else
+          store.dispatch('UserData/addTopology', {data: {name: this.name, nodes: this.selected.map(node => node.id)}, changedFromUser: true})
         this.$emit('closeDialog', false)
       }
     },

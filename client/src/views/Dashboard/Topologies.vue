@@ -16,7 +16,7 @@
             </q-input>
         </div>
       </div>
-      <NewTopology v-model="dialogFlag" :selected="selected" :name="name" @closeDialog="dialogFlag = false"/>
+      <NewTopology v-model="dialogFlag" :selected="selected" :name="name" @closeDialog="dialogFlag = false" :editedTopology="editedTopology"/>
       <Table :filter="filter" :rows="rows" :columns="columns" @delete="deleteTopo" @edit="editTopo"/>
     </div>
   </div>
@@ -59,6 +59,7 @@ export default {
       })
       return {
         selected: ref([]),
+        editedTopology: ref({}),
         name: ref(''),
         filter: ref(''),
         ipNetOpen: ref(''),
@@ -73,10 +74,11 @@ export default {
         this.dialogFlag = true
       },
       deleteTopo(id){
-        this.store.dispatch('UserData/deleteTopology', id);
+        this.store.dispatch('UserData/deleteTopology', {id: id, changedFromUser: true});
       },
       editTopo(name){
         let topo = this.store.getters['UserData/getTopology'](name);
+        this.editedTopology = topo
         this.selected = topo.nodes
         this.name = topo.name
         this.dialogFlag = true

@@ -38,20 +38,21 @@ const newTopology = async (user, name, nodes) => {
     }
 }
 
-const setNodesTopology = async (topology) => {
+const updateTopology = async (topology) => {
     try{
-        const savedTopology = await Topology.updateOne({ _id: topology._id }, { nodes: topology.nodes });
+        const savedTopology = await Topology.updateOne({ _id: topology._id }, { name: topology.name, nodes: topology.nodes });
+        return { message: 'Topology Updated', data: topology };
     }catch (err){
-        console.log(err);
+        return { message: err};
     }
 }
 
-const deleteTopology = async (user, id) => {
-    user = await getUser(user)
+const deleteTopology = async (id) => {
     try{
-        const deletedTopo = await Topology.deleteOne({user: user._id, _id: id})
+        const deletedTopo = await Topology.deleteOne({_id: id})
+        return { message: 'Topology Deleted', data: id };
     }catch(err){
-        console.log(err)
+        return { message: err};
     }
 }
 
@@ -78,6 +79,6 @@ modifyDataTopos = async (data, type) => {
 
 
 module.exports.getTopologies = getTopologies;
-module.exports.setNodesTopology = setNodesTopology;
+module.exports.updateTopology = updateTopology;
 module.exports.newTopology = newTopology;
 module.exports.deleteTopology = deleteTopology;
