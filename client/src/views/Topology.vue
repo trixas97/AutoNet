@@ -63,7 +63,6 @@ export default {
             imgRefs: [],
             labelRefs: [],
             initData,
-            initFlag: false,
             topo,
             nodes,
             links,
@@ -134,20 +133,25 @@ export default {
 
         updateNodes(){
             this.topo.value.nodes.map(node => {
-                this.nodes[node.id].updateAllPositions(node.x, node.y)
+                if(this.nodes[node.id] === undefined){
+                    this.initNodes()
+                }else{
+                    this.nodes[node.id].updateAllPositions(node.x, node.y)
+                }
             })
         }
     },
-    updated() {  
-        if(!this.initFlag)
-            this.initNodes()
-        else{
-            this.updateNodes()
-        }
-        this.initFlag = true
+    updated() { 
+        this.updateNodes()
     },
     mounted(){
-        this.initNodes()   
+        this.initNodes() 
+    },
+    unmounted(){
+        for(let i=0; i < this.links.length; i++){
+            this.links[i].link.remove()
+            delete this.links[i]
+        }
     }
 }
 </script>
