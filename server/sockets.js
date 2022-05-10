@@ -75,7 +75,6 @@ const listeners = (io) => {
 }
 
 const emitTraffic = (users, data) => {
-    console.log(data);
     let msg = {
         data: data,
         type: 'traffic'
@@ -87,6 +86,18 @@ const emitTraffic = (users, data) => {
     });
 }
 
+const emitNodeInterfaceStatus = (users, data) => {
+    let msg = {
+        data: data,
+        type: 'node-interface-status',
+    }
+
+    users.forEach(element => {
+        mainIo.emit(element.username, msg)
+    });
+}
+
 
 module.exports.emitTraffic = emitTraffic;
+module.exports.emitNodeInterfaceStatus = emitNodeInterfaceStatus;
 module.exports.socketsListeners = listeners

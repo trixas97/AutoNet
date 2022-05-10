@@ -32,6 +32,12 @@ export const UserDataModule = {
             state.nodes.data.splice(state.nodes.data.indexOf(state.nodes.data.find(node => node.interfaces.find(inter => inter.ip_address.value.includes(val+'/')))), 1);
             state.nodes.changedFromUser = true
         },
+        updateNodeInterfaceStatus(state, val){
+            const node = state.nodes.data.find(node => node._id === val.id)
+            node.interfaces.find(inter => inter.interface.value === val.if).link_status.value = val.adminStatus
+            node.interfaces.find(inter => inter.interface.value === val.if).protocol_status.value = val.operStatus
+            state.nodes.changedFromUser = val.changedFromUser
+        },
 
 
         setNetworks(state, val){
@@ -105,6 +111,9 @@ export const UserDataModule = {
         },
         deleteNode({ commit },val){
             commit('deleteNode', val);
+        },
+        updateNodeInterfaceStatus({commit}, val){
+            commit('updateNodeInterfaceStatus', val)
         },
 
 

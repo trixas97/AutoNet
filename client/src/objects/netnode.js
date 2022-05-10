@@ -68,17 +68,16 @@ export default class NetNode {
 
     async setLinkState(data){
         let ifVar = await this.findInterface(data.if);
-        console.log(ifVar);
         this.links.forEach(element =>{
-            if((element.ifstart.id == this.id && element.ifstart.name == ifVar.interfaceSum) || (element.ifend.id == this.id && element.ifend.name == ifVar.interfaceSum))
-                element.setState({operStatus: data.operStatus, adminStatus: data.adminStatus, node:this.node})
+            if((element.ifstart.id == this.id && element.ifstart.name == ifVar.interface_short.value) || (element.ifend.id == this.id && element.ifend.name == ifVar.interface_short.value))
+                element.setState({link_status: data.link_status, protocol_status: data.protocol_status, node:this.node})
         });
     }
 
     findInterface(name){
         return new Promise(resolve => { 
             this.ifs.forEach(element => {
-                if (element.interface == name)
+                if (element.interface.value === name)
                     resolve(element);
             });
         })

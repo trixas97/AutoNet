@@ -1,5 +1,4 @@
-const { getTopologies } = require('./database/topology');
-const { getNodeInfoByIP } = require('./database/node');
+const { updateInterfaceStatus } = require('./database/node');
 
 
 const oids = {
@@ -30,16 +29,10 @@ module.exports = function(io) {
         } else {
             let pdu = notification.pdu;
             let info = notification.rinfo;
-            // console.log(pdu);
             let data = await modifyDataSNMP(pdu.varbinds, modifyTypeSNMP.receive, info.address);
-            console.log(data);
+            updateInterfaceStatus(data)
             if(Object.keys(data).length > 1){
-                data.id = (await getNodeInfoByIP(data.ip))._id;
-                console.log(data);
-                let topologies = await getTopologies(data.ip);
-                let notify = {data: data, topologies: topologies, io: io}
-                await  modifyDataSNMP(notify, modifyTypeSNMP.emit, null);             
-                
+                updateInterfaceStatus(data)      
             }
         }
 

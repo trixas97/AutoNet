@@ -54,8 +54,14 @@ export default {
             if(nodesTopo != null){
                 nodesFromWatch.value = nodesTopo
                 nodesData = ref(nodesFromWatch)
+                nodesData.value.forEach(node => updateLink(node))
             }
         })
+
+        const updateLink = (nodeData) => {
+            if(nodes[nodeData._id] !== undefined)
+                nodeData.interfaces.map(inter => nodes[nodeData._id].setLinkState({if: inter.interface.value, protocol_status: inter.protocol_status.value, link_status: inter.link_status.value}))
+        }
 
 
         return {
@@ -102,13 +108,20 @@ export default {
 
             start.id = nodeStart._id; 
             start.name = nodeInterface.interface_short.value
-            start.state = (nodeInterface.protocol_status.value.includes('up') && nodeInterface.link_status.value.includes('up')) ? true : false
+            start.state = ( nodeInterface.protocol_status.value && nodeInterface.link_status.value) ? true : false
             
+            nodeInterface = nodeEnd.interfaces.find(inter => inter.interface.value == cdpEntry.remote_port.value)
+
             end.id = nodeEnd._id; 
             end.name = nodeInterface.interface_short.value
-            end.state = (nodeInterface.protocol_status.value.includes('up') && nodeInterface.link_status.value.includes('up')) ? true : false
+            end.state = (nodeInterface.protocol_status.value && nodeInterface.link_status.value) ? true : false
 
-            let link = new Link(this.nodes[start.id].node, this.nodes[end.id].node,{id: start.id, name: start.name, state: start.state},{id: end.id, name: end.name, state: end.state}); 
+            let link = new Link(
+                this.nodes[start.id].node, 
+                this.nodes[end.id].node,
+                start,
+                end
+            ); 
             this.links.push(link)
             this.nodes[start.id].links.push(link);
             this.nodes[end.id].links.push(link);
@@ -139,6 +152,11 @@ export default {
                     this.nodes[node.id].updateAllPositions(node.x, node.y)
                 }
             })
+        }
+    },
+    computed: {
+        interfaceStatus() {
+            return false
         }
     },
     updated() { 

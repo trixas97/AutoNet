@@ -92,7 +92,7 @@ io.on('connection', (socket) => {
 
     initNode = (host) => {
         return new Promise(resolve => {
-            let shell = new PythonShell('server/python/node_init.py', {mode: 'json', args: [host.ip, host.username, host.password, '192.168.58.1']});
+            let shell = new PythonShell('server/python/node_init.py', {mode: 'json', args: [host.ip, host.username, host.password, '192.168.78.1']});
             shell.on('message', function (message) {
                 resolve(host)
             })

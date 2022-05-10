@@ -1,6 +1,6 @@
 const Node = require('./models/Node');
 const { getUsersNode } = require('./userData');
-const { emitTraffic } = require('../sockets');
+const { emitTraffic, emitNodeInterfaceStatus } = require('../sockets');
 
 const getNodeInfoByIP = async (ip) => {
     let node = await Node.findOne({ 'interfaces.ip_address.value': { $regex: ip} });
@@ -12,13 +12,30 @@ const setTraffic = async (ip, traffic, io) => {
     node = await modifyNodeData('traffic', node, traffic);
 
     try{
-        // console.log(traffic);
         const savedNode = await Node.updateOne({ _id: node._id }, { interfaces: node.interfaces });
         const users = await getUsersNode(node)
-        // console.log(traffic);
         emitTraffic(users,traffic)
     }catch (err){
         console.log(err);
+    }
+}
+
+const updateInterfaceStatus = async (nodeInterfaceEvent) => {
+    const node= await getNodeInfoByIP(nodeInterfaceEvent.ip)
+    const users = await getUsersNode(node)
+    try{
+        const updatedNode = await Node.updateOne(
+            { _id: node._id},
+            { $set: {
+                "interfaces.$[interface].link_status.value": nodeInterfaceEvent.adminStatus,
+                "interfaces.$[interface].protocol_status.value": nodeInterfaceEvent.operStatus 
+            } },
+            { arrayFilters: [ {"interface.interface.value": nodeInterfaceEvent.if }] }
+        )
+        nodeInterfaceEvent.id = node._id
+        emitNodeInterfaceStatus(users, nodeInterfaceEvent)
+    }catch (err){
+        console.log(err)
     }
 }
 
@@ -50,3 +67,4 @@ const modifyNodeData = async (type, node, data) => {
 
 module.exports.getNodeInfoByIP = getNodeInfoByIP;
 module.exports.setTraffic = setTraffic;
+module.exports.updateInterfaceStatus = updateInterfaceStatus;

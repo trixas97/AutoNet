@@ -62,6 +62,9 @@ export const sockets = () => {
             case 'traffic':
                 updateTraffic(msg.data)
                 break; 
+            case 'node-interface-status':
+                store.dispatch('UserData/updateNodeInterfaceStatus', {...msg.data, changedFromUser: false })
+                break;
         }
     })
     

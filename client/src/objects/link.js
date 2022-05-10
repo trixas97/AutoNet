@@ -42,31 +42,37 @@ export default class Link {
     }
 
     setDown = (node) => {
-        if(node == this.start)
+        if(node == this.start){
             this.link["startPlugColor"] = this.linkColors.colorDown;
-        else
-            this.link["endPlugColor"] = this.linkColors.colorDown;   
+            this.ifstart.state = false
+        }else if(node == this.end){
+            this.link["endPlugColor"] = this.linkColors.colorDown;  
+            this.ifend.state = false 
+        }
     }
 
     setUp = (node) => {
-        if(node == this.start)
+        if(node == this.start){
             this.link["startPlugColor"] = this.linkColors.colorUp;
-        else
-            this.link["endPlugColor"] = this.linkColors.colorUp;   
+            this.ifstart.state = true
+        }else if(node == this.end){
+            this.link["endPlugColor"] = this.linkColors.colorUp;
+            this.ifend.state = true
+        }
     }
 
     setInter = (node) => {
         if(node == this.start)
             this.link["startPlugColor"] = this.linkColors.colorInter;
-        else
+        else if(node == this.end)
             this.link["endPlugColor"] = this.linkColors.colorInter;   
     }
 
     setState= (data) => {
-        if(data.operStatus && data.adminStatus)
+        if(data.protocol_status && data.link_status)
             this.setUp(data.node);
         else 
-            if(!data.adminStatus)
+            if(!data.link_status)
                 this.setDown(data.node);
             else
                 this.setInter(data.node);
