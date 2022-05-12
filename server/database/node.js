@@ -7,6 +7,24 @@ const getNodeInfoByIP = async (ip) => {
     return node
 }
 
+const getNodeInfoByID = async (id) => {
+    let node = await Node.findOne({ _id: id});
+    return node
+}
+
+const getAllNodes = async () => {
+    let nodes = await Node.find({"interfaces.mainIf.value": true}, {"interfaces.ip_address.value": 1, "interfaces.mainIf.value": 1, "username.value": 1, "password.value": 1})
+    const modifiedNodes = nodes.map(node  => {
+        return {
+            _id: node._id,
+            ip: node.interfaces.find(inter => inter.mainIf.value === true).ip_address.value, 
+            username: node.username.value,
+            password: node.password.value
+        }
+    })
+    return modifiedNodes
+}
+
 const setTraffic = async (ip, traffic, io) => {
     let node = await getNodeInfoByIP(ip);
     node = await modifyNodeData('traffic', node, traffic);
@@ -34,6 +52,37 @@ const updateInterfaceStatus = async (nodeInterfaceEvent) => {
         )
         nodeInterfaceEvent.id = node._id
         emitNodeInterfaceStatus(users, nodeInterfaceEvent)
+    }catch (err){
+        console.log(err)
+    }
+}
+
+const updateNodeData = async (newNode) => {
+    let node = await getNodeInfoByID(newNode._id)
+    let updatedNode = {...node, ...newNode}
+    updatedNode.interfaces = node.interfaces.map(oldInter => {return {...oldInter, ...updatedNode.interfaces.find(inter => oldInter.interface.value === inter.interface.value)}})
+    try{
+        await Node.updateOne({ _id: updatedNode._id},{$set: {
+            username: updatedNode.username,
+            password: updatedNode.password,
+            name: updatedNode.name,
+            vendor: updatedNode.vendor,
+            type: updatedNode.type,
+            status: updatedNode.status,
+            model: updatedNode.model,
+            upTime: updatedNode.upTime,
+            runConf: updatedNode.runConf,
+            startConf: updatedNode.startConf,
+            route_table: updatedNode.route_table,
+            arp_table: updatedNode.arp_table,
+            acl: updatedNode.acl,
+            cdp: updatedNode.cdp,
+            stp: updatedNode.stp,
+            mac: updatedNode.mac,
+            serial: updatedNode.serial,
+            os: updatedNode.os,
+            interfaces: updatedNode.interfaces,
+        }})
     }catch (err){
         console.log(err)
     }
@@ -68,3 +117,5 @@ const modifyNodeData = async (type, node, data) => {
 module.exports.getNodeInfoByIP = getNodeInfoByIP;
 module.exports.setTraffic = setTraffic;
 module.exports.updateInterfaceStatus = updateInterfaceStatus;
+module.exports.getAllNodes = getAllNodes
+module.exports.updateNodeData =updateNodeData

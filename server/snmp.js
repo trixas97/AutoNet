@@ -30,7 +30,6 @@ module.exports = function(io) {
             let pdu = notification.pdu;
             let info = notification.rinfo;
             let data = await modifyDataSNMP(pdu.varbinds, modifyTypeSNMP.receive, info.address);
-            updateInterfaceStatus(data)
             if(Object.keys(data).length > 1){
                 updateInterfaceStatus(data)      
             }

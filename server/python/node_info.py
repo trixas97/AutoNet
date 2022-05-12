@@ -12,9 +12,9 @@ def  modifyInterface(interface, key):
     elif key == "interface":
         return {keysNames["name"]: "Name", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "link_status":
-        return {keysNames["name"]: "Link Status", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
+        return {keysNames["name"]: "Link Status", keysNames["value"]: 'up' in interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "protocol_status":
-        return {keysNames["name"]: "Protocol Status", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
+        return {keysNames["name"]: "Protocol Status", keysNames["value"]: 'up' in interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "hardware_type":
         return {keysNames["name"]: "Hardware Type", keysNames["value"]: interface[key], keysNames["edit"]: False, keysNames["visible"]: True}
     elif key == "address":

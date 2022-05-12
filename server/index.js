@@ -78,3 +78,6 @@ mongoose.connect(
 
   }
 );
+
+const {updateNodesData} = require('./dataNodesReceiver') 
+setInterval(updateNodesData, 60000);

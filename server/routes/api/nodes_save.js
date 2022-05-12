@@ -1,11 +1,11 @@
 const { hostname } = require('os');
+const {PythonShell} = require('python-shell');
+const {spawn} = require('child_process');
 
 module.exports = function(io) {
 const express = require('express');
 const router = express.Router();
 const ipValid = require('ip');
-const {spawn} = require('child_process');
-const {PythonShell} = require('python-shell');
 const Node = require('../../database/models/Node');
 let hostLength = 0;
 
@@ -99,16 +99,6 @@ io.on('connection', (socket) => {
         })
     }
 
-    getNodeInfo = (host) => {
-        console.log("Go Python: " + host.ip);
-        return new Promise(resolve => {
-            let shell = new PythonShell('server/python/node_info.py', {mode: 'json', args: [host.ip, host.username, host.password]});
-            shell.on('message', function (message) {
-                resolve(message);
-            });
-        })
-    }
-
     initTraffic = async (interfaces) => {
         return new Promise(async resolve => { 
             for (let i=0; i < interfaces.length; i++){
@@ -140,4 +130,15 @@ io.on('connection', (socket) => {
 return router;
 }
 
+
+const getNodeInfo = (host) => {
+    console.log("Go Python: " + host.ip);
+    return new Promise(resolve => {
+        let shell = new PythonShell('server/python/node_info.py', {mode: 'json', args: [host.ip, host.username, host.password]});
+        shell.on('message', function (message) {
+            resolve(message);
+        });
+    })
+}
+module.exports.getNodeInfo = getNodeInfo
 // module.exports = router;
