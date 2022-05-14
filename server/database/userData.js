@@ -46,7 +46,7 @@ modifyNodesData = (nodes) => {
             for(let j=0; j < nodes[i].interfaces.length; j++){
                 let res = [];
                 let trafficLength = nodes[i].interfaces[j].traffic.value.length;
-                for(let k=trafficLength-6; k < trafficLength; k++){
+                for(let k=trafficLength >= 6 ? trafficLength-6 : 0; k < trafficLength; k++){
                     res.push(await new Promise(resolve => resolve(nodes[i].interfaces[j].traffic.value[k])))
                 }
                 nodes[i].interfaces[j].traffic.value = res;

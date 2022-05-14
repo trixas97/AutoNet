@@ -1,17 +1,17 @@
 const { hostname } = require('os');
 const {PythonShell} = require('python-shell');
 const {spawn} = require('child_process');
-
-module.exports = function(io) {
-const express = require('express');
-const router = express.Router();
 const ipValid = require('ip');
 const Node = require('../../database/models/Node');
+const express = require('express');
+const router = express.Router();
+
+function nodesSave(io) {
+
 let hostLength = 0;
 
 
 io.on('connection', (socket) => {
-
     router.post('/', (req,res) => {
         let data = {};
         Object.keys(req.query).length === 0 ? data = req.body : data = req.query;
@@ -90,41 +90,6 @@ io.on('connection', (socket) => {
         }
     }
 
-    initNode = (host) => {
-        return new Promise(resolve => {
-            let shell = new PythonShell('server/python/node_init.py', {mode: 'json', args: [host.ip, host.username, host.password, '192.168.78.1']});
-            shell.on('message', function (message) {
-                resolve(host)
-            })
-        })
-    }
-
-    initTraffic = async (interfaces) => {
-        return new Promise(async resolve => { 
-            for (let i=0; i < interfaces.length; i++){
-                interfaces[i].traffic = await { name: 'Traffic', value: [], editable: false, visible: false };
-                if(i == interfaces.length-1) resolve(interfaces)
-            }
-        })
-    }
-
-    setInterfacesNetworks = async (interfaces) => {
-        return new Promise(async resolve => {
-            for(let i=0; i < interfaces.length; i++){
-                
-                interfaces[i].network = await { 
-                    name: 'Network',
-                    value: `${interfaces[i].ip_address.value.length>0 ? ipValid.cidr(interfaces[i].ip_address.value) : ""}/${interfaces[i].ip_address.value.split('/')[1]}`,
-                    editable: false,
-                    visible: true
-                }
-                if(interfaces[i].ip_address.value.length==0)
-                    interfaces[i].network.value = ""
-                if(i == interfaces.length-1)
-                    resolve(interfaces)
-            }
-        })
-    }
 });
 
 return router;
@@ -140,5 +105,45 @@ const getNodeInfo = (host) => {
         });
     })
 }
+
+const initNode = (host) => {
+    return new Promise(resolve => {
+        let shell = new PythonShell('server/python/node_init.py', {mode: 'json', args: [host.ip, host.username, host.password, '192.168.78.1']});
+        shell.on('message', function (message) {
+            resolve(host)
+        })
+    })
+}
+
+const initTraffic = async (interfaces) => {
+    return new Promise(async resolve => { 
+        for (let i=0; i < interfaces.length; i++){
+            interfaces[i].traffic = await { name: 'Traffic', value: [], editable: false, visible: false };
+            if(i == interfaces.length-1) resolve(interfaces)
+        }
+    })
+}
+
+const setInterfacesNetworks = async (interfaces) => {
+    return new Promise(async resolve => {
+        for(let i=0; i < interfaces.length; i++){
+            
+            interfaces[i].network = await { 
+                name: 'Network',
+                value: `${interfaces[i].ip_address.value.length>0 ? ipValid.cidr(interfaces[i].ip_address.value) : ""}/${interfaces[i].ip_address.value.split('/')[1]}`,
+                editable: false,
+                visible: true
+            }
+            if(interfaces[i].ip_address.value.length==0)
+                interfaces[i].network.value = ""
+            if(i == interfaces.length-1)
+                resolve(interfaces)
+        }
+    })
+}
+module.exports.nodesSave = nodesSave
+module.exports.initNode = initNode
 module.exports.getNodeInfo = getNodeInfo
+module.exports.initTraffic = initTraffic
+module.exports.setInterfacesNetworks = setInterfacesNetworks
 // module.exports = router;

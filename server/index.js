@@ -27,7 +27,7 @@ const { socketsListeners } = require('./sockets');
 socketsListeners(io)
 const authRoute = require("./routes/auth.js");
 const nodesFinder = require('./routes/api/nodes_find.js')(io);
-const nodesSave = require('./routes/api/nodes_save.js')(io);
+const {nodesSave} = require('./routes/api/nodes_save.js');
 const saveTopology = require('./routes/api/topology');
 const links = require('./routes/api/links');
 const { getServerInfo, updateServerInfo, addServerInfo } = require('./database/server');
@@ -38,7 +38,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use('/user', authRoute);
 app.use('/api/devices', nodesFinder);
-app.use('/api/nodesSave', nodesSave);
+app.use('/api/nodesSave', nodesSave(io));
 app.use('/api/topology', saveTopology);
 app.use('/api/links', links);
 app.use('/api/console', consoleDevice);
@@ -80,4 +80,5 @@ mongoose.connect(
 );
 
 const {updateNodesData} = require('./dataNodesReceiver') 
+updateNodesData()
 setInterval(updateNodesData, 60000);
