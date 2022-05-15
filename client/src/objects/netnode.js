@@ -4,7 +4,7 @@ export default class NetNode {
     
     // img = "file:///C:/Program%20Files/GNS3/symbols/classic/router.svg";
 
-    constructor(id,topoId,node,label,links,ifs){
+    constructor(id,topoId,node,label,links,ifs, goToNodeInfo){
         this.id = id;
         this.topoId = topoId
         this.ifs = ifs;
@@ -26,6 +26,14 @@ export default class NetNode {
             store.default.dispatch('UserData/updateTopology', {id: this.topoId, node: {id: this.id, x: this.dragnode.left, y: this.dragnode.top}, changedFromUser: true});
         }
 
+        this.node.addEventListener('dblclick', function () {
+            const ip = ifs.find(inter => inter.mainIf.value === true).ip_address.value
+            console.log(ip)
+            console.log(goToNodeInfo)
+            goToNodeInfo('device?ip='+ (ip.includes('/') ? ip.slice(0, -(ip.length - ip.indexOf('/'))) : ip))
+        })
+
+        // }
     }
     
     //Calculate Label position
