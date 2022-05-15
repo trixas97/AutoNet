@@ -1,6 +1,6 @@
 const Node = require('./models/Node');
-const { getUsersNode } = require('./userData');
-const { emitTraffic, emitNodeInterfaceStatus } = require('../sockets');
+const { getUsersNode, modifyNodesData } = require('./userData');
+const { emitTraffic, emitNode, emitNodeInterfaceStatus } = require('../sockets');
 const {initTraffic, setInterfacesNetworks} = require('../routes/api/nodes_save')
 
 
@@ -40,6 +40,22 @@ const setTraffic = async (ip, traffic, io) => {
     }
 }
 
+const setNodeStatus = async (node, status) => {
+    try{
+        node = await getNodeInfoByID(node._id)
+        const users = await getUsersNode(node)
+        node.status.value = status
+        const updateResult = await Node.updateOne({_id: node._id}, {"status.value": node.status.value})
+        node = await modifyNodesData([node])
+        node = node[0]
+        if(updateResult.nModified === 1){
+            emitNode(users,node)
+        }
+    }catch(err){
+        console.log(err)
+    }
+}
+
 const updateInterfaceStatus = async (nodeInterfaceEvent) => {
     const node= await getNodeInfoByIP(nodeInterfaceEvent.ip)
     const users = await getUsersNode(node)
@@ -61,6 +77,7 @@ const updateInterfaceStatus = async (nodeInterfaceEvent) => {
 
 const updateNodeData = async (newNode) => {
     let node = await getNodeInfoByID(newNode._id)
+    const users = await getUsersNode(node)
     let updatedNode = {...node, ...newNode}
     if(updatedNode.interfaces.length > node.interfaces.length){
         let newInterfaces = updatedNode.interfaces.reduce((interfaces, inter) => {
@@ -69,7 +86,6 @@ const updateNodeData = async (newNode) => {
             }
             return interfaces
         },[])
-        console.log(newInterfaces)
         newInterfaces = await initTraffic(newInterfaces)
         newInterfaces = await setInterfacesNetworks(newInterfaces)
         newInterfaces.map(newInter => node.interfaces.push(newInter))
@@ -78,9 +94,10 @@ const updateNodeData = async (newNode) => {
     updatedNode.interfaces = node.interfaces.map(oldInter => {
         return {...oldInter, ...updatedNode.interfaces.find(inter => oldInter.interface.value === inter.interface.value)}
     })
+    updatedNode.status.value = true
 
     try{
-        await Node.updateOne({ _id: updatedNode._id},{$set: {
+        const updateResult = await Node.updateOne({ _id: updatedNode._id},{$set: {
             username: updatedNode.username,
             password: updatedNode.password,
             name: updatedNode.name,
@@ -101,6 +118,9 @@ const updateNodeData = async (newNode) => {
             os: updatedNode.os,
             interfaces: updatedNode.interfaces,
         }})
+        updatedNode = await modifyNodesData([updatedNode])
+        updatedNode = updatedNode[0]
+        emitNode(users, updatedNode)
     }catch (err){
         console.log(err)
     }
@@ -135,6 +155,7 @@ const modifyNodeData = async (type, node, data) => {
 module.exports.getNodeInfoByIP = getNodeInfoByIP;
 module.exports.getNodeInfoByID =getNodeInfoByID
 module.exports.setTraffic = setTraffic;
+module.exports.setNodeStatus = setNodeStatus;
 module.exports.updateInterfaceStatus = updateInterfaceStatus;
 module.exports.getAllNodes = getAllNodes
 module.exports.updateNodeData =updateNodeData

@@ -80,8 +80,6 @@ const emitTraffic = (users, data) => {
         type: 'traffic'
     }
     users.forEach(element => {
-        // console.log('emit ' + element.username);
-        // console.log(msg);
         mainIo.emit(element.username, msg)
     });
 }
@@ -97,7 +95,18 @@ const emitNodeInterfaceStatus = (users, data) => {
     });
 }
 
+const emitNode = (users, node) => {
+    let msg = {
+        data: node,
+        type: 'node'
+    }
+    users.forEach(element => {
+        mainIo.emit(element.username, msg)
+    })
+}
+
 
 module.exports.emitTraffic = emitTraffic;
+module.exports.emitNode = emitNode;
 module.exports.emitNodeInterfaceStatus = emitNodeInterfaceStatus;
 module.exports.socketsListeners = listeners

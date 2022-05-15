@@ -60,3 +60,4 @@ modifyNodesData = (nodes) => {
 module.exports.getUserData = getUserData;
 module.exports.getUser = getUser;
 module.exports.getUsersNode = getUsersNode;
+module.exports.modifyNodesData = modifyNodesData;

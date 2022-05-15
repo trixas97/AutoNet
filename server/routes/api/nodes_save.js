@@ -103,6 +103,9 @@ const getNodeInfo = (host) => {
         shell.on('message', function (message) {
             resolve(message);
         });
+        shell.on('error', function (message) {
+            resolve({error: true})
+        })
     })
 }
 

@@ -1,4 +1,4 @@
-const {getAllNodes, getNodeInfoByID, updateNodeData} = require('./database/node');
+const {getAllNodes, getNodeInfoByID, updateNodeData, setNodeStatus} = require('./database/node');
 const {getNodeInfo, initNode} = require('./routes/api/nodes_save');
 
 const updateNodesData = async () => {
@@ -11,13 +11,17 @@ const updateNodesData = async () => {
 
 const saveUpdatedNodesData = async (node) => {
     let updatedNode = await getNodeInfo(node)
-    const nodeDb = await getNodeInfoByID(node._id)
-    if(nodeDb.interfaces.length < updatedNode.interfaces.length){
-        updatedNode = await initNode(node)
-        updatedNode = await getNodeInfo(node)
+    if(!updatedNode.error){
+        const nodeDb = await getNodeInfoByID(node._id)
+        if(nodeDb.interfaces.length < updatedNode.interfaces.length){
+            updatedNode = await initNode(node)
+            updatedNode = await getNodeInfo(node)
+        }
+        updatedNode._id = node._id
+        updateNodeData(updatedNode)
+    }else{
+        setNodeStatus(node, false)
     }
-    updatedNode._id = node._id
-    updateNodeData(updatedNode)
 
 }
 
