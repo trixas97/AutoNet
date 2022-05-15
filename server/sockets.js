@@ -5,6 +5,8 @@ let mainIo;
 const listeners = (io) => {
     const { updateTopology, newTopology, deleteTopology } = require('./database/topology');
     const { saveNetworks, deleteNetwork } = require('./database/network')
+    const {getNodeInfoByID, setNodeStatus} = require('./database/node');
+    const {sendCommandsNode} = require('./routes/api/nodes_save')
     io.on('connection', (socket) => {
         socket.on('initUser', async (data) => {
           console.log(`User ${data} connected with socket ${socket.id}`);
@@ -65,6 +67,20 @@ const listeners = (io) => {
             }
             io.emit(data.user, msg)
             // saveNetworks(data.user, data.networks)
+        })
+
+        socket.on('save-config', async (data) => {
+            console.log(`Save config for node ${data.node} from ${data.user}` );
+            const node = await getNodeInfoByID(data.node)
+            const ip = node.interfaces.find(inter => inter.mainIf.value === true).ip_address.value
+            const runCommands = await sendCommandsNode({
+                ip: ip.includes('/') ? ip.slice(0, -(ip.length - ip.indexOf('/'))) : ip,
+                username: node.username.value,
+                password: node.password.value
+            }, {type: ''})
+            if(runCommands.error){
+                setNodeStatus(node, false)
+            }
         })
 
 

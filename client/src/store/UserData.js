@@ -4,6 +4,7 @@ const getDefaultState = () => {
         nodes: {data: [], changedFromUser: false},
         networks: {data: [], changedFromUser: false},
         topologies: {data: [], changedFromUser: false},
+        saveNodeConfigAction: null,
         links: []
     }
 }
@@ -20,10 +21,11 @@ export const UserDataModule = {
         },
         setNode(state, val){
             for(let i=0; i < state.nodes.data.length; i++){
-                if(state.nodes.data[i]._id == val._id){
-                    state.nodes.data[i] = val
+                if(state.nodes.data[i]._id == val.data._id){
+                    state.nodes.data[i] = val.data
                 }
             }
+            state.nodes.changedFromUser = val.changedFromUser
         },
         addNode(state,val){
             state.nodes.data.push(val);
@@ -39,6 +41,9 @@ export const UserDataModule = {
             state.nodes.changedFromUser = val.changedFromUser
         },
 
+        setSaveNodeConfigAction(state, val){
+            state.saveNodeConfigAction = {node: val._id}
+        },
 
         setNetworks(state, val){
             state.networks.data = val
@@ -115,7 +120,10 @@ export const UserDataModule = {
         updateNodeInterfaceStatus({commit}, val){
             commit('updateNodeInterfaceStatus', val)
         },
-
+        setSaveNodeConfigAction({commit}, val){
+            commit('setSaveNodeConfigAction', val)
+        },
+        
 
         setNetworks({ commit }, val){
             commit('setNetworks', val);
@@ -174,6 +182,9 @@ export const UserDataModule = {
         },
         getNodesById: (state) => async (ids) => {
             return state.nodes.find(node => node._id.includes(ids))
+        },
+        getSaveNodeConfigAction(state){
+            return state.saveNodeConfigAction
         },
         getNetworks(state) {
             return state.networks.data

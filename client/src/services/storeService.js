@@ -6,7 +6,7 @@ export const updateTraffic = async (data) => {
         node.interfaces.map(inter => {
             if(inter.interface.value == traffic.interface){
                 inter.traffic.value.push(traffic)
-                store.dispatch('UserData/setNode', node)                      
+                store.dispatch('UserData/setNode', {data: node, changedFromUser: false})                      
             }
         })
     })

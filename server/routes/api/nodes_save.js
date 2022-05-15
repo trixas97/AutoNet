@@ -118,6 +118,18 @@ const initNode = (host) => {
     })
 }
 
+const sendCommandsNode= (node, actions) => {
+    return new Promise(resolve => {
+        let shell = new PythonShell('server/python/node_update.py', {mode: 'json', args: [node.ip, node.username, node.password, actions.type]});
+        shell.on('message', function (message) {
+            resolve(message)
+        })
+        shell.on('error', function (message) {
+            resolve({error: true})
+        })
+    })
+}
+
 const initTraffic = async (interfaces) => {
     return new Promise(async resolve => { 
         for (let i=0; i < interfaces.length; i++){
@@ -149,4 +161,5 @@ module.exports.initNode = initNode
 module.exports.getNodeInfo = getNodeInfo
 module.exports.initTraffic = initTraffic
 module.exports.setInterfacesNetworks = setInterfacesNetworks
+module.exports.sendCommandsNode = sendCommandsNode
 // module.exports = router;

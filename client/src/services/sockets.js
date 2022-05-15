@@ -44,10 +44,10 @@ export const sockets = () => {
                     store.dispatch('UserData/deleteTopology', {id: msg.res.data, changedFromUser: false});
                 break;
             case 'nodes':
-                store.dispatch('UserData/setNodes', msg.nodes);
+                store.dispatch('UserData/setNodes', { data: msg.node, changedFromUser: false });
                 break;
             case 'node':
-                store.dispatch('UserData/setNode', msg.data);
+                store.dispatch('UserData/setNode', {data: msg.data, changedFromUser: false});
                 break;
             case 'links':
                 //code
@@ -122,6 +122,11 @@ export const sockets = () => {
         }
     })
 
+    watch(() => store.getters['UserData/getSaveNodeConfigAction'], (data) => {
+        if(data != null){
+            socket.emit('save-config', {node: data.node, user: store.getters['User/getUsername']});
+        }
+    })
     
 
     // For console device live stream - listener 

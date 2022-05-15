@@ -13,23 +13,23 @@
         <div class="info">
             <div class="name">
                 <span>Name: </span><span class="value">{{name}}</span>
-                <q-popup-edit v-model="name" class="bg-accent text-white" auto-save v-slot="scope">
-                    <q-input dark color="white" :input-style="{ 'font-weight': 'bold', 'font-family': 'arial', color: 'white' }" class="text-white" v-model="scope.value" dense autofocus counter @keyup.enter="scope.set">
+                <!-- <q-popup-edit v-model="name" class="bg-accent text-white" auto-save v-slot="scope">
+                    <q-input dark color="white" :input-style="{ 'font-weight': 'bold', 'font-family': 'arial', color: 'white' }" class="text-white" v-model="scope.value" dense autofocus @keyup.enter="scope.set">
                         <template v-slot:append color="accent" >
                         <q-icon name="edit" color="white" />
                         </template>
                     </q-input>
-                </q-popup-edit>
+                </q-popup-edit> -->
             </div>
             <div class="username">
                 <span>Username: </span><span class="value">{{username}}</span>
-                <q-popup-edit v-model="username" class="bg-accent text-white" auto-save v-slot="scope">
-                    <q-input dark color="white" :input-style="{ 'font-weight': 'bold', 'font-family': 'arial', color: 'white' }" class="text-white" v-model="scope.value" dense autofocus counter @keyup.enter="scope.set">
+                <!-- <q-popup-edit v-model="usernameText" class="bg-accent text-white" auto-save v-slot="scope">
+                    <q-input dark color="white" :input-style="{ 'font-weight': 'bold', 'font-family': 'arial', color: 'white' }" class="text-white" v-model="scope.value" dense counter @keyup.enter="scope.set">
                         <template v-slot:append color="accent" >
                         <q-icon name="edit" color="white" />
                         </template>
                     </q-input>
-                </q-popup-edit>
+                </q-popup-edit> -->
                 <!-- <q-input outlined v-model="username" label="Username" /> -->
             </div>
             <div class="vendor">
@@ -38,13 +38,13 @@
             </div>
             <div class="password">
                 <span>Password: </span><span class="value">{{password}}</span>
-                <q-popup-edit v-model="password" class="bg-accent text-white" auto-save v-slot="scope">
+                <!-- <q-popup-edit v-model="password" class="bg-accent text-white" auto-save v-slot="scope">
                     <q-input dark color="white" :input-style="{ 'font-weight': 'bold', 'font-family': 'arial', color: 'white' }" class="text-white" v-model="scope.value" dense autofocus counter @keyup.enter="scope.set">
                         <template v-slot:append color="accent" >
                         <q-icon name="edit" color="white" />
                         </template>
                     </q-input>
-                </q-popup-edit>
+                </q-popup-edit> -->
                 <!-- <q-input outlined v-model="password" label="Password" /> -->
             </div>
             <div class="type">

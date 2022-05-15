@@ -1,13 +1,13 @@
 <template>
     <div class="configComp">
         <div class="head">
-            <div class="save"><q-btn push color="green" round size="lg" icon="save">
-                <q-tooltip class="bg-green text-body1" :offset="[10, 10]">
+            <div class="save"><q-btn push color="green" :disabled="title === 'Startup'" round size="lg" icon="save" @click="onSave">
+                <q-tooltip v-if="title !== 'Startup'" class="bg-green text-body1" :offset="[10, 10]">
                     Save
                 </q-tooltip>
             </q-btn></div>
             <span class="title">{{title}} Configuration</span>
-            <div class="close"><q-btn push color="secondary" icon="save_alt" round size="lg">
+            <div class="close"><q-btn push color="secondary" icon="save_alt" round size="lg" @click="onDownload">
                 <q-tooltip class="bg-secondary text-body1" :offset="[10, 10]">
                     Download
                 </q-tooltip>
@@ -26,9 +26,11 @@ import"prismjs/prism";
 import "prismjs/themes/prism-tomorrow.css";
 import "prismjs/components/prism-editorconfig"
 import Prism from "vue-prism-component";
+import store from '@/store';
 import { watch } from 'vue'
 // import store from '@/store';
 import _ from "lodash";
+const download = require("downloadjs");
 
 export default {
     props:{
@@ -52,10 +54,15 @@ export default {
                 dataConfig = props.node.startConf
         })
 
+        const onDownload = () => {
+            download(dataConfig, `${props.node.name.value}-${props.title}Configuration.txt`, "text/plain");
+        }
 
-
+        const onSave = () => {
+            store.dispatch('UserData/setSaveNodeConfigAction', props.node);
+        }
         
-        return {dataConfig};
+        return {dataConfig,onDownload, onSave};
     }
 }
 </script>
