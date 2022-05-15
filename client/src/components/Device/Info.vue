@@ -62,9 +62,9 @@
                     Informations
                 </q-tooltip>
             </q-btn></div>
-            <div class="console"><q-btn push color="dark" round size="lg" @click="openConsole">
+            <div class="console"><q-btn :disabled="status !== 'Active'" push color="dark" round size="lg" @click="openConsole">
                 <img src="@/assets/console.svg" class="filter-green">
-                <q-tooltip class="bg-dark text-body1" :offset="[10, 10]">
+                <q-tooltip :disabled="status !== 'Active'" class="bg-dark text-body1" :offset="[10, 10]">
                     Console
                 </q-tooltip>
             </q-btn></div>

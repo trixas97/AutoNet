@@ -29,7 +29,7 @@
                 <span class="value">{{node.os.version}}</span>
               </q-card>
             </div>
-            <div class="element3">
+            <!-- <div class="element3">
               <q-input standout v-model="privilege" bg-color="black" label="Privilege Password" label-color="primary" @focus="focusPr" @blur="blurPr">
                 <template v-slot:prepend>
                   <q-icon name="lock" color="white" />
@@ -42,7 +42,7 @@
                   <q-icon name="vpn_key" color="white" />
                 </template>
               </q-input>
-            </div>
+            </div> -->
             <div class="tableComp">
               <TableInfo :node="node"/>
             </div>
@@ -126,11 +126,10 @@ export default {
       grid-area: infoContent;
       display: grid;
       text-align: center;
-      grid-template-rows: 1.5fr 1.5fr 6fr;
+      grid-template-rows: 1.5fr 8.5fr;
       grid-template-columns: 4.5fr 0.5fr 4.5fr;
       grid-template-areas: 
       "element1 . element2"
-      "element3 . element4"
       "tableComp tableComp tableComp";
       font: {
           size:1.5em;
@@ -207,7 +206,7 @@ export default {
 
       .tableComp {
         grid-area: tableComp;
-        height: 22em;
+        height: 28em;
         // background-color: #eeef;
       }
     }

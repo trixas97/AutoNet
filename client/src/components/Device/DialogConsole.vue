@@ -1,6 +1,6 @@
 <template>
     <q-dialog persistent transition-show="fade" transition-hide="fade">
-      <q-layout view="hhh lpR fff"  class="bg-white" style="min-height: 25em; height: 25em">
+      <q-layout view="hhh lpR fff"  class="bg-white" style="overflow: hidden; min-height: 60em; height: 60em; width: 80em; min-width: 80em;">
 
         <q-header class="bg-primary" style="width: 100%">
           <q-toolbar>

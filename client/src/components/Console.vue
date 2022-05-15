@@ -101,8 +101,8 @@ methods:{
         width: 100%;
         height: 100%;
         margin: 0px;
-        padding-top: 2%;
-        padding-left: 3.6%;
+        padding-bottom: 2%;
+        padding-left: 2%;
         
         
       }
@@ -128,6 +128,7 @@ methods:{
         user-select: none;
         -ms-user-select: none;
         -webkit-user-select: none;
+        height: 100%;
     }
 
     .xterm.focus,
@@ -183,14 +184,21 @@ methods:{
         left: 0;
         top: 0;
         bottom: 0;
+        max-width: 100%;
+        max-height: 100%;
     }
 
     .xterm .xterm-screen {
         position: relative;
+        max-height: 100%;
+        max-width: 100%;
     }
 
     .xterm .xterm-screen canvas {
         position: absolute;
+        max-height: 100%;
+        max-width: 100%;
+        
         left: 0;
         top: 0;
         
