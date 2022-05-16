@@ -10,6 +10,7 @@ import Protocols from '@/views/Dashboard/Protocols.vue'
 import Topologies from '@/views/Dashboard/Topologies.vue'
 import Devices from '@/views/Dashboard/Devices.vue'
 import Networks from '@/views/Dashboard/Networks.vue'
+import Profile from '@/views/Dashboard/Profile.vue'
 
 
 const routes = [
@@ -84,6 +85,12 @@ const routes = [
       name: 'Networks',
       devname: 'homeNetworks',
       component: Networks
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      devname: 'homeProfile',
+      component: Profile
     }
   
   ]
