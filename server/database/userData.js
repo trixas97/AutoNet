@@ -15,7 +15,7 @@ const getUserData = async (username) => {
     let networks = await Networks.find({user: user._id})
     let server = await Server.findOne()
     let users = await User.count()
-    let completeData = {server: server, nodes: nodes, topologies: topologies, links: links, networks: networks, users: users}
+    let completeData = {server: server, nodes: nodes, topologies: topologies, links: links, networks: networks, users: users, userInfo: user}
     return completeData
 }
 
@@ -27,6 +27,28 @@ const getUser = async (username) => {
 const getUsersNode = async (node) => {
     let users = await User.find({_id: node.user})
     return users;
+}
+
+const setUserCredentials = async (user, credentials) => {
+    try{
+        let userCredentials = { username: credentials.username}
+        if(credentials.password !== undefined){
+            userCredentials.password = credentials.password
+        }
+        const savedData = await User.updateOne({username: user}, userCredentials)
+        return { message: 'User Credentials Saved', data: credentials };
+    }catch (err){
+        return { message: err};
+    }
+}
+
+const setUserDetails = async (user, details) => {
+    try{
+        const savedData = await User.updateOne({username: user}, {name: details.firstname, surname: details.surname, email: details.email})
+        return { message: 'User Details Saved', data: details };
+    }catch (err){
+        return { message: err};
+    }
 }
 
 linksParams = async (nodes) => {
@@ -60,4 +82,6 @@ modifyNodesData = (nodes) => {
 module.exports.getUserData = getUserData;
 module.exports.getUser = getUser;
 module.exports.getUsersNode = getUsersNode;
+module.exports.setUserCredentials = setUserCredentials;
+module.exports.setUserDetails = setUserDetails;
 module.exports.modifyNodesData = modifyNodesData;

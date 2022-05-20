@@ -6,7 +6,9 @@ const listeners = (io) => {
     const { updateTopology, newTopology, deleteTopology } = require('./database/topology');
     const { saveNetworks, deleteNetwork } = require('./database/network')
     const {getNodeInfoByID, setNodeStatus} = require('./database/node');
+    const {setUserCredentials, setUserDetails} = require('./database/userData');
     const {sendCommandsNode} = require('./routes/api/nodes_save')
+    const {getHashPassword} = require('./routes/auth')
     io.on('connection', (socket) => {
         socket.on('initUser', async (data) => {
           console.log(`User ${data} connected with socket ${socket.id}`);
@@ -81,6 +83,20 @@ const listeners = (io) => {
             if(runCommands.error){
                 setNodeStatus(node, false)
             }
+        })
+
+        socket.on('save-user_credentials', async (data) => {
+            console.log(`Save user credentials from ${data.username}` );
+            let userCredentials = {username: data.username}
+            if(data.password.length > 0){
+                userCredentials.password = await getHashPassword(data.password)
+            }
+            setUserCredentials(data.user, userCredentials)
+        })
+
+        socket.on('save-user_details', async (data) => {
+            console.log(`Save user details from ${data.firstname}` );
+            setUserDetails(data.user, {email: data.email, firstname: data.firstname, surname: data.surname})
         })
 
 

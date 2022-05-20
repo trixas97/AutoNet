@@ -24,8 +24,7 @@ router.post('/register', async (req,res) => {
     if(userExists) return res.status(400).send("Username already exists");
 
     // Create user Mongo Model
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(data.password, salt);
+    const hashedPassword = await getHashPassword(data.password)
     const user = new User({
         username: data.username,
         password: hashedPassword,
@@ -70,4 +69,11 @@ router.get('/', verify, (req,res) => {
     res.json({state: 'Loged in'});
 })
 
+const getHashPassword = async (plainText) => {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(plainText, salt);
+    return hashedPassword
+}
+
 module.exports = router;
+module.exports.getHashPassword = getHashPassword

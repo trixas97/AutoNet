@@ -26,7 +26,7 @@
             </q-input>
             <q-checkbox v-model="isEnabledChangePassword" label="Change your password?" color="teal" />
             <div class="saveButtonConatiner">
-              <q-btn color="positive" push  @click="showNotif('User Credentials', 'credentials')">
+              <q-btn color="positive" push  @click="onSaveCredentials">
                 <div class="row items-center no-wrap">
                   <q-icon left name="save" />
                   <div class="text-center">
@@ -47,7 +47,7 @@
             </q-input>
 
             <div class="saveButtonConatiner">
-              <q-btn color="positive" push @click="showNotif('User Details', 'details')">
+              <q-btn color="positive" push @click="onSaveDetails">
                 <div class="row items-center no-wrap">
                   <q-icon left name="save" />
                   <div class="text-center">
@@ -65,18 +65,18 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useQuasar } from 'quasar'
-// import store from '@/store';
+import store from '@/store';
 
 export default {
     name: 'Profile',
     setup(){
-        const username = ref('autonet')
-        const password = ref('autonet')
-        const firstname = ref('mixas')
-        const surname = ref('trixas')
-        const email = ref('trixasmixas@gmail.com')
+        let username = ref(store.getters['UserData/getUserInfoCredentials'].username !== undefined ? store.getters['UserData/getUserInfoCredentials'].username : '')
+        let password = ref('')
+        let firstname = ref(store.getters['UserData/getUserInfoDetails'].firstname !== undefined ? store.getters['UserData/getUserInfoDetails'].firstname : '')
+        let surname = ref(store.getters['UserData/getUserInfoDetails'].surname !== undefined ? store.getters['UserData/getUserInfoDetails'].surname : '')
+        let email = ref(store.getters['UserData/getUserInfoDetails'].email !== undefined ? store.getters['UserData/getUserInfoDetails'].email : '')
         const isEnabledChangePassword = ref(false)
         const isPwd =  ref(true)
         const $q = useQuasar()
@@ -84,6 +84,17 @@ export default {
         let isUsernameValid = true
         let isPasswordValid = true
         const emailRegex =  /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+
+        
+        watch(() => store.getters['UserData/getUserInfoCredentials'], (data) => {
+          username.value = data.username
+        })
+
+        watch(() => store.getters['UserData/getUserInfoDetails'], (data) => {
+          email.value = data.email
+          firstname.value = data.firstname
+          surname.value = data.surname
+        })
 
         const showNotif = (title, type) => {
           let message = ''
@@ -115,6 +126,22 @@ export default {
             isPasswordValid = value.length >= 3 
             return isPasswordValid
         }
+
+        const onSaveCredentials = () => {
+          if(isUsernameValid && (!isEnabledChangePassword.value || (isEnabledChangePassword.value && isPasswordValid))){
+            store.dispatch('UserData/setUserInfoCredentials', {username: username.value, password: password.value});
+          }
+          showNotif('User Credentials', 'credentials')
+        }
+
+        const onSaveDetails = () => {
+          if(isEmailValid){
+            store.dispatch('UserData/setUserInfoDetails', {firstname: firstname.value, surname: surname.value, email: email.value});
+          }
+          showNotif('User Details', 'details')
+        }
+
+
       return {
         username, 
         password, 
@@ -126,7 +153,9 @@ export default {
         isPwd, 
         checkEmailValidation,
         checkUsernameValidation,
-        checkPasswordValidation
+        checkPasswordValidation,
+        onSaveCredentials,
+        onSaveDetails
       }
     }
 }

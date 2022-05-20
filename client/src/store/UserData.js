@@ -1,6 +1,8 @@
 const getDefaultState = () => {
     return {
         server: {},
+        userInfoCredentials: {},
+        userInfoDetails: {},
         nodes: {data: [], changedFromUser: false},
         networks: {data: [], changedFromUser: false},
         topologies: {data: [], changedFromUser: false},
@@ -98,6 +100,14 @@ export const UserDataModule = {
             state.server = val
         },
 
+        setUserInfoCredentials(state,val){
+            state.userInfoCredentials = val
+        },
+
+        setUserInfoDetails(state,val){
+            state.userInfoDetails = val
+        },
+
         resetState (state) {
             Object.assign(state, getDefaultState())
         }
@@ -163,6 +173,14 @@ export const UserDataModule = {
             commit('deleteLink', val);
         },
 
+        setUserInfoCredentials({ commit },val){
+            commit('setUserInfoCredentials', val)
+        },
+
+        setUserInfoDetails({ commit },val){
+            commit('setUserInfoDetails', val)
+        },
+
         setServer({ commit }, val){
             commit('setServer', val)
         },
@@ -213,6 +231,12 @@ export const UserDataModule = {
         },
         getLinks(state){
             return state.links
+        },
+        getUserInfoCredentials(state){
+            return state.userInfoCredentials
+        },
+        getUserInfoDetails(state){
+            return state.userInfoDetails
         }
     }
 }

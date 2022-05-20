@@ -33,6 +33,8 @@ export const sockets = () => {
                 store.dispatch('UserData/setNetworks', msg.data.networks);
                 msg.data.server.users = msg.data.users
                 store.dispatch('UserData/setServer', msg.data.server)
+                store.dispatch('UserData/setUserInfoCredentials', {username: msg.data.userInfo.username})
+                store.dispatch('UserData/setUserInfoDetails', {firstname: msg.data.userInfo.name, surname: msg.data.userInfo.surname, email: msg.data.userInfo.email})
                 break;
             case 'topologies':
                 //code
@@ -125,6 +127,18 @@ export const sockets = () => {
     watch(() => store.getters['UserData/getSaveNodeConfigAction'], (data) => {
         if(data != null){
             socket.emit('save-config', {node: data.node, user: store.getters['User/getUsername']});
+        }
+    })
+
+    watch(() => store.getters['UserData/getUserInfoCredentials'], (data) => {
+        if(data != null){
+            socket.emit('save-user_credentials', {user: store.getters['User/getUsername'], username: data.username, password: data.password});
+        }
+    })
+
+    watch(() => store.getters['UserData/getUserInfoDetails'], (data) => {
+        if(data != null){
+            socket.emit('save-user_details', {user: store.getters['User/getUsername'], firstname: data.firstname, surname: data.surname, email: data.email});
         }
     })
     
