@@ -89,6 +89,7 @@ io.on('connection', (socket) => {
             let datastr = data.toString();
             let datajson = JSON.parse(datastr);
             host.vendor = datajson.vendor;
+            host.mac = undefined
 
             if(host.vendor == "Cisco"){                                                   // Check vendor for Cisco devices
                 console.log(host);                                                        // Return Device from Slow script

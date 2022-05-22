@@ -29,6 +29,12 @@ const getUsersNode = async (node) => {
     return users;
 }
 
+const getUserNodes = async (username) => {
+    let user = await User.findOne({username: username})
+    let nodes = await Node.find({user: user._id})
+    return nodes;
+}
+
 const setUserCredentials = async (user, credentials) => {
     try{
         let userCredentials = { username: credentials.username}
@@ -85,3 +91,4 @@ module.exports.getUsersNode = getUsersNode;
 module.exports.setUserCredentials = setUserCredentials;
 module.exports.setUserDetails = setUserDetails;
 module.exports.modifyNodesData = modifyNodesData;
+module.exports.getUserNodes = getUserNodes

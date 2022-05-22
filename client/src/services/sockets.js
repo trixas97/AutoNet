@@ -67,16 +67,27 @@ export const sockets = () => {
             case 'node-interface-status':
                 store.dispatch('UserData/updateNodeInterfaceStatus', {...msg.data, changedFromUser: false })
                 break;
+            case 'saveNewNodes':
+                // store.dispatch('NewNetwork/setNodes', msg.data)
+                // socket.emit('nodes', {user: store.getters['User/getUsername']});
+                break;
+            case 'saveNewNode':
+                store.dispatch('NewNetwork/updateSaveStatus', msg.data)
+                break;
         }
     })
     
 
 
-    watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (nodes) => { 
+    watch(() => _.cloneDeep(store.getters['UserData/getNodes']), (nodes, prev) => { 
         console.log('watch change from sockets Nodes');
         if(initFlag.nodes && nodes.changedFromUser){
             if(nodes != null){
-                socket.emit('nodes', {nodes: nodes.data, user: store.getters['User/getUsername']});
+                if(nodes.data.length < prev.data.length) {
+                    socket.emit('nodes', { nodes: nodes.data, user: store.getters['User/getUsername'], id: prev.data.find(node => !nodes.data.find(nodeDel => node._id === nodeDel._id))._id, method:'delete'})
+                }else{
+                    socket.emit('nodes', {nodes: nodes.data, user: store.getters['User/getUsername']});
+                }
             }
         }
         else
@@ -139,6 +150,12 @@ export const sockets = () => {
     watch(() => store.getters['UserData/getUserInfoDetails'], (data) => {
         if(data != null){
             socket.emit('save-user_details', {user: store.getters['User/getUsername'], firstname: data.firstname, surname: data.surname, email: data.email});
+        }
+    })
+
+    watch(() => store.getters['NewNetwork/getSaveDevices'], (data) => {
+        if(data != null){
+            socket.emit('save-new-nodes', {user: store.getters['User/getUsername'], nodes: store.getters['NewNetwork/getNodes'].filter(node => node.checked === true), socketId: socket.id});
         }
     })
     

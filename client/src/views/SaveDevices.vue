@@ -39,10 +39,10 @@
 <script>
 // @ is an alias to /src
 import NewNetworkCatalogNode from '@/components/NewNetwork/NewNetworkCatalogNode.vue'
-import { computed } from '@vue/runtime-core';
 import { useStore } from 'vuex';
-import io from 'socket.io-client'
-import axios from 'axios'
+import { ref, watch } from 'vue'
+import _ from "lodash";
+
 export default {
   
   name: 'SaveDevices',
@@ -51,51 +51,26 @@ export default {
   },
   data(){
     // const route = useRoute();
-    const store = useStore();
-    const storeState = 'NewNetwork/';
-    const storeActions = {
-      nodes: `${storeState}getNodes`,
-    }
-    
-    const nodes = computed(() => store.getters[storeActions.nodes]).value;
-    let socket = io('http://192.168.2.14:5000');
+    const store = useStore();    
+    const nodes = ref(store.getters['NewNetwork/getNodes']);
     
     console.log(nodes);
-    let url = 'http://192.168.2.14:5000/api/nodesSave';
-     
-    socket.on('save-nodes',(data) => {
-      this.$refs.nodesRef.forEach(element => {
-        if(element.node.ip == data.ip)
-          element.changeFinished(data.messageState);
-      });
-      console.log('[OK]');
-    });
+
+    watch(() => _.cloneDeep(store.getters['NewNetwork/getNodes']), (dataNodes) => {
+      if(dataNodes != null){
+          nodes.value = dataNodes
+      }
+    })
 
     return {
       nodes,
-      socket,
-      url
+      store
     }
   },
   methods:{
     saveDevices(){
-      let params = {}
-
-      for(let i=0; i < this.nodes.length; i++){
-        let param = `node${i}`;
-        params[param] = `${this.nodes[i].ip} ${this.nodes[i].username} ${this.nodes[i].password}`;
-      }
-
-      params.id = this.$route.params.socket.id;
-
-      axios.post(this.url, params).then(response => {
-        console.log(response.data);
-      })
-      
-
-      this.$refs.nodesRef.forEach(element => {
-        element.changeProgress(true);
-      });
+      this.nodes = this.nodes.map(node => {return {...node, finished:0}})
+      this.store.dispatch('NewNetwork/saveDevices', {flag: false, nodes: this.nodes})
     }
   }
 }

@@ -5,9 +5,9 @@ let mainIo;
 const listeners = (io) => {
     const { updateTopology, newTopology, deleteTopology } = require('./database/topology');
     const { saveNetworks, deleteNetwork } = require('./database/network')
-    const {getNodeInfoByID, setNodeStatus} = require('./database/node');
-    const {setUserCredentials, setUserDetails} = require('./database/userData');
-    const {sendCommandsNode} = require('./routes/api/nodes_save')
+    const {getNodeInfoByID, setNodeStatus, deleteNode} = require('./database/node');
+    const {setUserCredentials, setUserDetails, getUserNodes} = require('./database/userData');
+    const {sendCommandsNode, saveNodesAction} = require('./routes/api/nodes_save')
     const {getHashPassword} = require('./routes/auth')
     io.on('connection', (socket) => {
         socket.on('initUser', async (data) => {
@@ -18,14 +18,22 @@ const listeners = (io) => {
           io.to(socket.id).emit(data, msg)
         })
 
-        socket.on('nodes', (data) => {
+        socket.on('nodes', async (data) => {
             console.log(`Changes NODES from ${data.user}` );
             let msg = {
                 nodes: {
-                    data: data.nodes,
                     changedFromUser: false
                 },
                 type: 'nodes'
+            }
+            switch(data.method){
+                case 'delete':
+                    msg.res = await deleteNode(data.id)
+            }
+            if(data.nodes !== undefined){
+                msg.data = data.nodes
+            }else{
+                msg.data = await getUserNodes(data.user)
             }
             io.emit(data.user, msg)
         })
@@ -69,6 +77,16 @@ const listeners = (io) => {
             }
             io.emit(data.user, msg)
             // saveNetworks(data.user, data.networks)
+        })
+
+        socket.on('save-new-nodes', async (data) => {
+            let msg = {
+                data: data.nodes,
+                savedNodes: true,
+                type: 'saveNewNodes'
+            }
+            let result = await saveNodesAction(data)
+            io.emit(data.user, msg)
         })
 
         socket.on('save-config', async (data) => {
@@ -137,8 +155,19 @@ const emitNode = (users, node) => {
     })
 }
 
+const emitSavedNode = (socketId, users,savedNodeResult) => {
+    let msg = {
+        data: savedNodeResult,
+        type: 'saveNewNode'
+    }
+    users.forEach(element => {
+        mainIo.to(socketId).emit(element.username, msg)
+    })
+}
+
 
 module.exports.emitTraffic = emitTraffic;
 module.exports.emitNode = emitNode;
 module.exports.emitNodeInterfaceStatus = emitNodeInterfaceStatus;
+module.exports.emitSavedNode = emitSavedNode
 module.exports.socketsListeners = listeners

@@ -122,6 +122,7 @@ export default {
       rows(){
         let rowsArray = [];
         let nodesArray = this.nodes.value.data;
+        try{
         for(let  i=0; i< nodesArray.length; i++){
           rowsArray[i] ={
             type: nodesArray[i].type.value,
@@ -135,6 +136,7 @@ export default {
           if(i == nodesArray.length-1)
             return(rowsArray)
         }
+        }catch(err){return rowsArray}
         return rowsArray
       },
       columns(){ 

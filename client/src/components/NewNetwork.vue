@@ -100,7 +100,7 @@ export default {
         let flagExist = false;
         nodes.forEach(element => {
           if(element.ip == data.ip){
-            element.mac == null ? element.mac = data.mac : null;
+            element.mac == null ? element.mac = data.mac : undefined;
             element.vendor == null ? element.vendor = data.vendor : null;
             flagExist = true;
           }

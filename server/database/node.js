@@ -126,6 +126,15 @@ const updateNodeData = async (newNode) => {
     }
 }
 
+const deleteNode = async (id) => {
+    try{
+        const deletedNode = await Node.deleteOne({_id: id})
+        return { message: 'Node Deleted', data: id };
+    }catch(err){
+        return { message: err};
+    }
+}
+
 const modifyNodeData = async (type, node, data) => {
     return new Promise(async resolve => {
         switch(type){
@@ -159,3 +168,4 @@ module.exports.setNodeStatus = setNodeStatus;
 module.exports.updateInterfaceStatus = updateInterfaceStatus;
 module.exports.getAllNodes = getAllNodes
 module.exports.updateNodeData =updateNodeData
+module.exports.deleteNode = deleteNode

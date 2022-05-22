@@ -5,6 +5,8 @@ const ipValid = require('ip');
 const Node = require('../../database/models/Node');
 const express = require('express');
 const router = express.Router();
+const {emitSavedNode} = require('../../sockets')
+const {getUser} = require('../../database/userData')
 
 function nodesSave(io) {
 
@@ -36,59 +38,6 @@ io.on('connection', (socket) => {
             saveNodes(hosts[i], res, nodes, socket);
         }     
     });
-
-    saveNodes = async (host, res, nodes, socket) => {
-        let node = {};
-        node = await initNode(host)
-        node = await getNodeInfo(host);
-        node.interfaces = await initTraffic(node.interfaces)
-        node.interfaces = await setInterfacesNetworks(node.interfaces)
-        if(node != null){
-            const nodeDb = new Node({
-                user: '60aa9e031c1d653434fcf352',
-                username: node.username,
-                password: node.password,
-                name: node.name,
-                vendor: node.vendor,
-                type: node.type,
-                status: node.status,
-                model: node.model,
-                upTime: node.upTime,
-                runConf: node.runConf,
-                startConf: node.startConf,
-                route_table: node.route_table,
-                arp_table: node.arp_table,
-                acl: node.acl,
-                cdp: node.cdp,
-                stp: node.stp,
-                mac: node.mac,
-                serial: node.serial,
-                interfaces: node.interfaces,
-                os: { name: node.os.name, version: node.os.version}
-            });
-
-            try{
-                const savedNode = await nodeDb.save();
-                nodes.push(savedNode);
-                hostLength--;
-                let sendNode = {ip: host.ip, messageState: 1}
-                io.to(socket).emit('save-nodes', sendNode);
-
-            }catch (err){
-                let sendNode = {ip: host.ip, messageState: 2}
-                io.to(socket).emit('save-nodes', sendNode);
-                res.json({ message: err});
-            }
-        }else{
-            let sendNode = {ip: host.ip, messageState: 2}
-            io.to(socket).emit('save-nodes', sendNode);
-            hostLength--
-        }
-
-        if(hostLength == 0){
-            nodes.length != 0 ? res.send(nodes) : res.json({ message: "No found devices"});
-        }
-    }
 
 });
 
@@ -156,10 +105,71 @@ const setInterfacesNetworks = async (interfaces) => {
         }
     })
 }
+
+const saveNodesAction = (data) => {
+    let hosts = data.nodes;
+
+    for(let i=0; i < hosts.length; i++){
+        saveNodes(hosts[i], data.user, data.socketId);
+    }
+}
+
+const saveNodes = async (host, user, socket) => {
+    let node = {};
+    node = await initNode(host)
+    node = await getNodeInfo(host);
+    node.interfaces = await initTraffic(node.interfaces)
+    node.interfaces = await setInterfacesNetworks(node.interfaces)
+    user = await getUser(user)
+    if(node != null){
+        const nodeDb = new Node({
+            user: '60aa9e031c1d653434fcf352',
+            username: node.username,
+            password: node.password,
+            name: node.name,
+            vendor: node.vendor,
+            type: node.type,
+            status: node.status,
+            model: node.model,
+            upTime: node.upTime,
+            runConf: node.runConf,
+            startConf: node.startConf,
+            route_table: node.route_table,
+            arp_table: node.arp_table,
+            acl: node.acl,
+            cdp: node.cdp,
+            stp: node.stp,
+            mac: node.mac,
+            serial: node.serial,
+            interfaces: node.interfaces,
+            os: { name: node.os.name, version: node.os.version}
+        });
+
+        try{
+            const savedNode = await nodeDb.save();
+            let sendNode = {ip: host.ip, messageState: 1}
+            emitSavedNode(socket, [user], sendNode)
+
+        }catch (err){
+            let sendNode = {ip: host.ip, messageState: 2}
+            emitSavedNode(socket, [user], sendNode)
+            // res.json({ message: err});
+        }
+    }else{
+        let sendNode = {ip: host.ip, messageState: 2}
+        emitSavedNode(socket, [user], sendNode)
+    }
+
+    // if(hostLength == 0){
+    //     nodes.length != 0 ? res.send(nodes) : res.json({ message: "No found devices"});
+    // }
+}
+
 module.exports.nodesSave = nodesSave
 module.exports.initNode = initNode
 module.exports.getNodeInfo = getNodeInfo
 module.exports.initTraffic = initTraffic
 module.exports.setInterfacesNetworks = setInterfacesNetworks
 module.exports.sendCommandsNode = sendCommandsNode
+module.exports.saveNodesAction = saveNodesAction
 // module.exports = router;

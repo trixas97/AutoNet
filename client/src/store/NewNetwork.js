@@ -3,6 +3,7 @@ const getDefaultState = () => {
         nodes: [],
         networks: [],
         finishedScan: true,
+        saveDevices: true
     }
 }
 
@@ -25,11 +26,19 @@ export const NewNetworkModule = {
         addNetwork(state,val){
             state.networks.push(val);
         },
+        saveDevices(state, val){
+            state.saveDevices = !state.saveDevices ;
+            state.nodes = val.nodes
+        },
         deleteNetwork(state){
             state.networks.pop();
         },
         resetState (state) {
             Object.assign(state, getDefaultState())
+        },
+        updateSaveStatus(state,val){
+            const index = state.nodes.findIndex(node => node.ip === val.ip)
+            state.nodes[index] = {...state.nodes[index], finished: val.messageState}
         }
     },
 
@@ -47,11 +56,17 @@ export const NewNetworkModule = {
         addNetwork({ commit }, val){
             commit('addNetwork', val);
         },
+        saveDevices({ commit }, val){
+            commit('saveDevices', val);
+        },
         deleteNetwork({ commit }){
             commit('deleteNetwork');
         },
         resetState ({ commit }) {
             commit('resetState')
+        },
+        updateSaveStatus({ commit }, val){
+            commit('updateSaveStatus', val)
         }
     },
 
@@ -61,6 +76,9 @@ export const NewNetworkModule = {
         },
         getNodes(state){
             return state.nodes
+        },
+        getSaveDevices(state){
+            return state.saveDevices
         }
     }
     
