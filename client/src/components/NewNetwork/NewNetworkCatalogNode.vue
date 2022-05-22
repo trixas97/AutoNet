@@ -11,15 +11,7 @@
     <span class="mac col" v-if="node.mac!==null && userPass===true"><div class="input-container"><i class="fa fa-lock icon"></i><span></span><input v-model="node.password" class="textForm" type="text" placeholder="Password"></div></span>
   </div>
   <span class="column" v-if="userPass!=true"><q-checkbox v-model="node.checked" left-label color="teal" class="q-pr-xs" keep-color size="lg" /></span>
-  <span v-if="userPass==true" class="check">
-    <span class="icon-status">
-      <i ref="iconStatus" 
-         v-bind:class="{'fa fa-check icon': node.finished==1, 
-                        'fa fa-spinner fa-spin icon': node.finished==0, 
-                        'fa fa-times icon': node.finished==2}">
-      </i>
-    </span>
-  </span>
+  <span v-if="userPass==true" class="check"><span class="icon-status"><i ref="iconStatus" v-bind:class="{'fa fa-check icon': node.finished==1, 'fa fa-spinner fa-spin icon': node.finished==0, 'fa fa-times icon': node.finished==2}"></i></span></span>
 </div>
 </template>
 

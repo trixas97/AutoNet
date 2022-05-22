@@ -81,10 +81,13 @@ export default {
         let avg = 0
         node.interfaces.map(inter => {
           let trInter = 0
-          inter.traffic.value.map(traffic =>{
-            trInter += parseInt(traffic.bytes.in) + parseInt(traffic.bytes.out)      
-          })
-          avg += trInter / inter.traffic.value.length
+          if(inter.traffic.value.length >= 2){
+            let traffic = inter.traffic.value
+            for(let i=0; i <= traffic.length-2; i++){
+              trInter += (parseInt(traffic[i+1].bytes.in) + parseInt(traffic[i+1].bytes.out)) - (parseInt(traffic[i].bytes.in) + parseInt(traffic[i].bytes.out)) 
+            }
+            avg += trInter / ((inter.traffic.value.length-1) * 60)
+          }
         })
         this.modifyTrafficHeader(avg)
         return avg

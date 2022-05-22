@@ -213,6 +213,25 @@ export const UserDataModule = {
         getNetworksFull(state) {
             return state.networks
         },
+        getNetworksTraffic(state){
+            let networksTraffic = []
+            state.networks.data.map(network => {
+                let avgTraffic = 0
+                state.nodes.data.map( node => {
+                    let inter =  node.interfaces.find(interf => interf.network.value === network.ipNetwork.value)
+                    if(inter !== undefined){
+                        let traffic = inter.traffic.value
+                        let trInter = 0
+                        for(let i=0; i <= traffic.length-2; i++){
+                            trInter += (parseInt(traffic[i+1].bytes.in) + parseInt(traffic[i+1].bytes.out)) - (parseInt(traffic[i].bytes.in) + parseInt(traffic[i].bytes.out)) 
+                        }
+                        avgTraffic += trInter / ((inter.traffic.value.length-1) * 60)
+                    }
+                })
+                networksTraffic.push({ipNet: network.ipNetwork.value, traffic: avgTraffic})
+            })
+            return networksTraffic
+        },
         getTopologies(state){
             return state.topologies.data
         },

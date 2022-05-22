@@ -80,6 +80,8 @@ export default {
   setup(){
     let server = computed(() => ref(store.getters['UserData/getServer']))
     let user = computed(() => ref(store.getters['User/getUsername']))
+    let myChart = ref()
+    const colors = ['rgb(46, 64, 83)', 'rgb(40, 180, 99)', 'rgb(203, 68, 53)', 'rgb(241, 196, 15)', 'rgb(115, 198, 182)', 'rgb(52, 152, 219)', 'rgb(125, 60, 152)'];
 
     let networksFromWatch = ref(store.getters['UserData/getNetworks'])
     let networks = computed(() => ref(networksFromWatch));
@@ -96,25 +98,19 @@ export default {
       if(dataNodes != null){
           nodesFromWatch.value = dataNodes
           nodes = ref(nodesFromWatch)
+          updateChart()
+          
       }
     })
 
     const chart = ref(null);
-    const labels = [
-      '192.168.78.0/24',
-      '13.13.13.0/24',
-      '10.10.10.0/24',
-      '25.25.25.0/24',
-      'Others'
-    ];
-    const colors = ['rgb(46, 64, 83)', 'rgb(40, 180, 99)', 'rgb(203, 68, 53)', 'rgb(241, 196, 15)', 'rgb(115, 198, 182)', 'rgb(52, 152, 219)', 'rgb(125, 60, 152)'];
     const dataChart = {
-      labels: labels,
+      labels: [],
       datasets: [
           {
-              label: '192.168.78.0/24',
+              label: '',
               backgroundColor: colors,
-              data: [60, 20, 15, 3, 2],
+              data: [],
           },
       ]
     };
@@ -128,19 +124,34 @@ export default {
     };
 
     onMounted(() => {
-      let myChart = new Chart(
+      myChart = new Chart(
         chart.value,
         config
       );
-      console.log(myChart);
+      updateChart()
     })
-    return{
+
+    const updateChart = () => {
+      store.getters['UserData/getNetworksTraffic'].map(trafficNet => {
+            if(!myChart.data.labels.find(label => label === trafficNet.ipNet)){
+              myChart.data.labels.push(trafficNet.ipNet)
+              myChart.data.datasets[0].data.push(trafficNet.traffic)
+            }else{
+              let index = myChart.data.labels.findIndex(label => label === trafficNet.ipNet)
+              myChart[index] = trafficNet.traffic
+            }            
+          })
+
+          myChart.update()
+    }
+
+    return {
       config,
       chart,
       server,
       user,
       networks,
-      nodes
+      nodes,      
     }
   },
   methods:{
