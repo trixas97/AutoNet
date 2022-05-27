@@ -53,7 +53,7 @@ const getNodeInfo = (host) => {
             resolve(message);
         });
         shell.on('error', function (message) {
-            resolve({error: true})
+            resolve({error: true, message})
         })
     })
 }
@@ -142,7 +142,9 @@ const saveNodes = async (host, user, socket) => {
             mac: node.mac,
             serial: node.serial,
             interfaces: node.interfaces,
-            os: { name: node.os.name, version: node.os.version}
+            os: { name: node.os.name, version: node.os.version},
+            eigrp: node.eigrp,
+            ospf: node.ospf
         });
 
         try{

@@ -12,7 +12,7 @@
         </div>
         <div class="info">
             <div class="name">
-                <span>Name: </span><span class="value">{{name}}</span>
+                <span>Name: </span><span class="value">{{node.name.value}}</span>
                 <!-- <q-popup-edit v-model="name" class="bg-accent text-white" auto-save v-slot="scope">
                     <q-input dark color="white" :input-style="{ 'font-weight': 'bold', 'font-family': 'arial', color: 'white' }" class="text-white" v-model="scope.value" dense autofocus @keyup.enter="scope.set">
                         <template v-slot:append color="accent" >
@@ -22,7 +22,7 @@
                 </q-popup-edit> -->
             </div>
             <div class="username">
-                <span>Username: </span><span class="value">{{username}}</span>
+                <span>Username: </span><span class="value">{{node.username.value}}</span>
                 <!-- <q-popup-edit v-model="usernameText" class="bg-accent text-white" auto-save v-slot="scope">
                     <q-input dark color="white" :input-style="{ 'font-weight': 'bold', 'font-family': 'arial', color: 'white' }" class="text-white" v-model="scope.value" dense counter @keyup.enter="scope.set">
                         <template v-slot:append color="accent" >
@@ -33,11 +33,11 @@
                 <!-- <q-input outlined v-model="username" label="Username" /> -->
             </div>
             <div class="vendor">
-                <span>Vendor: </span><span class="value value-stable">{{vendor}}</span>
+                <span>Vendor: </span><span class="value value-stable">{{node.vendor.value}}</span>
                 <!-- <q-input outlined v-model="vendor" label="Vendor" /> -->
             </div>
             <div class="password">
-                <span>Password: </span><span class="value">{{password}}</span>
+                <span>Password: </span><span class="value">{{node.password.value}}</span>
                 <!-- <q-popup-edit v-model="password" class="bg-accent text-white" auto-save v-slot="scope">
                     <q-input dark color="white" :input-style="{ 'font-weight': 'bold', 'font-family': 'arial', color: 'white' }" class="text-white" v-model="scope.value" dense autofocus counter @keyup.enter="scope.set">
                         <template v-slot:append color="accent" >
@@ -48,11 +48,11 @@
                 <!-- <q-input outlined v-model="password" label="Password" /> -->
             </div>
             <div class="type">
-                <span>Type: </span><span class="value value-stable">{{type}}</span>
+                <span>Type: </span><span class="value value-stable">{{node.type.value}}</span>
                 <!-- <q-input outlined v-model="type" label="Type" /> -->
             </div>
             <div class="status">
-                <span>Status: </span><span class="value value-stable" :class="status == 'Active' ? 'text-positive' : 'text-negative'">{{status}} <q-icon name="circle"/></span><!-- stop -->
+                <span>Status: </span><span class="value value-stable" :class="node.status.value ? 'text-positive' : 'text-negative'">{{node.status.value ? 'Active' : 'Inactive'}} <q-icon name="circle"/></span><!-- stop -->
                 
                 <!-- <q-input outlined v-model="status" label="Status" /> -->
             </div>
@@ -62,9 +62,9 @@
                     Informations
                 </q-tooltip>
             </q-btn></div>
-            <div class="console"><q-btn :disabled="status !== 'Active'" push color="dark" round size="lg" @click="openConsole">
+            <div class="console"><q-btn :disabled="!node.status.value" push color="dark" round size="lg" @click="openConsole">
                 <img src="@/assets/console.svg" class="filter-green">
-                <q-tooltip :disabled="status !== 'Active'" class="bg-dark text-body1" :offset="[10, 10]">
+                <q-tooltip :disabled="!node.status.value" class="bg-dark text-body1" :offset="[10, 10]">
                     Console
                 </q-tooltip>
             </q-btn></div>
@@ -99,7 +99,9 @@ import store from '@/store';
 import _ from "lodash";
 
 export default {
-
+    props: {
+        node: {}
+    },
     data(){
         const route = useRoute()
         let mainIp = route.query.ip
@@ -131,68 +133,6 @@ export default {
         }
     },
 
-    computed: {
-        name(){
-            let nodes = this.nodes.value.data;
-            for(let j=0; j < nodes.length; j++){
-                for(let k=0; k < nodes[j].interfaces.length; k++){
-                    if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
-                        return nodes[j].name.value
-                }
-            }
-            return ''
-        },
-        username(){
-            let nodes = this.nodes.value.data;
-            for(let j=0; j < nodes.length; j++){
-                for(let k=0; k < nodes[j].interfaces.length; k++){
-                    if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
-                        return nodes[j].username.value
-                }
-            }
-            return ''
-        },
-        password(){
-            let nodes = this.nodes.value.data;
-            for(let j=0; j < nodes.length; j++){
-                for(let k=0; k < nodes[j].interfaces.length; k++){
-                    if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
-                        return nodes[j].password.value
-                }
-            }
-            return ''
-        },
-        vendor(){
-            let nodes = this.nodes.value.data;
-            for(let j=0; j < nodes.length; j++){
-                for(let k=0; k < nodes[j].interfaces.length; k++){
-                    if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
-                        return nodes[j].vendor.value
-                }
-            }
-            return ''
-        },
-        type(){
-            let nodes = this.nodes.value.data;
-            for(let j=0; j < nodes.length; j++){
-                for(let k=0; k < nodes[j].interfaces.length; k++){
-                    if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
-                        return nodes[j].type.value
-                }
-            }
-            return ''
-        },
-        status(){
-            let nodes = this.nodes.value.data;
-            for(let j=0; j < nodes.length; j++){
-                for(let k=0; k < nodes[j].interfaces.length; k++){
-                    if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
-                        return nodes[j].status.value ? 'Active' : 'Inactive'
-                }
-            }
-            return ''
-        }
-    }
 }
 </script>
 

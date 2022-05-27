@@ -167,12 +167,79 @@ def modifyMac(cdp, key):
         return {keysNames["name"]: "Interface", keysNames["value"]: cdp[key], keysNames["edit"]: False, keysNames["visible"]: True}
 
 
+def modifyOspf(ospf, key):
+    if key == "router_id":
+        return {keysNames["name"]: "Router ID", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "process_id":
+        return {keysNames["name"]: "Process ID", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "area":
+        return {keysNames["name"]: "Area", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "lsa_age":
+        return {keysNames["name"]: "LS Age", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}   
+    elif key == "lsa_options":
+        return {keysNames["name"]: "Options", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+    elif key == "lsa_type":
+        return {keysNames["name"]: "LS Type", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+    elif key == "lsa_id":
+        return {keysNames["name"]: "Link State ID", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+    elif key == "lsa_adv_router":
+        return {keysNames["name"]: "Advertising Router", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+    elif key == "lsa_seq_number":
+        return {keysNames["name"]: "LS Seq Number", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+    elif key == "lsa_checksum":
+        return {keysNames["name"]: "Checksum", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+    elif key == "lsa_length":
+        return {keysNames["name"]: "Length", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+    elif key == "lsa_num_links":
+        return {keysNames["name"]: "Number of Links", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "lsa_abr":
+        return {keysNames["name"]: "Lsa Abr", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+    elif key == "lsa_asbr":
+        return {keysNames["name"]: "Lsa Asbr", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+    elif key == "ls_link_type":
+        return {keysNames["name"]: "Ls Link Type", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+    elif key == "ls_link_id":
+        return {keysNames["name"]: "Network/Subnet Number", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "ls_link_data":
+        return {keysNames["name"]: "Network Mask", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "ls_mtid_metrics":
+        return {keysNames["name"]: "Metrics", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "ls_tos_0_metrics":
+        return {keysNames["name"]: "TOS", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+
+
+def modifyEigrp(ospf, key):
+    if key == "router_id":
+        return {keysNames["name"]: "Router ID", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "process_id":
+        return {keysNames["name"]: "Process ID", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "code":
+        return {keysNames["name"]: "Code", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "route":
+        return {keysNames["name"]: "Route", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}   
+    elif key == "mask":
+        return {keysNames["name"]: "Mask", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "successors":
+        return {keysNames["name"]: "Successors", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "fd":
+        return {keysNames["name"]: "FD", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: True}
+    elif key == "tag":
+        return {keysNames["name"]: "Tag", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+    elif key == "adv_router":
+        return {keysNames["name"]: "Adv Router", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+    elif key == "out_interface":
+        return {keysNames["name"]: "Out Interface", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+    elif key == "source":
+        return {keysNames["name"]: "Out Interface", keysNames["value"]: ospf[key], keysNames["edit"]: False, keysNames["visible"]: False}
+
+
 try:
     cisco_881 = {
         'device_type': 'cisco_ios',
         'host':   sys.argv[1],
         'username': sys.argv[2],
-        'password': sys.argv[3]
+        'password': sys.argv[3],
+        'fast_cli': False
     }
     net_connect = ConnectHandler(**cisco_881) 
 
@@ -185,8 +252,8 @@ try:
     arpTable = net_connect.send_command('show ip arp', use_textfsm=True)
     acl = net_connect.send_command('show access-list', use_textfsm=True)
     cdp = net_connect.send_command('show cdp neighbors detail', use_textfsm=True)
-    eigrpNeighbors = net_connect.send_command('show ip eigrp neighbors', use_textfsm=True)
-    eigrpTopology = net_connect.send_command('show ip eigrp topology', use_textfsm=True)
+    eigrp = net_connect.send_command('show ip eigrp topology', use_textfsm=True)
+    ospf= net_connect.send_command('show ip ospf database router', use_textfsm=True)
     stp = net_connect.send_command('show spanning-tree', use_textfsm=True)
     os = net_connect.send_command('show version')
     mac = net_connect.send_command('show mac address-table', use_textfsm=True)
@@ -241,6 +308,28 @@ try:
     except:
         mac = []      
 
+    # Modify OSPF
+    try:
+        if len(ospf) > 0:
+            for ospfItem in ospf:
+                for key in ospfItem:
+                    ospfItem[key] = modifyOspf(ospfItem, key)
+        else:
+            ospf = []
+    except:
+        ospf = []  
+
+    # Modify EIGRP
+    try:
+        if len(eigrp) > 0:
+            for eigrpItem in eigrp:
+                for key in eigrpItem:
+                    eigrpItem[key] = modifyEigrp(eigrpItem, key)
+        else:
+            eigrp = []
+    except:
+        eigrp = []
+
     node = {
         "username": {keysNames["name"]: "Username", keysNames["value"]: sys.argv[2], keysNames["edit"]: True},
         "password": {keysNames["name"]: "Password", keysNames["value"]: sys.argv[3], keysNames["edit"]: True},
@@ -261,7 +350,8 @@ try:
         "mac": mac,
         "serial": version[0]['serial'][0],
         "os": { "name": os.split(",")[0], "version": os.split("Version ")[1].split(",")[0] },
-        "eigrp" : { "neighbors" : eigrpNeighbors, "topology" : eigrpTopology}
+        "eigrp" : eigrp,
+        "ospf": ospf
         
     }
 except NameError:

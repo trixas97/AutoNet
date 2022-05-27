@@ -72,8 +72,8 @@ modifyDataTopos = async (data, type) => {
                 if (data.length ==0)
                     resolve([])
                 for (let i=0; i < data.length; i++){
-                    data[i] = await new Promise(resolve => resolve({ id: mongoose.Types.ObjectId(data[i]), x: position, y: 0, label: { x: position+20, y: position+40 } }));
-                    position += 60
+                    data[i] = await new Promise(resolve => resolve({ id: mongoose.Types.ObjectId(data[i]), x: position, y: 0, label: { x: 17, y: 40 } }));
+                    position += 110
                     if(i == data.length-1) resolve(data);
                 }
                 break;
@@ -83,8 +83,8 @@ modifyDataTopos = async (data, type) => {
                     resolve([])
                 for (let i=0; i < data.length; i++){
                     if(data[i].x === undefined){
-                        data[i] = await new Promise(resolve => resolve({ id: mongoose.Types.ObjectId(data[i].id), x: position, y: 0, label: { x: position+20, y: position+40 } }));
-                        position += 60
+                        data[i] = await new Promise(resolve => resolve({ id: mongoose.Types.ObjectId(data[i].id), x: position, y: 0, label: { x: 17, y: 40 } }));
+                        position += 110
                     }
                     if(i == data.length-1) resolve(data);
                 }

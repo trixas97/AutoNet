@@ -9,14 +9,6 @@
           </q-toolbar>
 
           <div class="infoContent">
-            <!-- <div class="element1">
-              <span>Operating System: </span><span class="value value-stable">Value1</span>
-            </div> -->
-            <!-- <q-field standout label="Operating System" stack-label :dense="dense">
-              <template v-slot:control>
-                <div class="self-center full-width no-outline" tabindex="0">IOS v 15.4</div>
-              </template>
-            </q-field> -->
             <div class="element1">
               <q-card>
                 <span class="title">Operating System</span>
@@ -29,20 +21,6 @@
                 <span class="value">{{node.os.version}}</span>
               </q-card>
             </div>
-            <!-- <div class="element3">
-              <q-input standout v-model="privilege" bg-color="black" label="Privilege Password" label-color="primary" @focus="focusPr" @blur="blurPr">
-                <template v-slot:prepend>
-                  <q-icon name="lock" color="white" />
-                </template>
-              </q-input>
-            </div>
-            <div class="element4">
-              <q-input standout v-model="configure" bg-color="black" label="Configuration Password" label-color="primary" @focus="focusCo" @blur="blurCo">
-                <template v-slot:prepend>
-                  <q-icon name="vpn_key" color="white" />
-                </template>
-              </q-input>
-            </div> -->
             <div class="tableComp">
               <TableInfo :node="node"/>
             </div>

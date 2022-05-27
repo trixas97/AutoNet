@@ -51,7 +51,10 @@ const saveNetworks = (username, networks) => {
 
 const addNetworkToDB = async (network) =>{
     try {
-        let savedNet = await network.save();
+        let isExistNetwork = await Network.findOne({"ipNetwork.value": network.ipNetwork.value})
+        if(isExistNetwork === null){
+            let savedNet = await network.save();
+        }
         return { code: 200, message: 'Network Saved', data: savedNet };
 
     }catch (err) {

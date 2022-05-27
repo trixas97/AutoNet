@@ -106,8 +106,10 @@ const listeners = (io) => {
         socket.on('save-user_credentials', async (data) => {
             console.log(`Save user credentials from ${data.username}` );
             let userCredentials = {username: data.username}
-            if(data.password.length > 0){
-                userCredentials.password = await getHashPassword(data.password)
+            if(data.password){
+                if(data.password.length > 0){
+                    userCredentials.password = await getHashPassword(data.password)
+                }
             }
             setUserCredentials(data.user, userCredentials)
         })

@@ -83,6 +83,14 @@ const nodeSchema = new mongoose.Schema({
         type: Array,
         required: true
     },
+    ospf:{
+        type: Array,
+        required: true
+    },
+    eigrp:{
+        type: Array,
+        required: true
+    },
     topologyInfo:{
         type: Object,
         required: false

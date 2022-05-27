@@ -46,7 +46,7 @@ export const sockets = () => {
                     store.dispatch('UserData/deleteTopology', {id: msg.res.data, changedFromUser: false});
                 break;
             case 'nodes':
-                store.dispatch('UserData/setNodes', { data: msg.node, changedFromUser: false });
+                store.dispatch('UserData/setNodes', { data: msg.data, changedFromUser: false });
                 break;
             case 'node':
                 store.dispatch('UserData/setNode', {data: msg.data, changedFromUser: false});
@@ -84,6 +84,7 @@ export const sockets = () => {
         if(initFlag.nodes && nodes.changedFromUser){
             if(nodes != null){
                 if(nodes.data.length < prev.data.length) {
+                    console.log('tet')
                     socket.emit('nodes', { nodes: nodes.data, user: store.getters['User/getUsername'], id: prev.data.find(node => !nodes.data.find(nodeDel => node._id === nodeDel._id))._id, method:'delete'})
                 }else{
                     socket.emit('nodes', {nodes: nodes.data, user: store.getters['User/getUsername']});

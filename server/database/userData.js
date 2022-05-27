@@ -32,6 +32,7 @@ const getUsersNode = async (node) => {
 const getUserNodes = async (username) => {
     let user = await User.findOne({username: username})
     let nodes = await Node.find({user: user._id})
+    nodes = await modifyNodesData(nodes)
     return nodes;
 }
 

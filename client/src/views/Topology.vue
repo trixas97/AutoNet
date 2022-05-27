@@ -95,7 +95,12 @@ export default {
             let nodeEnd = this.nodesData.value.find(node => node.interfaces.find(inter => inter.ip_address.value.includes(`${cdpEntry.management_ip.value}/`)))
             if(nodeEnd){
                 // If link is not exist then add it
-                if(!this.links.find(link => (link.ifstart.id == nodeEnd._id && nodeEnd.interfaces.find(inter => inter.interface_short.value == link.ifstart.name)) || (link.ifend.id == nodeEnd._id && nodeEnd.interfaces.find(inter => inter.interface_short.value == link.ifend.name)))){
+                if(!this.links.find(link => 
+                    (link.ifstart.id === nodeEnd._id 
+                        && nodeEnd.interfaces.find(inter => inter.interface.value === cdpEntry.remote_port.value).interface_short.value === link.ifstart.name)
+                    || 
+                    (link.ifend.id === nodeEnd._id 
+                        && nodeEnd.interfaces.find(inter => inter.interface.value === cdpEntry.remote_port.value).interface_short.value === link.ifend.name))){
                     this.addLink(nodeStart,nodeEnd,cdpEntry)
                 }
             }

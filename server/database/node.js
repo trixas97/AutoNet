@@ -5,7 +5,7 @@ const {initTraffic, setInterfacesNetworks} = require('../routes/api/nodes_save')
 
 
 const getNodeInfoByIP = async (ip) => {
-    let node = await Node.findOne({ 'interfaces.ip_address.value': { $regex: ip} });
+    let node = await Node.findOne({ 'interfaces.ip_address.value': { $regex: ip+'/'} });
     return node
 }
 
@@ -29,7 +29,8 @@ const getAllNodes = async () => {
 
 const setTraffic = async (ip, traffic, io) => {
     let node = await getNodeInfoByIP(ip);
-    node = await modifyNodeData('traffic', node, traffic);
+    if(node !== null)
+        node = await modifyNodeData('traffic', node, traffic);
 
     try{
         const savedNode = await Node.updateOne({ _id: node._id }, { interfaces: node.interfaces });
@@ -117,6 +118,8 @@ const updateNodeData = async (newNode) => {
             serial: updatedNode.serial,
             os: updatedNode.os,
             interfaces: updatedNode.interfaces,
+            eigrp: updatedNode.eigrp,
+            ospf: updatedNode.ospf
         }})
         updatedNode = await modifyNodesData([updatedNode])
         updatedNode = updatedNode[0]

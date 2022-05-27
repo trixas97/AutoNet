@@ -105,7 +105,7 @@ export default {
         let nodes = this.nodes.value.data;
         for(let j=0; j < nodes.length; j++){
           for(let k=0; k < nodes[j].interfaces.length; k++){
-            if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp))
+            if(nodes[j].interfaces[k].ip_address.value.includes(this.mainIp+'/'))
               return nodes[j]
           }
         }
