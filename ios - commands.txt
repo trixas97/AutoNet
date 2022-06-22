@@ -25,3 +25,9 @@
 	snmp-server host <SNMP SERVER IP> version 2c AutoNet
 	snmp-server trap link ietf
 	snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+
+- OSPF
+
+	conf t
+	router ospf 109
+	network 10.10.10.0 0.0.0.255 area 20

@@ -11,7 +11,7 @@ const getUserData = async (username) => {
     nodes = await modifyNodesData(nodes)
     let topologies = await Topology.find({user: user._id})
     let linksParameters = await linksParams(nodes)
-    let links = await Link.find({ $or: linksParameters });
+    let links = await Link.find({ $or: linksParameters })
     let networks = await Networks.find({user: user._id})
     let server = await Server.findOne()
     let users = await User.count()

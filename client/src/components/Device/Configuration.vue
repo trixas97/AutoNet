@@ -13,9 +13,7 @@
                 </q-tooltip>
             </q-btn></div>
         </div>
-        <q-scroll-area
-            class="scrollArea"
-        >
+        <q-scroll-area class="scrollArea">
             <prism language="editorconfig">{{ dataConfig }}</prism>
         </q-scroll-area>
     </div>

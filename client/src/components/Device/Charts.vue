@@ -77,6 +77,11 @@ export default {
         })
 
         function fillChart(){
+            console.log('initFlag', initFlag)
+            console.log('UpdatedTraffic', props.node.interfaces[0].traffic.value.length > trafficFlag ? true : false)
+            console.log('UpdatedTrafficLength', props.node.interfaces[0].traffic.value.length)
+            console.log('trafficFlag', trafficFlag)
+            console.log('UpdatedTrafficValue', props.node.interfaces[0].traffic.value[props.node.interfaces[0].traffic.value.length-1])
             if(!initFlag){
                 initData()
                 initFlag = true
@@ -104,9 +109,9 @@ export default {
                     await myChart.data.datasets[j].data.push(rate/60);
                 }
             }
-            if(dateFlag != null && myChart.data.labels.length > 0){
-                myChart.data.labels[myChart.data.labels.length-1] = await myChart.data.labels[myChart.data.labels.length-1].split(' ')[1];
-            }
+            // if(dateFlag != null && myChart.data.labels.length > 0){
+            //     myChart.data.labels[myChart.data.labels.length-1] = await myChart.data.labels[myChart.data.labels.length-1].split(' ')[1];
+            // }
             myChart.update();
             trafficFlag++
         }
@@ -134,7 +139,11 @@ export default {
                         if(parseInt(trafficIf[i].bytes.out) < parseInt(trafficIf[i-1].bytes.out))
                             rate = parseInt(trafficIf[i].bytes.out) + parseInt(trafficIf[i].bytes.in);
                         else 
-                            rate = (parseInt(trafficIf[i].bytes.out) + parseInt(trafficIf[i].bytes.in)) - (parseInt(trafficIf[i-1].bytes.out) + parseInt(trafficIf[i-1].bytes.in));
+                            rate = 
+                                (parseInt(trafficIf[i].bytes.out) + 
+                                parseInt(trafficIf[i].bytes.in)) - 
+                                (parseInt(trafficIf[i-1].bytes.out) + 
+                                parseInt(trafficIf[i-1].bytes.in));
                         await myChart.data.datasets[j].data.push(rate/60);
                     }
                 } 
@@ -145,11 +154,11 @@ export default {
                     colorIndex++
             }
 
-            if(dateFlag != null && myChart.data.labels.length > 0){
-                for(let k=0; k < myChart.data.labels.length; k++){
-                    myChart.data.labels[k] = await myChart.data.labels[k].split(' ')[1];
-                }
-            }
+            // if(dateFlag != null && myChart.data.labels.length > 0){
+            //     for(let k=0; k < myChart.data.labels.length; k++){
+            //         myChart.data.labels[k] = await myChart.data.labels[k].split(' ')[1];
+            //     }
+            // }
             myChart.update();
             
         }
@@ -163,11 +172,24 @@ export default {
                 if(dateFlag == '')
                     dateFlag = monthDayFlag
             }
-            await myChart.data.labels.push(monthDayFlag + ' ' +  ("0" + dateObj.getHours()).slice(-2) + ':' +  ("0" + dateObj.getMinutes()).slice(-2))
+            if(date)
+            await myChart.data.labels.push( ("0" + dateObj.getHours()).slice(-2) + ':' +  ("0" + dateObj.getMinutes()).slice(-2))
         }
 
         function updatedTraffic(){
-            return props.node.interfaces[0].traffic.value.length > trafficFlag ? true : false
+            return !calculateTime(props.node.interfaces[0].traffic.value[props.node.interfaces[0].traffic.value.length-1].date).includes(myChart.data.labels[myChart.data.labels.length-1])
+        }
+
+        function calculateTime(date){
+            let dateObj = new Date(date)
+            let monthDayFlag = ("0" + dateObj.getDate()).slice(-2) + '/' + ("0" + parseInt(dateObj.getMonth()+1)).slice(-2)
+            if(dateFlag != '' && dateFlag != null){
+                dateFlag == monthDayFlag ? dateFlag = monthDayFlag : dateFlag = null
+            }else{
+                if(dateFlag == '')
+                    dateFlag = monthDayFlag
+            }
+            return monthDayFlag + ' ' +  ("0" + dateObj.getHours()).slice(-2) + ':' +  ("0" + dateObj.getMinutes()).slice(-2)
         }
         
         return{

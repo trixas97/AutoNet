@@ -48,7 +48,6 @@ module.exports = function(io) {
    let receiver = snmp.createReceiver(options,callback);
 
    return receiver;
-
 }
 
 modifyDataSNMP = async (data, type, ip) => {

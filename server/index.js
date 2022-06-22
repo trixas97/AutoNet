@@ -72,6 +72,7 @@ mongoose.connect(
       const {interface} = defaultGateway.v4.sync();
       addServerInfo(results[interface][0], process.env.PORT || 5000 , process.env.PORT || 8080)
     }else{
+      const {interface} = defaultGateway.v4.sync();
       updateServerInfo(server)
     }
 

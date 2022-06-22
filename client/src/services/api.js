@@ -107,7 +107,7 @@ const initConsoleSSH = data => {
             }
         }
         axios(req)
-            .then(response => { console.log(response); resolve(response); })
+            .then(response => { resolve(response); })
             .catch(error => { resolve(error.response) });
     })
 }

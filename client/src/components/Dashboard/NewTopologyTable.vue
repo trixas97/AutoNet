@@ -26,7 +26,7 @@ const columns = [
   { name: 'name', label: 'Name', align: 'center', field: row => row.name, format: val => `${val}`, sortable: true },
   { name: 'ip', align: 'center', label: 'Ip', field: 'ip'},
   { name: 'network', label: 'Network', field: 'network', align: 'center'},
-  { name: 'traffic', label: 'Traffic (kbps)', field: 'traffic',  align: 'center'},
+  // { name: 'traffic', label: 'Traffic (kbps)', field: 'traffic',  align: 'center'},
 ]
 
 export default {

@@ -1,6 +1,5 @@
 const { hostname } = require('os');
 const {PythonShell} = require('python-shell');
-const {spawn} = require('child_process');
 const ipValid = require('ip');
 const Node = require('../../database/models/Node');
 const express = require('express');
@@ -48,7 +47,10 @@ return router;
 const getNodeInfo = (host) => {
     console.log("Go Python: " + host.ip);
     return new Promise(resolve => {
-        let shell = new PythonShell('server/python/node_info.py', {mode: 'json', args: [host.ip, host.username, host.password]});
+        let shell = new PythonShell('server/python/node_info.py', {
+            mode: 'json', 
+            args: [host.ip, host.username, host.password]
+        });
         shell.on('message', function (message) {
             resolve(message);
         });
@@ -63,18 +65,6 @@ const initNode = (host) => {
         let shell = new PythonShell('server/python/node_init.py', {mode: 'json', args: [host.ip, host.username, host.password, '192.168.78.1']});
         shell.on('message', function (message) {
             resolve(host)
-        })
-    })
-}
-
-const sendCommandsNode= (node, actions) => {
-    return new Promise(resolve => {
-        let shell = new PythonShell('server/python/node_update.py', {mode: 'json', args: [node.ip, node.username, node.password, actions.type]});
-        shell.on('message', function (message) {
-            resolve(message)
-        })
-        shell.on('error', function (message) {
-            resolve({error: true})
         })
     })
 }
@@ -106,6 +96,21 @@ const setInterfacesNetworks = async (interfaces) => {
     })
 }
 
+
+const sendCommandsNode= (node, actions) => {
+    return new Promise(resolve => {
+        let shell = new PythonShell('server/python/node_update.py', {mode: 'json', args: [node.ip, node.username, node.password, actions.type]});
+        shell.on('message', function (message) {
+            resolve(message)
+        })
+        shell.on('error', function (message) {
+            resolve({error: true})
+        })
+    })
+}
+
+
+
 const saveNodesAction = (data) => {
     let hosts = data.nodes;
 
@@ -123,7 +128,7 @@ const saveNodes = async (host, user, socket) => {
     user = await getUser(user)
     if(node != null){
         const nodeDb = new Node({
-            user: '60aa9e031c1d653434fcf352',
+            user: user._id,
             username: node.username,
             password: node.password,
             name: node.name,

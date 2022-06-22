@@ -10,7 +10,7 @@ let traffic = []
  
 module.exports = function(io) {
     const serverSys = new SyslogServer();
-    serverSys.on("message", async (value) => {
+    serverSys.on("message", async (value) => { 
         
         if(value.message.includes("AutonetTraffic")){
             if(value.message.includes("Finish")){
@@ -23,7 +23,6 @@ module.exports = function(io) {
                     traffic[value.host] = []
                     pushTraffic(value)
                 }
-                // io.emit("trixas97", value);
             }
         }
     });

@@ -22,7 +22,7 @@ const saveUpdatedNodesData = async (node) => {
     }else{
         setNodeStatus(node, false)
     }
-
+    
 }
 
 module.exports.updateNodesData = updateNodesData

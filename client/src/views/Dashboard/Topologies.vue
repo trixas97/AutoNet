@@ -43,7 +43,7 @@ export default {
         { name: 'type', align: 'center', field: 'type', sortable: true },
         { name: 'name',  label: 'Name', align: 'center', field: 'name', sortable: true },
         // { name: 'network', label: 'IP Network', align: 'center', field: 'network' },
-        { name: 'netlength', label: 'Networks', align: 'center', field: 'netlength', sortable: true },
+        // { name: 'netlength', label: 'Networks', align: 'center', field: 'netlength', sortable: true },
         { name: 'devices', label: 'Devices', align: 'center', field: 'devices', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
         { name: 'edit', label: '', field: 'edit', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
         { name: 'delete', label: '', field: 'delete', align: 'center', sortable: false, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
@@ -93,7 +93,7 @@ export default {
             type: 'topology',
             id: toposArray[i]._id,
             name: toposArray[i].name,
-            netlength: 1,
+            // netlength: ,
             devices: toposArray[i].nodes.length,
             delete: '',
           };

@@ -1,5 +1,4 @@
 import nmap
-import asyncio
 import json
 import sys
 

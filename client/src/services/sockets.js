@@ -29,12 +29,15 @@ export const sockets = () => {
             case 'userData':
                 store.dispatch('UserData/setNodes', { data: msg.data.nodes, changedFromUser: false });
                 store.dispatch('UserData/setTopologies', msg.data.topologies);
-                store.dispatch('UserData/setLinks', msg.data.links);
                 store.dispatch('UserData/setNetworks', msg.data.networks);
                 msg.data.server.users = msg.data.users
                 store.dispatch('UserData/setServer', msg.data.server)
                 store.dispatch('UserData/setUserInfoCredentials', {username: msg.data.userInfo.username})
-                store.dispatch('UserData/setUserInfoDetails', {firstname: msg.data.userInfo.name, surname: msg.data.userInfo.surname, email: msg.data.userInfo.email})
+                store.dispatch('UserData/setUserInfoDetails', {
+                    firstname: msg.data.userInfo.name, 
+                    surname: msg.data.userInfo.surname, 
+                    email: msg.data.userInfo.email
+                })
                 break;
             case 'topologies':
                 //code
@@ -144,7 +147,10 @@ export const sockets = () => {
 
     watch(() => store.getters['UserData/getUserInfoCredentials'], (data) => {
         if(data != null){
-            socket.emit('save-user_credentials', {user: store.getters['User/getUsername'], username: data.username, password: data.password});
+            socket.emit('save-user_credentials', {
+                user: store.getters['User/getUsername'], 
+                username: data.username, password: data.password
+            });
         }
     })
 

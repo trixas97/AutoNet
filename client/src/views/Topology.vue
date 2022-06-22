@@ -139,8 +139,18 @@ export default {
             let nodesData = this.nodesData.value
             for(let i=0; i < nodesData.length; i++){
                 let topoNode = this.topo.value.nodes.find(node => node.id == nodesData[i]._id)
-                // this.nodes.push(new NetNode(this.imgRefs[i], {name: this.labelRefs[i], x: this.nodesData[i].topologyInfo.label.x, y:this.nodesData[i].topologyInfo.label.y}, [], this.nodesData[i].interfaces));
-                this.nodes[nodesData[i]._id] = new NetNode(nodesData[i]._id,this.topo.value._id,this.imgRefs[i],{name: this.labelRefs[i], x: topoNode.label.x, y:topoNode.label.y}, [], nodesData[i].interfaces, this.$router.push);
+                this.nodes[nodesData[i]._id] = new NetNode(
+                    nodesData[i]._id,
+                    this.topo.value._id,
+                    this.imgRefs[i],{
+                        name: this.labelRefs[i], 
+                        x: topoNode.label.x, 
+                        y:topoNode.label.y
+                    }, 
+                    [], 
+                    nodesData[i].interfaces, 
+                    this.$router.push
+                );
                 this.nodes[nodesData[i]._id].dragnode.left = topoNode.x;
                 this.nodes[nodesData[i]._id].dragnode.top = topoNode.y;
                 this.nodes[nodesData[i]._id].labelPosition(); 

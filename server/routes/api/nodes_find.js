@@ -114,11 +114,7 @@ io.on('connection', (socket) => {
                             deviceFinderSlow(aliveHost, socketid, completeScan);           // Call Function => Return Device from Slow script
                         }else{
                             if(aliveHost.vendor == "Cisco Systems"){                       // Check vendor for Cisco devices
-                                aliveHost.vendor = "Cisco"
-                                console.log(aliveHost);                                    // Return Device from Fast script
-                                // io.to(socketid).emit('net-scan', aliveHost);
-                            }else{
-                            console.log(aliveHost);
+                                aliveHost.vendor = "Cisco"                                
                             }
                         }
                         io.to(socketid).emit('net-scan', aliveHost);
@@ -127,7 +123,6 @@ io.on('connection', (socket) => {
                         deadHosts.push(host);
                     }
                     if(count == ips.length){
-                        console.log("size " + count);
                         resolve(deadHosts);
                     }
                 });
